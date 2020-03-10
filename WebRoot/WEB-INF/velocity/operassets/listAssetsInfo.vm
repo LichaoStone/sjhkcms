@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>资产列表</title>
+#tagLibs()
+#calendar()
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<div class="topline">
+	<a href="#" class="xzbtn" style="color:#FFFFFF">资产列表</a>
+</div>
+	<form name="form2" action="" id="queryForm" method="get">
+		<input type="hidden" id="orderColumn" name="orderColumn" value="" />
+		<table border='0' cellpadding='0' cellspacing='0' style="margin-top:13px;">
+			<tr class="search">
+				    <td>工单ID：<input type="text" id="correlateID" name="correlateID" value="$!{asset.correlateID}" style="width:80px;"/></td>		
+					<td>生成文件情况：<select name="isCreateFile" id="isCreateFile" style="margin:2px 2px;width:100px;">
+                        			   <option value="">==请选择==</option>
+                   					   <option value="0" #if ($!{asset.isCreateFile} == '0') selected #end>成功</option>
+                   					   <option value="1" #if ($!{asset.isCreateFile} == '1') selected #end>失败</option>
+                   					   <option value="2" #if ($!{asset.isCreateFile} == '2') selected #end>尚未处理</option>
+           						   </select>
+           			</td>
+           			<td>处理文件情况：<select name="isDealFile" id="isDealFile" style="margin:2px 2px;width:100px;">
+                        			   <option value="">==请选择==</option>
+                   					   <option value="0" #if ($!{asset.isDealFile} == '0') selected #end>成功</option>
+                   					   <option value="1" #if ($!{asset.isDealFile} == '1') selected #end>失败</option>
+                   					   <option value="2" #if ($!{asset.isDealFile} == '2') selected #end>尚未处理</option>
+           						   </select>
+           			</td>
+           			<td>信息反馈情况：<select name="sendStatus" id="sendStatus" style="margin:2px 2px;width:100px;">
+                        			   <option value="">==请选择==</option>
+                   					   <option value="0" #if ($!{asset.sendStatus} == '0') selected #end>成功</option>
+                   					   <option value="-1" #if ($!{asset.sendStatus} == '-1') selected #end>失败</option>
+                   					   <option value="1" #if ($!{asset.sendStatus} == '1') selected #end>尚未发送</option>
+           						   </select>
+           			</td>
+           			<td>交接时间：<input type="text" id="jointTime" name="jointTime" value="$!{asset.jointTime}" style="width:100px;" readonly="readonly"	onclick="WdatePicker()" class="Wdate"/></td>
+           	        <td>反馈时间：<input type="text" id="sendTime" name="sendTime" value="$!{asset.sendTime}" style="width:100px;" readonly="readonly" onclick="WdatePicker()" class="Wdate"/></td>
+					<td><input id="imageField" name="imageField" type="image" src="${ctx}/images/button_search.gif"/></td>	
+			</tr>
+		</table>
+		<!--  内容列表   -->
+		<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+			<tr align="left" bgcolor="#eff2f7" height="30">
+				<td width="3%"><input type="checkbox" id="allSelect" style="padding-top:5px;" onclick="isCheckAll('arcID',this);"><label for="allSelect">全选</label></td>
+				<td width="12%">工单号</td>
+				<td width="25%">保存文件名</td>
+				<td width="8%"><a href="javascript:void(0);" onclick="orderBy(this);" name="fo.jointTime" lastOrderBy="$!{asset.orderColumn}" class="tb_head">交接时间</a></td>
+				<td width="5%"><a href="javascript:void(0);" onclick="orderBy(this);" name="fo.isCreateFile" lastOrderBy="$!{asset.orderColumn}" class="tb_head">生成文件情况</a></td>
+				<td width="5%"><a href="javascript:void(0);" onclick="orderBy(this);" name="fo.isDealFile" lastOrderBy="$!{asset.orderColumn}" class="tb_head">处理文件情况</a></td>
+				<td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="cerror" lastOrderBy="$!{asset.orderColumn}" class="tb_head">生成文件异常</a></td>
+				<td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="derror" lastOrderBy="$!{asset.orderColumn}" class="tb_head">处理文件异常</a></td>
+				<td width="5%"><a href="javascript:void(0);" onclick="orderBy(this);" name="fo.sendStatus" lastOrderBy="$!{asset.orderColumn}" class="tb_head">信息反馈状态</a></td>
+				<td width="7%"><a href="javascript:void(0);" onclick="orderBy(this);" name="fo.sendTime" lastOrderBy="$!{asset.orderColumn}" class="tb_head">反馈时间</a></td>
+				<td width="10%" colspan="3">操作</td>
+			</tr>
+			
+			#if ($null.isNull($list) || $list.size()==0)
+	            <tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	                <td colspan="11"><h1>暂无相关数据内容</h1></td>
+                </tr>
+            #end
+            
+			#foreach ($a in $list)
+			<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+				<td>
+				    <input type="checkbox" name="arcID" class="np" value="$!{a.correlateID}"/>
+				    <input type="hidden" value="$!{a.isCreateFile}"/>
+				    <input type="hidden" value="$!{a.isDealFile}"/>
+				    <input type="hidden" value="$!{a.cmdFileURL}"/>    
+				</td>
+				<td>$!{a.correlateID}</td>
+				<td>$!{a.localFileName}</td>
+				<td>$!{a.jointTime}</td>
+				<td>#if ($!{a.isCreateFile} == '0') 成功 #elseif($!{a.isCreateFile} == '1') 失败 #else 尚未处理 #end</td>
+				<td>#if ($!{a.isDealFile} == '0') 成功 #elseif($!{a.isDealFile} == '1') 失败 #else 尚未处理 #end</td>
+				<td>#if($null.isNull($!{a.cerror})) 无 #else #if($!{a.cerror.length()} > 50) $!{a.cerror.substring(0,50)} #else $!{a.cerror} #end #end</td>
+				<td>#if($null.isNull($!{a.derror})) 无 #else #if($!{a.derror.length()} > 50) $!{a.derror.substring(0,50)} #else $!{a.derror} #end #end</td>
+				<td>#if ($!{a.sendStatus} == '0') 成功 #elseif($!{a.sendStatus} == '-1') 失败 #else 尚未发送 #end</td>
+				<td>$!{a.sendTime}</td>
+				<td>
+				   <a href="${ctx}/oper/toAssets.do?correlateID=${a.correlateID}">详情</a>
+				   <!-- <a href="javascript:void(0);" onclick="toCreateOrDealFile(this,0)">生成文件</a>|
+				   <a href="javascript:void(0);" onclick="toCreateOrDealFile(this,1)">处理文件</a> -->
+				</td>
+			</tr>
+			#end
+		</table>
+		<div height="36" align="right">
+        		#pagination(${asset})
+        </div>
+        <!-- <div height="36" align="left">
+   	       <a href="javascript:void(0);" class="wxbtn" id="toBatchcfile">批量生成文件</a>
+   	       <a href="javascript:void(0);" class="wxbtn" id="toBatchdfile">批量处理文件</a>
+        </div> -->
+	</form>
+	<script language="javascript" src="${ctx}/js/ott/select/listAssetsInfo.js"></script>
+</body>
+</html>

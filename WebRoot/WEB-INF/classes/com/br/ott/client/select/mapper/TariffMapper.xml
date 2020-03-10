@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.select.mapper.TariffMapper">
+	<resultMap id="TariffMap" type="Tariff" >
+		<id property="id" column="id"></id>
+		<result property="tariffName" column="tariffName"></result>
+		<result property="tariffValue" column="tariffValue"></result>
+		<result property="tariffType" column="tariffType"></result>
+		<result property="tariffDesc" column="tariffDesc"/>
+		<result property="status" column="status"/>
+	</resultMap>
+
+	<!--添加一个资费 -->
+	<insert id="addTariff" parameterType="Tariff">
+       <selectKey keyProperty="id" resultType="String"  order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+		<![CDATA[ INSERT INTO OTT_TARIFF (tariffName, tariffValue, tariffType, tariffDesc, status)
+			VALUES (#{tariffName,jdbcType=VARCHAR},
+			#{tariffValue},
+			#{tariffType,jdbcType=VARCHAR},
+			#{tariffDesc,jdbcType=VARCHAR},
+			'1')   
+	 	]]>
+	</insert>
+	
+	<!-- 按ID查询资费类型 -->
+	<select id="getTariffById" resultMap="TariffMap">
+		SELECT id, tariffName, tariffValue, tariffType, tariffDesc, status 
+		FROM  OTT_TARIFF WHERE id = #{id, jdbcType=INTEGER}
+	</select>	
+	
+	<!-- 按分页查资费信息 -->
+	<select id="findTariffByPage" resultMap="TariffMap">
+		SELECT id, tariffName, tariffValue, tariffType, tariffDesc, status 
+		FROM OTT_TARIFF
+		<where>
+			<if test="status !=null and status != ''">
+				status = #{status}
+			</if>
+			<if test="tariffType != null and tariffType != ''">
+				and tariffType = #{tariffType}
+			</if>
+			<if test="tariffName != null and tariffName != ''">
+				and tariffName = #{tariffName}
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			order by id desc
+		</if>
+	</select>
+	<select id="getCountTariff" resultType="int">
+		SELECT count(1) 
+		FROM OTT_TARIFF
+		<where>
+			<if test="status !=null and status != ''">
+				status = #{status}
+			</if>
+			<if test="tariffType != null and tariffType != ''">
+				and tariffType = #{tariffType}
+			</if>
+			<if test="tariffName != null and tariffName != ''">
+				and tariffName = #{tariffName}
+			</if>
+		</where>
+	</select>
+	<!-- 修改资费信息 -->
+	<update id="updateTariff" parameterType="Tariff">
+		<![CDATA[ UPDATE OTT_TARIFF SET 
+				tariffName = #{tariffName,jdbcType=VARCHAR}, 
+				tariffValue = #{tariffValue}, 
+				tariffType = #{tariffType,jdbcType=VARCHAR},
+				tariffDesc = #{tariffDesc,jdbcType=VARCHAR}
+           WHERE id = #{id, jdbcType=INTEGER} ]]>
+	</update>
+	
+	<!-- 修改资费状态 -->
+	<update id="updateTariffStatus">
+		<![CDATA[ UPDATE OTT_TARIFF SET status = #{status,jdbcType=VARCHAR} 
+		WHERE id = #{id, jdbcType=INTEGER} ]]>
+	</update>
+	
+	<!-- 查询所有资费 -->
+	<select id="findTariffByCond" resultMap="TariffMap">
+		SELECT id, tariffName, tariffValue, tariffType, tariffDesc, status 
+		FROM OTT_TARIFF
+		<where>
+			<if test="status !=null and status != ''">
+				status = #{status}
+			</if>
+			<if test="tariffType != null and tariffType != ''">
+				and tariffType = #{tariffType}
+			</if>
+			<if test="tariffName != null and tariffName != ''">
+				and tariffName = #{tariffName}
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			order by id desc
+		</if>
+	</select>
+</mapper>

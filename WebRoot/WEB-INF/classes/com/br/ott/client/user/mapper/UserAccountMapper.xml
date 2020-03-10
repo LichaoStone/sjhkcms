@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.user.mapper.UserAccountMapper">
+	<resultMap type="UserAccount" id="UserAccount">
+		<id property="id" column="id" />
+		<result property="trueName" column="trueName" />
+		<result property="phone" column="phone" />
+		<result property="email" column="email" />
+		<result property="pwd" column="pwd" />
+		<result property="sex" column="sex" />
+		<result property="birthday" column="birthday" />
+		<result property="nickName" column="nickName" />
+		<result property="mac" column="mac" />
+		<result property="registerTime" column="registerTime" />
+		<result property="address" column="address" />
+		<result property="postCode" column="postCode" />
+		<result property="resetBalance" column="resetBalance" />
+		<result property="virtualBlance" column="virtualBlance" />
+		<result property="status" column="status" />
+		<result property="childPwd" column="childPwd" />
+		<result property="userId" column="userId" />
+		<result property="isMember" column="isMember" />
+	</resultMap>
+	
+	<!-- 添加用户 -->
+	<insert id="addUser" parameterType="UserAccount">
+		<selectKey keyProperty="id" resultType="String" order="AFTER">
+			  SELECT LAST_INSERT_ID()
+		</selectKey>
+		<![CDATA[
+			INSERT INTO OTT_USER_ACCOUNT(ID,TRUENAME,PHONE,EMAIL,PWD,SEX,BIRTHDAY,NICKNAME,mac,
+			REGISTERTIME,ADDRESS,POSTCODE,RESETBALANCE,VIRTUALBLANCE,STATUS,CITY, CHILDPWD, USERID, ISMEMBER) 
+			VALUES(
+				#{id,jdbcType=VARCHAR},
+				#{trueName,jdbcType=VARCHAR},
+				#{phone,jdbcType=VARCHAR},
+				#{email,jdbcType=VARCHAR},
+				#{pwd,jdbcType=VARCHAR},
+				#{sex,jdbcType=VARCHAR},
+				#{birthday,jdbcType=VARCHAR},
+				#{nickName,jdbcType=VARCHAR},
+				#{mac,jdbcType=VARCHAR},
+				#{registerTime,jdbcType=DATE},
+				#{address,jdbcType=VARCHAR},
+				#{postCode,jdbcType=VARCHAR},
+				#{resetBalance,jdbcType=FLOAT},
+				#{virtualBlance,jdbcType=FLOAT},
+				#{status,jdbcType=VARCHAR},
+				#{city,jdbcType=VARCHAR},
+				#{childPwd,jdbcType=VARCHAR},
+				#{userId,jdbcType=VARCHAR},
+				#{isMember,jdbcType=VARCHAR}
+			)
+		]]>
+	</insert>
+	<select id="checkLogin" resultMap="UserAccount" >
+		<![CDATA[ SELECT * FROM OTT_USER_ACCOUNT 
+		where status='1' and (phone=#{account} or userId=#{account}) and pwd=#{pwd}]]>
+	</select>
+	
+	<!-- 查询用户列表 -->
+	<select id="findUsers" resultMap="UserAccount"
+		parameterType="UserAccount">
+		SELECT U.* FROM OTT_USER_ACCOUNT U
+		<where>
+			status='0'
+			<if test="nickName != null and nickName != ''">
+				AND U.nickName like #{nickName}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND U.phone = #{phone}
+			</if>
+			<if test="email != null and email != ''">
+				AND U.email = #{email}
+			</if>
+			<if test="status != null and status != ''">
+				AND U.status = #{status}
+			</if>
+		</where>
+		 <if test="orderColumn != null and orderColumn !=''">
+		 	<![CDATA[
+			ORDER BY ${orderColumn}
+			]]>
+		</if> 
+	</select>
+	<select id="findCountUsers" resultType="int">
+		SELECT count(id) FROM OTT_USER_ACCOUNT
+		<where>
+			status='0'
+			<if test="nickName != null and nickName != ''">
+				AND nickName like #{nickName}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND phone = #{phone}
+			</if>
+			<if test="email != null and email != ''">
+				AND email = #{email}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查看用户详情 -->
+	<select id="getUserAccount" resultType="UserAccount">
+		<![CDATA[
+			SELECT * FROM OTT_USER_ACCOUNT WHERE ID=#{id}
+		]]>
+	</select>
+	
+	<!-- 按IPTV帐号查询用户详情 -->
+	<select id="getUserAccountByUserId" resultType="UserAccount">
+		<![CDATA[
+			SELECT * FROM OTT_USER_ACCOUNT WHERE USERID = #{userId}
+		]]>
+	</select>
+	
+	<!-- 根据ID删除用户 -->
+	<update id="delUser">
+		<![CDATA[
+			UPDATE OTT_USER_ACCOUNT SET status='1' WHERE ID=#{id}
+		]]>
+	</update>
+	
+	<!-- 修改用户信息 -->
+	<update id="modifyUserAccount" parameterType="UserAccount">
+		<![CDATA[
+			UPDATE OTT_USER_ACCOUNT SET  
+				trueName=#{trueName,jdbcType=VARCHAR},
+				phone=#{phone,jdbcType=VARCHAR},
+				email=#{email,jdbcType=VARCHAR},
+				sex=#{sex,jdbcType=VARCHAR},
+				birthday=#{birthday,jdbcType=VARCHAR},
+				nickName=#{nickName,jdbcType=VARCHAR},
+				mac=#{mac,jdbcType=VARCHAR},
+				address=#{address,jdbcType=VARCHAR},
+				postCode=#{postCode,jdbcType=VARCHAR},
+				status=#{status,jdbcType=VARCHAR},
+				city=#{city,jdbcType=VARCHAR}
+			WHERE ID=#{id}
+		]]>
+	</update>
+	
+	<!-- 用户登录 -->
+	<select id="getCheck" resultType="UserAccount">
+		<![CDATA[
+			SELECT * FROM OTT_USER_ACCOUNT
+			where email=#{email,jdbcType=VARCHAR} and pwd=#{pwd,jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<!--修改儿童锁密码 -->
+	<update id="updateChildPwd" parameterType="UserAccount">
+		<![CDATA[
+		    UPDATE OTT_USER_ACCOUNT SET 
+		    childPwd=#{childPwd,jdbcType=VARCHAR},status=#{status,jdbcType=VARCHAR} where email=#{email,jdbcType=VARCHAR}
+		]]>
+	</update>
+	
+	<update id="modifyToMember">
+		<![CDATA[
+		    UPDATE OTT_USER_ACCOUNT SET 
+		    isMember=#{isMember,jdbcType=VARCHAR} where userId=#{userId,jdbcType=VARCHAR}
+		]]>
+	</update>
+	
+	<resultMap type="UserAccount" id="pwdValidateMap">
+		<result property="childPwd" column="childPwd"/>
+	</resultMap> 
+	<!-- 修改儿童密码锁之前的密码确认 -->
+	<select id="getCheckPwd" resultMap="pwdValidateMap">
+		<![CDATA[
+			SELECT childPwd FROM OTT_USER_ACCOUNT
+			where email=#{email,jdbcType=VARCHAR} and childPwd=#{childPwd,jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<select id="findUserAccountByCond" resultType="UserAccount">
+		SELECT U.* FROM OTT_USER_ACCOUNT U
+		<where>
+			<if test="status != null and status != ''">
+				 U.status = #{status}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND U.nickName = #{userName}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND U.phone = #{phone}
+			</if>
+			<if test="email != null and email != ''">
+				AND U.email = #{email}
+			</if>
+		</where>
+	</select>
+</mapper>

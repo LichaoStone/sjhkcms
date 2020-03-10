@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.common.mapper.DictionarysMapper">
+	<resultMap type="Dictionary" id="Dictionary">
+		<id property="id" column="id"></id>
+		<result property="dicnickName" column="dicnickName"></result>
+		<result property="dicValue" column="dicValue"></result>
+		<result property="createTime" column="createTime"></result>
+		<result property="dicType" column="dicType"></result>
+		<result property="updatable" column="updatable"></result>
+		<result property="creator" column="creator"></result>
+		<result property="status" column="status"></result>
+		<result property="orderId" column="orderId"></result>
+		<result property="memo" column="memo"></result>
+	</resultMap>
+	
+	<!-- 读取报表的数据后批量插入  -->
+	<select id="insertDict" parameterType="java.util.List">   
+        insert into ott_dictionarys   
+        (dicnickName,dicName,dicValue,createTime,dicType,updatable,creator,status,orderid,memo)values   
+        <foreach collection="list" item="item" index="index" separator=",">   
+            (#{item.dicnickName,jdbcType=CHAR},#{item.dicName,jdbcType=CHAR},
+            #{item.dicValue,jdbcType=CHAR},#{item.createTime,jdbcType=CHAR},
+            #{item.dicType,jdbcType=CHAR},#{item.updatable,jdbcType=CHAR},
+            #{item.status,jdbcType=INTEGER},#{item.creator,jdbcType=INTEGER},   
+            #{item.orderId,jdbcType=CHAR},#{item.memo,jdbcType=VARCHAR}
+            )   
+        </foreach>   
+    </select>   
+
+	<update id="updateDictionary" parameterType="Dictionary">
+		UPDATE ott_dictionarys SET dicName=#{dicName,jdbcType=VARCHAR},
+				 	dicValue =#{dicValue,jdbcType=VARCHAR},
+				 	dicType =#{dicType,jdbcType=VARCHAR},
+				 	orderId =#{orderId,jdbcType=VARCHAR},
+				 	memo =#{memo,jdbcType=VARCHAR} 
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!--添加一个字典数据 -->
+		<insert id="addDictionarys" parameterType="Dictionary">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			  SELECT LAST_INSERT_ID()
+		</selectKey>
+		<![CDATA[   INSERT INTO ott_dictionarys (dicName,dicValue,createTime,dicType,status,creator,orderid,memo,updatable)
+			VALUES (
+				 	#{dicName,jdbcType=VARCHAR},
+				 	#{dicValue,jdbcType=VARCHAR},
+				 	now(),
+				 	#{dicType,jdbcType=VARCHAR},
+				 	#{status,jdbcType=VARCHAR},
+				 	#{creator,jdbcType=VARCHAR},
+				 	#{orderId,jdbcType=VARCHAR},
+				 	#{memo,jdbcType=VARCHAR},
+				 	'1')
+	 	]]>
+	</insert>
+	
+	<!-- 删除多个字典数据 -->
+	<delete id="delDictionaryList">
+		DELETE FROM ott_dictionarys
+		WHERE id in  
+		<foreach collection="list" item="ids"  open="(" separator="," close=")">  
+        	#{ids}  
+     	</foreach>
+	</delete>
+	
+		<!-- 根据字典分类ID删除分类 -->
+	<delete id="delDictionarys" parameterType="String">
+		<![CDATA[ DELETE FROM ott_dictionarys WHERE id = #{id,jdbcType=INTEGER} ]]>
+	</delete>
+	
+	<!-- 查询所有字典数据 -->
+	<select id="findAllDictionarys" resultMap="Dictionary">
+	 SELECT * FROM ott_dictionarys d
+	 <where>
+	 		<if test="status !=null and status !=''">
+				 d.status=#{status,jdbcType=VARCHAR}
+			</if>
+			<if test="dicName != null and dicName != ''">
+				and d.dicName LIKE CONCAT(CONCAT('%', #{dicName}),'%')
+			</if>
+			<if test="dicValue !=null and dicValue !=''">
+				and d.dicValue= #{dicValue,jdbcType=VARCHAR}
+			</if>
+			<if test="creator !=null and creator !=''">
+				and d.creator= #{creator,jdbcType=VARCHAR}
+			</if>
+			<if test="orderId !=null and orderId !=''">
+				and d.orderId= #{orderId,jdbcType=VARCHAR}
+			</if>
+	 </where>
+		  	<if test="orderColumn != null and orderColumn !=''">
+					order by ${orderColumn} 
+			</if>
+			<if test="orderColumn == null or orderColumn ==''">
+				order by d.id desc
+			</if>
+	</select>
+	
+	<!-- 字典总记录条数 -->
+	<select id="findCountDictionarys" resultType="int">
+		SELECT count(d.id) FROM ott_dictionarys d
+		<where>
+	 		<if test="status !=null and status !=''">
+				 d.status= #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="dicName != null and dicName != ''">
+				and d.dicName LIKE CONCAT(CONCAT('%', #{dicName}),'%')
+			</if>
+			<if test="dicValue !=null and dicValue !=''">
+				and d.dicValue= #{dicValue,jdbcType=VARCHAR}
+			</if>
+			<if test="creator !=null and creator !=''">
+				and d.creator= #{creator,jdbcType=VARCHAR}
+			</if>
+			<if test="orderId !=null and orderId !=''">
+				and d.orderId= #{orderId,jdbcType=VARCHAR}
+			</if>
+	 	</where>
+			<if test="creator !=null and creator !=''">
+				and d.creator= #{creator,jdbcType=VARCHAR}
+			</if>
+			<if test="orderId !=null and orderId !=''">
+				and d.orderId= #{orderId,jdbcType=VARCHAR}
+			</if>
+	</select>
+		
+	<!-- 查询字典数据详情 -->
+	<select id="findByDictById" resultMap="Dictionary">
+		<![CDATA[ SELECT id,dicName,dicValue,dicType, status,creator,orderId,memo 
+		FROM ott_dictionarys WHERE id=#{id}]]>
+	</select>
+	
+	<resultMap type="Dictionary" id="dicValidateMap">
+		<result property="dicName" column="dicName"/>
+	</resultMap>
+	
+	<resultMap type="Dictionary" id="dicValue">
+		<result property="dicValue" column="dicValue"/>
+	</resultMap>
+	
+    <!-- 验证输入的常量名称是否存在 -->
+    <select id="findDictByName" resultMap="dicValidateMap">
+	    <![CDATA[select dicName from OTT_DICTIONARYS  where dicName=#{dicName}]]>
+	</select>
+	
+   <select id="findDictByValue" resultMap="dicValue">
+       <![CDATA[select dicValue from OTT_DICTIONARYS  where dicValue=#{dicValue}]]>
+   </select>
+
+	<!-- 按条件查询字典信息 -->
+	<select id="findDictByCond" resultMap="Dictionary">
+		SELECT *
+		FROM ott_dictionarys
+		<where>
+			<if test="dicType != null and dicType != ''">
+				dicType= #{dicType,jdbcType=VARCHAR}
+			</if>
+			<if test="dicName != null and dicName != ''">
+				and dicName= #{dicName,jdbcType=VARCHAR}
+			</if>
+			<if test="dicValue !=null and dicValue !=''">
+				and dicValue= #{dicValue,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 得到最大的二级数据最大dicValue -->
+ 	<select id="findMaxKey" resultType="int">
+       <![CDATA[select max(DICVALUE) from OTT_DICTIONARYS where DICVALUE REGEXP '[0-9]' and LENGTH(DICVALUE)='3']]>
+  	 </select>
+   
+    <!-- 修改字典数据 子类数据状态 -->
+	<update id="modifyChildStatus">
+		<![CDATA[ UPDATE OTT_DICTIONARYS SET status= #{status,jdbcType=VARCHAR} where dicType= #{dicType,jdbcType=VARCHAR}
+		]]>
+	</update>
+	 <!-- 修改字典数据状态 -->
+	<update id="modifyDictStatus">
+		<![CDATA[ UPDATE OTT_DICTIONARYS SET status= #{status,jdbcType=VARCHAR} where id = #{id, jdbcType=INTEGER}
+		]]>
+	</update>
+</mapper>

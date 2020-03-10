@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>资产栏目信息</title>
+#tagLibs()
+<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/tinytree/themes/tinytree.css" />
+</head>
+<body>
+<div class="topline">
+	<a href="${ctx}/select/findDProgram.do" class="wxbtn">资产列表</a> | 
+    <a href="#" class="xzbtn" style="color:#FFFFFF">资产栏目管理</a>
+</div>
+<form id="form1" name="form1" action="" method="post">
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+				<legend>资产栏目信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">资产名称：</td>
+							<td class="pn-fcontent">
+								$!{dramaType.dramaName}
+								<input type="hidden" id="dramaId"  name="dramaId" value="$!{dramaType.dramaId}"/>
+								<input type="hidden" id="dType"  name="dType" value="$!{dType}"/>
+							</td>
+						</tr>
+						#if($!{oldType})
+							<tr>
+								<td width="20%" class="pn-flabel pn-flabel-h">内容商栏目：</td>
+								<td class="pn-fcontent">
+									$!{oldType}
+								</td>
+							</tr>
+						#end
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">栏目：</td>
+							<td class="pn-fcontent">
+           						<div class="m-content" style="margin:20px 10px;" >
+						        		<div class="m-content-center">
+						        			<div id="drama_tree"></div>
+						        		</div>
+						        </div>
+   								<em class="required">*</em>
+							</td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="20%">&nbsp;</td>
+    <td width="80%">
+		<button type="button" id="saveType" class="bt-primary">保存</button>
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+	<script type="text/javascript" src="${ctx}/js/jquery/tinytree/jquery.tinytree.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/select/dramaTypeTree.js"></script>
+</body>
+</html>

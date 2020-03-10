@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>系统查看</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	#tagLibs()
+</head>
+<body >
+	 <div class="topline">
+    	<a href="${ctx}/system/findSystemList.do" class="xzbtn" style="color:#FFFFFF">系统列表</a> | 
+        <a href="${ctx}/system/toSystem.do" class="wxbtn">新增系统</a>
+    </div>
+	<table width="98%"  border="0" align="center" style="margin-top:13px;">
+    <tr>
+      <td colspan="2">
+				<legend>系统信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">系统名称：</td>
+							<td class="pn-fcontent">
+								$!{systems.name}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">系统编码：</td>
+							<td class="pn-fcontent">
+								$!{systems.ename}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">上下文：</td>
+							<td class="pn-fcontent">
+								$!{systems.contextPath}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">表名前缀：</td>
+							<td class="pn-fcontent">
+								$!{systems.tablePrefix}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">系统标志：</td>
+							<td class="pn-fcontent">
+								$!{systems.logo}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">排序：</td>
+							<td class="pn-fcontent">
+								$!{systems.order}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">状态：</td>
+							<td class="pn-fcontent">
+								#if($!{systems.status} == 1) 
+									启用
+								#elseif($!{systems.status} == 2)
+									隐藏
+								#elseif($!{systems.status} == 3)
+									冻结
+								#elseif($!{systems.status} == 0)
+									弃用	
+								#end
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">版本：</td>
+							<td class="pn-fcontent">
+								$!{systems.version}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">备注：</td>
+							<td class="pn-fcontent" colspan="3">
+								$!{systems.memo}
+                            </td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</body>
+</html>

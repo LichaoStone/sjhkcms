@@ -1,0 +1,120 @@
+@charset "utf-8";
+* {
+	OUTLINE-STYLE: none; OUTLINE-COLOR: invert; OUTLINE-WIDTH: 0px
+}
+BODY {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; BACKGROUND: url(../../images/shrio/login_bg.jpg) #02618d no-repeat center 190px; PADDING-TOP: 0px
+}
+H3 {
+	POSITION: absolute; 
+	FILTER: dropshadow(color=#005381,offx=2,offy=2,positive=true); 
+	FONT-FAMILY: "微软雅黑", "Microsoft YaHei"; 
+	LETTER-SPACING: 5px; COLOR: #fff; 
+	FONT-SIZE: 36px; TOP: -140px; FONT-WEIGHT: normal; LEFT: 24px; text-shadow: 2px 2px 2px #005381
+}
+#top{
+	height: 90px;
+}
+/**登录提示 */
+.login-tip {
+	border: 1px solid #CAAE6D;
+	width: 80px;
+	height: 28px;
+	z-index: 1;
+	position: absolute;
+	top: 85px;
+	left: 214px;
+	background-color: #fef39e;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+.login-tip .arrow {
+	background: url("../images/shrio/i3.png?t=2") no-repeat;
+	background-position: -3px -120px;
+	width: 6px;
+	height: 6px;
+	position: relative;
+	left: -6px;
+	top: 20px;
+}
+.login-tip-text {
+	color: #696969;
+	font-size: 12px;
+	padding: 4px;
+	padding-top: 0px;
+}
+
+.logo {
+	POSITION: absolute; WIDTH: 386px; 
+	BACKGROUND: url(../../images/shrio/logo_big.png) no-repeat center 60%; HEIGHT: 130px; TOP: 8px; LEFT: -50px
+}
+.form-box {
+	POSITION: relative; PADDING-BOTTOM: 10px; MARGIN: 248px auto 0px; PADDING-LEFT: 458px; WIDTH: 262px; PADDING-RIGHT: 27px; HEIGHT: 136px; PADDING-TOP: 24px
+}
+FORM {
+	POSITION: relative; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; WIDTH: 262px; PADDING-RIGHT: 0px; HEIGHT: 100px; PADDING-TOP: 0px
+}
+.txt-user {
+	PADDING-LEFT: 6px;PADDING-top: 6px; HEIGHT: 30px
+}
+.txt-pass {
+	PADDING-LEFT: 6px;PADDING-top: 9px; HEIGHT: 30px
+}
+.txt-captcha {
+	PADDING-LEFT: 6px;PADDING-top: 3px; HEIGHT: 30px
+}
+.txt-user {
+	MARGIN-TOP: 0px
+}
+.txt-user {
+	WIDTH: 172px
+}
+.txt-pass {
+	WIDTH: 172px
+}
+.txt-captcha {
+	MARGIN-TOP: 7px; WIDTH: 90px
+}
+.txt-user INPUT {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; LINE-HEIGHT: 16px; MARGIN-TOP: 5px; FONT-FAMILY: arial, helvetica, sans-serif; BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #02618d; FONT-SIZE: 16px; BORDER-TOP: 0px; FONT-WEIGHT: bold; BORDER-RIGHT: 0px
+}
+.txt-pass INPUT {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; LINE-HEIGHT: 16px; MARGIN-TOP: 5px; FONT-FAMILY: arial, helvetica, sans-serif; BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #02618d; FONT-SIZE: 16px; BORDER-TOP: 0px; FONT-WEIGHT: bold; BORDER-RIGHT: 0px
+}
+.txt-captcha INPUT {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; LINE-HEIGHT: 16px; MARGIN-TOP: 4px; FONT-FAMILY: arial, helvetica, sans-serif; BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #02618d; FONT-SIZE: 16px; BORDER-TOP: 0px; FONT-WEIGHT: bold; BORDER-RIGHT: 0px
+}
+.txt-user INPUT {
+	WIDTH: 162px
+}
+.txt-pass INPUT {
+	WIDTH: 162px
+}
+.txt-captcha INPUT {
+	WIDTH: 84px
+}
+.btn {
+	BORDER-BOTTOM: 0px; POSITION: absolute; 
+	BORDER-LEFT: 0px; WIDTH: 71px; 
+	BACKGROUND: url(../../images/shrio/login_btn.jpg) no-repeat; 
+	HEIGHT: 73px; BORDER-TOP: 0px; TOP: 23px; BORDER-RIGHT: 0px; LEFT: 190px
+}
+.text-focus {
+	BACKGROUND: url(../../images/shrio/login_text_focus.gif) no-repeat right top
+}
+.img-captcha {
+	POSITION: absolute; WIDTH: 100px; DISPLAY: block; HEIGHT: 30px; OVERFLOW: hidden; TOP: 85px; LEFT: 105px
+}
+.img-captcha IMG {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; BORDER-TOP: 0px; BORDER-RIGHT: 0px
+}
+.copyright {
+	POSITION: absolute; PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: "微软雅黑", "Microsoft YaHei"; COLOR: #0170a2; FONT-SIZE: 13px; PADDING-TOP: 22px; LEFT: 380px
+}
+.copyright A {
+	COLOR: #0170a2; MARGIN-LEFT: 10px; TEXT-DECORATION: underline
+}
+.copyright A:hover {
+	COLOR: #c30e23
+}

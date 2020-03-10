@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>资产节目信息</title>
+#tagLibs()
+#calendar()
+<script type="text/javascript" src="${ctx}/xheditor/xheditor-1.1.14-zh-cn.min.js"></script>
+<script type="text/javascript">
+$(pageInit);
+function pageInit(){
+	var pid= "99999";
+    $('#remark').xheditor({tools:'full',skin:'vista',upImgExt:'jpg,jpeg,gif,png',html5Upload: false});
+}
+</script>
+</head>
+<body>
+<div class="topline">
+	<a href="javascript:void(0);" class="wxbtn">资产详情</a>
+</div>
+#dTypeList()
+<form id="form1" name="form1" action="" method="post">
+  <table width="100%"  border="0" align="center" cellpadding="2" cellspacing="2" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+					<table width="99%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">工单号：</td>
+							<td class="pn-fcontent">
+								${asset.correlateID}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">保存文件名：</td>
+							<td class="pn-fcontent">
+								${asset.localFileName}
+                            </td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">交接时间：</td>
+							<td class="pn-fcontent">
+							    ${asset.jointTime}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">生成文件情况：</td>
+							<td class="pn-fcontent">
+								#if (${asset.isCreateFile} == '0') 成功 #elseif(${asset.isCreateFile} == '1') 失败 #else 尚未处理 #end
+                            </td>
+                        </tr>
+                        <tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">处理文件情况：</td>
+							<td class="pn-fcontent">
+								#if (${asset.isDealFile} == '0') 成功 #elseif($!{asset.isDealFile} == '1') 失败 #else 尚未处理 #end
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">文件下载地址：</td>
+							<td class="pn-fcontent">
+							    ${asset.cmdFileURL}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">生成文件异常：</td>
+							<td class="pn-fcontent" colspan="3">
+							    <textarea rows="5" style="width:100%">#if($null.isNull(${asset.cerror})) 无  #else ${asset.cerror} #end</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">处理文件异常：</td>
+							<td class="pn-fcontent" colspan="3">
+							    <textarea rows="5" style="width:100%">#if($null.isNull(${asset.derror})) 无  #else ${asset.derror} #end</textarea>
+							</td>
+						</tr>
+					    <tr>
+					        <td width="10%" class="pn-flabel pn-flabel-h">信息反馈状态：</td>
+							<td class="pn-fcontent">
+								#if (${asset.sendStatus} == '0') 成功 #elseif(${asset.sendStatus} == '-1') 失败 #else 尚未发送 #end
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">反馈时间：</td>
+							<td class="pn-fcontent">
+							    ${asset.sendTime}
+							</td>
+						</tr>
+					</table>	
+		</td>
+    </tr>
+   <tr>
+    <td width="47%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+	<script type="text/javascript" src="${ctx}/js/jquery/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/uploadPreview.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/common/py.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/select/dProgramInfo.js"></script>
+</body>
+</html>

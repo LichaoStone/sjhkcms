@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>合作伙伴信息</title>
+#tagLibs()
+</head>
+<body onload="showCity('province','partnerCity','$proId','$cityId');">
+<table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+        <table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0" >
+            <tr>
+            	<td width="11%" class="pn-flabel pn-flabel-h">合作类型：</td>
+            	<td class="pn-fcontent">
+            		<select id="partnerType" style="margin-left:2px; width:130px; height:25px;">
+            			<option  value="">=请选择=</option>
+            			#foreach($mt in $mechantTypes)
+            				<option value="${mt.dicValue}" #if (${mt.dicValue} == $!{partner.partnerType}) selected #end>${mt.dicName}</option>
+            			#end
+                    </select>
+					<input type="hidden" id="editable" value="$!{editable}"/>
+            		<em class="required">*</em>
+            	</td>
+            </tr>
+        </table>
+      </td>
+    </tr>
+</table>
+<form id="form1" name="form1" action="" method="post" enctype="multipart/form-data">
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+      	<fieldset>
+				<legend>合作伙伴信息</legend>
+					<table width="100%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">个人名称：</td>
+							<td class="pn-fcontent" colspan="5">
+								<input type="hidden" id="id" name="id" value="$!{partner.id}"/>
+								<input type="hidden" id="personType" name="partnerType" value="$!{partner.partnerType}"/>
+								<input type="text" id="partnerName"  name="partnerName" value="$!{partner.partnerName}"/>
+								<em class="required">*</em>
+							</td>
+                        </tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系人：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="linkman"  name="linkman" value="$!{partner.linkman}"/>
+								<em class="required">*</em>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系电话：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="partnerPhone"  name="partnerPhone" value="$!{partner.partnerPhone}"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">所在城市：</td>
+							<td class="pn-fcontent">
+								<select name="province" id="province" onchange="changeCity(this,'partnerCity');" style="margin:2px 2px;width:90px;">
+                					<option value="">=请选择=</option>
+                					#foreach($p in $!provins)
+                                        <option value="$!p.id">$!p.name</option>
+                					#end
+                                </select>
+                				<select name="partnerCity" id="partnerCity" style="margin:2px 2px;width:90px;">
+                					#foreach($c in $!citys)
+                                        <option value="$!c.areacode">$!c.name</option>
+                					#end
+                                </select>
+							</td>
+						</tr> 
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系方式：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="otherContact"  name="otherContact" value="$!{partner.otherContact}"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">SPid：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="SPid" name="SPid" value="$!{partner.SPid}"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">地址：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="partnerAddress" style="width:220px;"  name="partnerAddress" value="$!{partner.partnerAddress}"/>
+							</td>
+						</tr>
+		</table>
+		</fieldset>
+		   <fieldset>
+    				<legend>其他信息</legend>
+					<table width="100%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+						    <td width="10%" class="pn-flabel pn-flabel-h">描述:</td>
+						    <td colspan="5" class="pn-fcontent">
+						    	<textarea rows="10" cols="100" id="partnerDesc" name="partnerDesc">
+									$!{partner.partnerDesc}
+								</textarea>
+						    </td>
+						  </tr>
+                         <tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">身份证: </td>	
+							<td class="pn-fcontent" colspan="5">
+								<input type="hidden" id="identitycardImg" name="identitycardImg" value="$!{partner.identitycardImg}">
+								<input type="file" id="identitycardImgFile" name="identitycardImgFile"/>
+								<div id="preview2">
+									#if(!${partner.identitycardImg}||$!{partner.identitycardImg}=="")
+										<img id="imghead2" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="暂无商家身份证" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead2" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="商家身份证" src="${sourceUrl}$!{partner.identitycardImg}">
+									#end
+							   </div>
+							</td>
+						 </tr>
+					</table>
+				</fieldset>
+			</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%" style="padding:10px 150px;">
+		<button type="button" id="savePartner" class="bt-primary">保存</button>
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+
+<form id="form2" name="form2" action="" method="post" enctype="multipart/form-data">
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" id="needset" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+      	<fieldset>
+				<legend>合作伙伴信息</legend>
+					<table width="100%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">公司全称：</td>
+    						<td class="pn-fcontent" colspan="5">
+								<input type="hidden" id="id" name="id" value="$!{partner.id}"/>
+    							<input type="hidden" id="companyType" name="partnerType" value="$!{partner.partnerType}"/>
+								<input type="text" id="partnerName" name="partnerName" value="$!{partner.partnerName}"/>
+								<em class="required">*</em>
+    						</td>
+                        </tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系人：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="linkman"  name="linkman" value="$!{partner.linkman}"/>
+								<em class="required">*</em>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系电话：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="partnerPhone"  name="partnerPhone" value="$!{partner.partnerPhone}"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">所在城市：</td>
+							<td class="pn-fcontent">
+								<select name="province" id="province" onchange="changeCity(this,'companyCity');" style="margin:2px 2px;width:140px;">
+                					<option value="">=请选择=</option>
+                					#foreach($p in $!provins)
+                                        <option value="$!p.id">$!p.name</option>
+                					#end
+                                </select>
+                				<select name="partnerCity" id="companyCity" style="margin:2px 2px;width:90px;">
+                					#foreach($c in $!citys)
+                                        <option value="$!c.areacode">$!c.name</option>
+                					#end
+                                </select>
+							</td>
+						</tr> 
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系方式：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="otherContact"  name="otherContact" value="$!{partner.otherContact}"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">SPid：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="SPid" name="SPid" value="$!{partner.SPid}"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">地址：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="partnerAddress" style="width:220px;"  name="partnerAddress" value="$!{partner.partnerAddress}"/>
+							</td>
+						</tr>
+		</table>
+		</fieldset>
+    	<fieldset  id="company_info">
+            	<legend>公司信息</legend>
+            		<table width="100%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+        						<tr>
+        							<td width="10%" class="pn-flabel pn-flabel-h">公司简称：</td>
+        							<td class="pn-fcontent">
+        								<input type="text" id="simpleName"  name="simpleName" value="$!{partner.simpleName}"/>
+										<em class="required">*</em>
+        							</td>
+        							<td width="10%" class="pn-flabel pn-flabel-h">法人代表：</td>
+        							<td class="pn-fcontent">
+        								<input type="text" id="legal"  name="legal" value="$!{partner.legal}"/>
+        							</td>
+        							<td width="10%" class="pn-flabel pn-flabel-h">注册资金：</td>
+        							<td class="pn-fcontent">
+        								<input type="text" id="funds" name="funds" style="width:220px;" value="$!{partner.funds}"/>
+        							</td>
+        						</tr>
+        						
+        						<tr>
+        							<td width="10%" class="pn-flabel pn-flabel-h">业务负责人：</td>
+        							<td class="pn-fcontent">
+        								<input type="text" id="competent"  name="competent" value="$!{partner.competent}"/>
+        							</td>
+        							<td width="10%" class="pn-flabel pn-flabel-h">业务电话：</td>
+        							<td class="pn-fcontent">
+        								<input type="text" id="competentPhone"  name="competentPhone" value="$!{partner.competentPhone}"/>
+        							</td>
+        							<td width="10%" class="pn-flabel pn-flabel-h">业务邮箱：</td>
+        							<td class="pn-fcontent">
+        								<input type="text" id="competentEmail" name="competentEmail" style="width:220px;" value="$!{partner.competentEmail}"/>
+        							</td>
+        						</tr>
+        						
+        						<tr>
+        							<td width="10%" class="pn-flabel pn-flabel-h">客服联系人：</td>
+        							<td class="pn-fcontent">
+        								<input type="text" id="contact"  name="contact" value="$!{partner.contact}"/>
+        							</td>
+        							<td width="10%" class="pn-flabel pn-flabel-h">客服电话：</td>
+        							<td class="pn-fcontent">
+        								<input type="text" id="contactPhone"  name="contactPhone" value="$!{partner.contactPhone}"/>
+        							</td>
+        							<td width="10%" class="pn-flabel pn-flabel-h">客服邮箱：</td>
+        							<td class="pn-fcontent">
+        								<input type="text" id="contactEmail" name="contactEmail" style="width:220px;" value="$!{partner.contactEmail}"/>
+        							</td>
+        						</tr>
+					</table>
+           </fieldset>
+		   <fieldset>
+    				<legend>其他信息</legend>
+					<table width="100%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+						    <td width="10%" class="pn-flabel pn-flabel-h">描述: </td>
+						    <td colspan="5" class="pn-fcontent">
+						    	<textarea rows="10" cols="100" id="partnerDesc" name="partnerDesc">$!{partner.partnerDesc}</textarea>
+						    </td>
+						  </tr>
+                         <tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">商家图片: </td>	
+							<td class="pn-fcontent">
+								<input type="hidden" id="merchantImg" name="merchantImg" value="$!{partner.merchantImg}" />
+								<input type="file" id="merchantImgFile" name="merchantImgFile"/>
+								<div id="preview">
+									#if(!${partner.merchantImg}||$!{partner.merchantImg}=="")
+										<img id="imghead" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="暂无商家LOGO" src="${ctx}/images/nopic.gif" />
+									#else
+										<img id="imghead" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="商家LOGO" src="${sourceUrl}$!{partner.merchantImg}"/>
+									#end
+							   </div>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">身份证: </td>	
+							<td class="pn-fcontent" colspan="3">
+								<input type="hidden" id="identitycardImg" name="identitycardImg" value="$!{partner.identitycardImg}" />
+								<input type="file" id="idcardFile" name="identitycardImgFile"/>
+								<div id="preview5">
+									#if(!${partner.identitycardImg}||$!{partner.identitycardImg}=="")
+										<img id="imghead5" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="暂无商家LOGO" src="${ctx}/images/nopic.gif" />
+									#else
+										<img id="imghead5" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="商家LOGO" src="${sourceUrl}$!{partner.identitycardImg}" />
+									#end
+							   </div>
+							</td>
+						 </tr>
+                         <tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">营业执照：</td>	
+							<td class="pn-fcontent">
+								<input type="hidden" id="businesslicense" name="businesslicense" value="$!{partner.businesslicense}">
+								<input type="file" id="businesslicenseFile" name="businesslicenseFile"/>
+							   <div id="preview3">
+									#if(!${partner.businesslicense}||$!{partner.businesslicense}=="")
+										<img id="imghead3" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="暂无商家营业执照" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead3" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="商家营业执照" src="${sourceUrl}$!{partner.businesslicense}">
+									#end
+							   </div>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">其它证件：</td>	
+							<td class="pn-fcontent" colspan="3">
+								<input type="hidden" id="otherImg" name="otherImg" value="$!{partner.otherImg}">
+								<input type="file" id="otherImgFile" name="otherImgFile"/>
+								<div id="preview4">
+									#if(!${partner.otherImg}||$!{partner.otherImg}=="")
+										<img id="imghead4" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="暂无商家其它证件" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead4" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="商家其它证件" src="${sourceUrl}$!{partner.otherImg}">
+									#end
+							   </div>
+							</td>
+						 </tr>
+					</table>
+				</fieldset>
+			</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%" style="padding:10px 150px;">
+		<button type="button" id="savePartner2" class="bt-primary">保存</button>
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/uploadPreview.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/partner/partnerInfo.js"></script>
+</body>
+</html>

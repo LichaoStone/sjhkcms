@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.select.mapper.DramaNavigationMapper">
+	<resultMap id="DramaNavigationMap" type="DramaNavigation" > 
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="operators" column="operators"></result>
+		<result property="parentId" column="parentId"></result>
+		<result property="code" column="code"></result>
+		<result property="sequence" column="sequence"></result>
+		<result property="recommend" column="recommend"></result>
+		<result property="imgurl" column="imgurl"></result>
+		<result property="status" column="status"></result>
+		<result property="isdl_display" column="isdl_display"></result>
+	</resultMap>  
+
+	<insert id="addDramaNavigation" parameterType="DramaNavigation">
+		<selectKey keyProperty="id" resultType="String"  order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+		<![CDATA[ insert into ott_drama_navigation(name, parentId, operators, code,sequence,imgurl,status,isdl_display) 
+		values(#{name,jdbcType=VARCHAR},
+			#{parentId,jdbcType=VARCHAR},
+			#{operators,jdbcType=VARCHAR},
+			#{code,jdbcType=VARCHAR},
+			#{sequence,jdbcType=VARCHAR},
+			#{imgurl,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR},
+			#{isdl_display,jdbcType=VARCHAR}
+			)
+		]]>
+	</insert> 
+	
+	<select id="findDramaNavigationByPage" resultMap="DramaNavigationMap">
+		select c.id, c.name, c.parentId, c.code, c.sequence,c.status, c.operators,c.recommend,c.imgurl,c.isdl_display
+		from ott_drama_navigation c
+		<where>
+		    1 = 1
+			<if test="status !='' and status !=null">
+				and c.status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="operators !='' and operators !=null">
+				and c.operators = #{operators,jdbcType=VARCHAR}
+			</if>
+			<if test="name !='' and name !=null">
+				and c.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+			<if test="parentId !='' and parentId !=null">
+				and c.parentId = #{parentId,jdbcType=VARCHAR}
+			</if>
+			<if test="recommend !='' and recommend !=null">
+				and c.recommend = #{recommend,jdbcType=VARCHAR}
+			</if> 
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			order by c.sequence desc
+		</if>
+	</select>
+	<select id="getCountDramaNavigation" resultType="int">
+		select count(c.id)
+		from ott_drama_navigation c
+		<where>
+		    1 = 1
+			<if test="status !='' and status !=null">
+				and c.status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="operators !='' and operators !=null">
+				and c.operators = #{operators,jdbcType=VARCHAR}
+			</if>
+			<if test="name !='' and name !=null">
+				and c.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+			<if test="parentId !='' and parentId !=null">
+				and c.parentId = #{parentId,jdbcType=VARCHAR}
+			</if>
+			<if test="recommend !='' and recommend !=null">
+				and c.recommend = #{recommend,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findDramaNavigationByCond" resultMap="DramaNavigationMap">
+		select c.id,c.name, c.parentId, c.code, c.sequence, c.status, c.operators,c.recommend,c.imgurl,c.isdl_display
+		from ott_drama_navigation c
+		<where>
+		    1 = 1
+			<if test="status !='' and status !=null">
+				and c.status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="operators !='' and operators !=null">
+				and c.operators = #{operators,jdbcType=VARCHAR}
+			</if>
+			<if test="parentId !='' and parentId !=null">
+				and c.parentId = #{parentId,jdbcType=VARCHAR}
+			</if>
+			<if test="name !='' and name !=null">
+				and c.name= #{name,jdbcType=VARCHAR}
+			</if>
+			<if test="code !='' and code !=null">
+				and c.code= #{code,jdbcType=VARCHAR}
+			</if>
+			<if test="recommend !='' and recommend !=null">
+				and c.recommend = #{recommend,jdbcType=VARCHAR}
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			order by c.parentId asc,c.sequence asc
+		</if>
+	</select>
+	
+	<select id="getDramaNavigationById" resultType="DramaNavigation">
+		select * from ott_drama_navigation where id=#{id, jdbcType=INTEGER}
+	</select>
+	
+	<select id="findDramaNavigationByTypeAndName" resultType="DramaNavigation">
+		select * from ott_drama_navigation where operators=#{operators, jdbcType=VARCHAR} and name=#{name, jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateDramaNavigationStatus" >
+		update ott_drama_navigation set status =#{status,jdbcType=VARCHAR}
+		where id=#{id, jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateDramaNavigation">
+		update ott_drama_navigation 
+		    <set>
+		        <if test="name != null and name != ''">name=#{name,jdbcType=VARCHAR},</if>
+		        <if test="parentId != null and parentId != ''">parentId=#{parentId,jdbcType=VARCHAR},</if>
+		        <if test="code != null and code != ''">code=#{code,jdbcType=VARCHAR},</if>
+		        <if test="sequence != null and sequence != ''">sequence=#{sequence,jdbcType=VARCHAR},</if>
+			    <if test="imgurl != null and imgurl !=''">imgurl=#{imgurl,jdbcType=VARCHAR},</if>
+			    <if test="isdl_display != null and isdl_display !=''">isdl_display=#{isdl_display,jdbcType=VARCHAR},</if>
+		        updateTime=sysdate()
+		    </set>
+		where id=#{id, jdbcType=INTEGER}
+	</update>
+	
+	<delete id="delNavigationById">
+		delete ott_drama_navigation where id=#{id,jdbcType=INTEGER}
+	</delete>
+	
+	<select id="getMaxSequence" resultType="int">
+		SELECT IFNULL(MAX(sequence),0)+1 as sequence FROM ott_drama_navigation WHERE parentId=#{parentId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="findDramaNavigationBySequenceUp" resultType="DramaNavigation">
+		SELECT sequence,id from ott_drama_navigation where parentId =#{parentId,jdbcType=VARCHAR} 
+		and sequence > #{sequence,jdbcType=VARCHAR}  ORDER BY sequence ASC limit 1
+	</select>
+	
+	<select id="findDramaNavigationBySequenceDown" resultType="DramaNavigation">
+	<![CDATA[ 
+		SELECT sequence,id from ott_drama_navigation where parentId =#{parentId,jdbcType=VARCHAR} 
+		and sequence < #{sequence,jdbcType=VARCHAR}  order by sequence desc limit 1
+		]]>
+	</select>
+	
+	<update id="updateDramaNavigationBySequence">
+		update ott_drama_navigation set sequence=#{sequence,jdbcType=VARCHAR} where id=#{id,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="findDramaNavigationBySortUp" resultType="DramaNavigation">
+		SELECT sequence,id from ott_drama_navigation where parentId =#{parentId,jdbcType=VARCHAR} 
+		and sequence > CAST(#{sequence,jdbcType=VARCHAR} AS UNSIGNED) ORDER BY sequence ASC limit 1
+	</select>
+	
+	<select id="findDramaNavigationBySortDown" resultType="DramaNavigation">
+	<![CDATA[ 
+		SELECT sequence,id from ott_drama_navigation where parentId =#{parentId,jdbcType=VARCHAR} 
+		and sequence < CAST(#{sequence,jdbcType=VARCHAR} AS UNSIGNED) order by sequence desc limit 1
+		]]>
+	</select>
+	
+	<!--大变小，数值+1， 5变为1 -->
+	<update id="updateDNAddSequence">
+		update ott_drama_navigation set sequence=sequence+1
+		where parentId= #{parentId} 
+			and sequence >= #{sequence}
+			<![CDATA[ 
+				and sequence < #{oldSequence}
+			]]>	
+	</update> 
+	
+	<!--小变大，数值-1， 2 变为6 -->
+	<update id="updateDNSubSequence">
+		update ott_drama_navigation  set sequence=sequence-1
+		where parentId= #{parentId} 
+			and sequence > #{oldSequence}
+			<![CDATA[ 
+				and sequence <= #{sequence}
+			]]>	
+	</update> 
+	
+	<update id="updateDNSequence">
+		update ott_drama_navigation set sequence = #{sequence} where id = #{id}
+	</update>
+	
+	<update id="updateDramaNavigationBySort">
+		update ott_drama_navigation set sequence=#{sequence,jdbcType=VARCHAR} where id=#{id,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateDramaNavigationRecommend" >
+		update ott_drama_navigation set recommend =#{recommend,jdbcType=VARCHAR}
+		where id=#{id, jdbcType=INTEGER}
+	</update>
+	
+	<select id="findDramaNavigationMaxSort" resultType="DramaNavigation">
+		SELECT IFNULL(MAX(sequence),0)+1 AS sequence from ott_drama_navigation where parentId ="0" 
+		 limit 1
+	</select>
+	
+	<select id="findDramaNavigationById" parameterType="DramaNavigation" resultType="DramaNavigation">
+		SELECT * from ott_drama_navigation where id = #{id,jdbcType=VARCHAR} 
+	</select>
+	
+</mapper>

@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>编辑资源</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	#tagLibs()
+</head>
+<body>
+<div>
+	<a href="${ctx}/resour/findResourList.do" class="wxbtn">资源列表</a> | 
+    <a href="#" class="xzbtn" style="color:#FFFFFF">#if($!{netMac.id}==""|| !${netMac.id})增加资源#else 修改资源#end</a>
+</div>
+<form method="post"  name="fom" id="fom">
+ <table width="98%"  border="0" align="center" style="margin-top:13px;">
+    <tr>
+      <td colspan="2">
+				<legend>资源信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">资源名称：</td>
+							<td class="pn-fcontent">
+								<input type="hidden" name="id" value="$!{resour.id}"/>
+								<input type="hidden" id="oldName" value="$!{resour.name}"/>
+								<input name="name" id="name" type="text" class="text-writer" value="$!{resour.name}"/> 
+								<em class="required">*</em>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">资源编码：</td>
+							<td class="pn-fcontent">
+								<input type="hidden" id="oldEnName" value="$!{resour.enname}"/>
+								<input name="enname" id="enname" type="text" class="text-writer" value="$!{resour.enname}"/>
+								<em class="required">*</em>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">所属系统：</td>
+							<td class="pn-fcontent">
+								<select name="systemid" style="width:120px" id="systemid" onchange="changeSystem(this, 'parentId');">
+									<option value="">==请选择==</option>
+									#foreach($syst in $!systems)
+                                        <option value="$!syst.id" #if ($!{resour.systemid}==$!{syst.id}) selected #end >$!syst.name</option>
+                					#end
+								</select>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">上级资源：</td>
+							<td class="pn-fcontent">
+								<select name="parentId" style="width:120px" id="parentId">
+									<option value="0">==请选择==</option>
+									#if(${resour.id})
+        								#foreach($res in $!resourList)
+                                            <option value="$!res.id" #if ($!{resour.parentId} == ${res.id}) selected #end >$!res.name</option>
+        								#end
+									#end
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">资源类型：</td>
+							<td class="pn-fcontent">
+								<input name="resourcetype" id="resourcetype" type="text" class="text-writer" value="$!{resour.resourcetype}"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">链接地址：</td>
+							<td class="pn-fcontent">
+								<input name="link" id="link" type="text" class="text-writer" value="$!{resour.link}"/>
+								<em class="required">*</em>
+							</td>
+						</tr>
+						
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">图标：</td>
+							<td class="pn-fcontent">
+								<input name="icon" id="icon" type="text" class="text-writer" value="$!{resour.icon}"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">打开图标：</td>
+							<td class="pn-fcontent">
+								<input type="radio" id="open2"  name="iconopen" value="1" #if($!{resour.iconopen} == 1 ||!${resour.iconopen}) checked="checked" #end /> 
+								<label for="open2">打开</label>
+								<input type="radio" id="close2"  name="iconopen" value="0" #if($!{resour.iconopen} == 0) checked="checked" #end /> 
+								<label for="close2">关闭</label>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">是否打开：</td>
+							<td class="pn-fcontent">
+                                <input type="radio" id="open"  name="isopen" value="1" #if($!{resour.isopen} == 1 ||!${resour.isopen} ) checked="checked" #end /> 
+								<label for="open">是</label>
+								<input type="radio" id="close"  name="isopen" value="0" #if($!{resour.isopen} == 0) checked="checked" #end /> 
+								<label for="close">否</label>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">是否节点：</td>
+							<td class="pn-fcontent">
+								<input type="radio" id="yesLeaf"  name="isleaf" value="1" #if($!{resour.isleaf} == 1 ||!${resour.isleaf} ) checked="checked" #end /> 
+								<label for="yesLeaf">是</label>
+								<input type="radio" id="noLeaf"  name="isleaf" value="0" #if($!{resour.isleaf} == 0) checked="checked" #end  /> 
+								<label for="noLeaf">否</label>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">状态：</td>
+							<td class="pn-fcontent">
+                                <select name="status" style="width:120px" id="status">
+										<option value="1" #if($!{resour.status} == 1) selected #end>启用</option>
+										<option value="2" #if($!{resour.status} == 2) selected #end>隐藏</option>
+										<option value="3" #if($!{resour.status} == 3) selected #end>冻结</option>
+										<option value="0" #if($!{resour.status} == 0) selected #end>弃用</option>
+								</select>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">排序：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="orderid"  name="orderid" value="$!{resour.orderid}"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">备注：</td>
+							<td class="pn-fcontent" colspan="3">
+								<textarea id="textarea" name="memo" rows="5" cols="100">$!{resour.memo}</textarea>
+                            </td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" id="saveResour" class="bt-primary">保存</button>
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/shiro/resourInfo.js"></script>
+</body>
+</html>

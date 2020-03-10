@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>字典详情信息</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+#tagLibs()
+</head>
+<body>
+	<div class="topline">
+	<a href="${ctx}/dict/findAll.do" class="wxbtn">字典列表</a> | 
+    <a href="#" class="xzbtn" style="color:#FFFFFF">新增字典</a>
+	</div>
+	 <form method="post"  name="dictForm" id="dictForm" action="">
+		<table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2">
+        <tr>
+         <td colspan="2">
+				<legend>字典信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">所属字典：</td>
+							<td class="pn-fcontent">
+								<div class="drop-down">
+									<input type="hidden" id="id"  name="id" value="$!{dict.id}"/>
+    								<input type="hidden" id="dicType"  name="dicType" value="$!{dict.dicType}"/>
+    								<input type="text" id="typeName" style="float:left;" value="$!{dict.dicTypeName}" class="text-writer" readonly/>
+    								<img src="${ctx}/images/main/threedot.gif" id="selectDict"/>
+        		                 </div>
+								 #dictList()
+								<em class="required">*</em>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">字典名称：</td>
+							<td class="pn-fcontent">
+								<input type="text" name="dicName" id="dicName" value="$!{dict.dicName}" class="text-writer"/> 
+								<input type="hidden" id="oldName" value="$!{dict.dicName}"/>
+								<em class="required">*</em>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">字典值：</td>
+							<td class="pn-fcontent">
+								<input  type="text" id="dicValue" name="dicValue" value="$!{dict.dicValue}" class="text-writer"/>
+								<input type="hidden" id="oldValue" value="$!{dict.dicValue}"/>
+								<em class="required">*</em>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">顺序：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="orderId" name="orderId" value="$!{dict.orderId}"  class="text-writer"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">备注：</td>
+							<td class="pn-fcontent" colspan="3">
+								<textarea id="textarea" name="memo" id="meno" rows="5" cols="95">$!{dict.memo}</textarea>
+							</td>
+						</tr>
+					</table>	
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" id="saveDict" class="bt-primary">保存</button>
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+		<script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+		<script type="text/javascript" src="${ctx}/js/ott/common/dictInfo.js"></script> 
+</body>
+</html>

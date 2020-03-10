@@ -1,0 +1,368 @@
+##------------------引入共公样式及JS--------------------------##
+
+#macro(tagLibs)
+    #set( $ctx = "$!{rc.contextPath}" )
+    <script type="text/javascript">
+		window.ctx = '${ctx}';
+	</script>
+	<link type="text/css" rel="stylesheet" href="${ctx}/css/base.css"/>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/public.css"/>
+    <script type="text/javascript" src="${ctx}/js/jquery/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/ott-all.min.js"></script>
+#end
+
+#macro(tagLibs2)
+    #set( $ctx = "$!{rc.contextPath}" )
+    <script type="text/javascript">
+		window.ctx = '${ctx}';
+	</script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/public.css"/>
+    <script type="text/javascript" src="${ctx}/js/jquery/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/ott-all.min.js"></script>
+#end
+##-----------------时间控件JS及样式-----------------------------##
+#macro(calendar)
+	<script type="text/javascript" src="${ctx}/js/My97DatePicker/WdatePicker.js"></script>
+#end
+##---------------------------分页----------------------------------------------------------------##
+#macro( rendPageInfo $pml )
+    #if (!$null.isNull($pml.pagedModelList) && $pml.pagedModelList.size()!=0 && $pml.pageCount)
+        <div class="pagination">
+			<span class="select-page">
+        		共$!{pml.totalCount}条记录&nbsp;
+                第$!{pml.pageId}/${pml.pageCount}页
+			</span>
+            #set($totalPage = ${pml.pageCount})
+			#if($!{pml.pageId} == 1)
+				<span class="first-page_2" >首页</span>
+				<span class="start-page" ><span>上一页</span></span>
+			#else
+				<a href="javascript:_toPage(1);" class="first-page"><span>首页</span></a>
+				<a href="javascript:prevSkip();" class="prev-page"><span>上一页</span></a>
+			#end
+			#if($totalPage > 1)
+               #set($startPage =1)
+				#if ($!{pml.pageId} > 5) 
+					#set($startPage = $!{pml.pageId})
+				#end
+                #set($endPage = $startPage + 4)
+				#if($endPage > $totalPage)
+            		#set($endPage = $totalPage)
+					#if($endPage>5)
+						#set($startPage = $endPage - 4)
+					#else
+						#set($startPage =1)
+					#end
+				#end
+				
+                #foreach($page in [$startPage .. $endPage])
+                    #if($page==${pml.pageId})
+						<span class="current-page">$page</span>
+                    #else
+            			<a href="javascript:_toPage($page);">$page</a>
+                    #end
+                #end
+			#end
+			
+			#if($totalPage != $!{pml.pageId})
+        		<a href="javascript:nextSkip();" class="next-page" target="_self"><span>下一页</span></a>
+				<a href="javascript:_toPage($totalPage);" class="last-page" ><span>末页</span></a>
+        	#else
+				<span class="end-page"><span>下一页</span></span>
+				<span class="last-page_2"><span>末页</span></span>
+			#end
+             <input type="hidden" id="pageNum" name="pageNum" value="$totalPage" />
+			 #if(${pml.isShowRowSelect()} == true)
+				<span>每页显示</span>
+    			<span class="pageRow">
+    				<select name="_pageRow">
+        				#foreach($pageRow in ${pml.pageRowSelect})
+        					<option value="$pageRow" #if(${pml.pageSize} == $pageRow) selected #end>${pageRow}行</option>
+        				#end
+    				</select>
+    			 </span>
+			 #end
+			 <span>转到</span>
+			 <span class="skip-page">
+    			 <input type="text" id="_p" name="_p" value="$!{pml.pageId}" onkeypress="onlyAcceptNumeric(event, this);" />
+                 <button onclick="skipPage();">确定</button>
+			 </span>
+		</div>	
+    #end
+#end
+##----------------------------------------------------------------------------------------------------##
+
+##-----------分页只显示记录数第几页，上一页，下一页--------##
+#macro( renderPage $pml )
+	<div class="pagination">
+			<span class="select-page">
+        		共$!{pml.totalCount}条记录&nbsp;
+                第$!{pml.pageId}/${pml.pageCount}页
+			</span>
+	 #if (!$null.isNull($pml.pagedModelList) && $pml.pagedModelList.size()!=0 && $pml.pageCount)
+			#set($totalPage = ${pml.pageCount})
+			#if($!{pml.pageId} == 1)
+				<span class="start-page" ><span>上一页</span></span>
+			#else
+				<a href="javascript:prevPage();" class="prev-page"><span>上一页</span></a>
+			#end
+			#if($totalPage != $!{pml.pageId})
+        		<a href="javascript:nextPage();" class="next-page"><span>下一页</span></a>
+        	#else
+				<span class="end-page"><span>下一页</span></span>
+			#end
+			<input type="hidden" id="pageNum" name="pageNum" value="$totalPage" />
+			<input type="hidden" id="_p" name="_p" value="$!{pml.pageId}"/>
+    #end
+	</div>	
+#end
+##--------------分页结束 ----------------------------------##
+
+##================ 统计 ============##
+#macro(highcharts)
+    <script type="text/javascript" src="${ctx}/js/highcharts/highcharts.js"></script>
+	<script type="text/javascript" src="${ctx}/js/highcharts/exporting.js"></script>
+#end
+
+#macro(pagination $pagination )
+    #if (!$null.isNull($pagination) && $pagination.totalResult!=0)
+        <div class="pagination">
+			<span class="select-page">
+        		共$!{pagination.totalResult}条记录&nbsp;
+                第$!{pagination.currentPage}/${pagination.totalPage}页
+			</span>
+            #set($totalPage = ${pagination.totalPage})
+			#if($!{pagination.currentPage}== 1)
+				<span class="start-page" ><span>上一页</span></span>
+			#else
+				<a href="javascript:_toPage(1);" class="first-page"><span>首页</span></a>
+				<a href="javascript:prevSkip();" class="prev-page"><span>上一页</span></a>
+			#end
+			
+			#if($totalPage > 1)
+                #set($startPage =1)
+				#if ($!{pagination.currentPage} > 5) 
+					#set($startPage = $!{pagination.currentPage} - 1)
+				#end
+                #set($endPage = $startPage + 4)
+				#if($endPage > $totalPage)
+            		#set($endPage = $totalPage)
+					#if($endPage>5)
+						#set($startPage = $endPage - 4)
+					#else
+						#set($startPage =1)
+					#end
+				#end
+				
+                #foreach($page in [$startPage .. $endPage])
+                    #if($page==${pagination.currentPage})
+						<span class="current-page">$page</span>
+                    #else
+            			<a href="javascript:_toPage($page);">$page</a>
+                    #end
+                #end
+			#end
+			
+			#if($totalPage != $!{pagination.currentPage})
+        		<a href="javascript:nextSkip();" class="next-page"><span>下一页</span></a>
+				<a href="javascript:_toPage($totalPage);" class="last-page" ><span>尾页</span></a>
+        	#else
+				<span class="end-page"><span>下一页</span></span>
+			#end
+             <input type="hidden" id="pageNum" name="pageNum" value="$totalPage" />
+			 #if(${pagination.isShowRowSelect()} == true)
+				<span>每页显示</span>
+    			<span class="pageRow">
+    				<select id="_pageRow" name="_pageRow">
+        				#foreach($pageRow in ${pagination.pageRowSelect})
+        					<option value="$pageRow" #if(${pagination.showCount} == $pageRow) selected #end>${pageRow}行</option>
+        				#end
+    				</select>
+    			 </span>
+			 #end
+    			 <span class="skip-page">转到
+        			 <input type="text" id="_p" name="_p" value="$!{pagination.currentPage}" onkeypress="onlyAcceptNumeric(event, this);" />
+                     <button onclick="skipPage();">确定</button>
+    			 </span>
+		</div>	
+    #end
+#end
+
+#macro(py)
+<div class="py-section" id="py-drop-drop">
+	<div class="header">
+		<div id="py-close" class="close" onclick="_closePyOption()">关闭</div>
+	</div>
+	<div id="py-options" class="options">
+	</div>
+</div>
+#end
+
+#macro(dictList)
+<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/tinytree/themes/tinytree.css" />
+<script type="text/javascript" src="${ctx}/js/jquery/tinytree/jquery.tinytree.js"></script>
+<script type="text/javascript" src="${ctx}/js/ott/common/dict.js"></script>
+<div class="pt-section" id="dictList" style="margin:15px auto;">
+    	<div class="header">
+    		<div id="pt-close" class="close" onclick="_closeDictOption()">关闭</div>
+    	</div>
+    	<div id="pt-options" class="options">
+			<div class="m-content">
+       		<div id="m-content-top" class="m-content-top">
+    			<ul id="m-boxtitle" class="m-boxtitle">
+    	          	<li>字典选择</li>
+    	        </ul>
+    	    </div>
+    		<div class="m-content-center">
+    			<div id="dict_tree_left"></div>
+    		</div>
+			</div>
+		</div>
+</div>
+#end
+
+#macro(partnerList)
+<link type="text/css" rel="stylesheet" href="${ctx}/css/common/pagination.css"/>
+<script type="text/javascript" src="${ctx}/js/jquery/jquery.pagination.js"></script>
+<div class="c-section" id="partnerList" style="margin:15px auto;">
+    	<div class="header">
+    		<div id="m-close" class="close" onclick="_closePartnerOption()">关闭</div>
+    	</div>
+    	<div id="c-options" class="options">
+            <form id="from2" name="form2" method="get" action="${ctx}/common/partner.do">
+            <table border='0' cellpadding='0' cellspacing='0' height="36">
+            <tr>
+             <td height="36" background="${ctx}/images/newlinebg3.gif" align="center">
+              <table width="98%" border="0" cellspacing="0" cellpadding="0">
+              <tr class="search">
+            		<td>名称：<input type='text' id="partnerName2" /></td>
+                    <td>电话号码：<input type='text' id="partnerPhone"/></td>
+            		<td>类型：
+            			<select id="partnerType" name="partnerType" style="width:140px;">
+            				<option  value="">==请选择==</option>
+            				#foreach($mt in $mechantTypes)
+            					<option value="${mt.dicValue}" #if (${mt.dicValue} == $!{partner.partnerType}) selected #end>${mt.dicName}</option>
+            				#end
+                        </select>
+                    </td>
+            		<td><img id="query_partner" src="${ctx}/images/button_search.gif"/></td>
+             </tr>
+            </table>
+            </td>
+            </tr>
+            </table>
+            <!--  内容列表   -->
+            <table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+            <tr align="left" bgcolor="#eff2f7" height="30">
+            	<td width="4%" >选择</td>
+                <td width="35%">名称</td>
+                <td width="15%">类型</td>
+                <td width="10%">联系人</td>
+                <td width="10%">电话号码</td>
+            	<td width="10%">状态</td>
+                <td width="16%">加入时间</td>
+            </tr>
+            <tbody id="partner_data">
+            </tbody>
+            <tr bgcolor="#ffffff">
+            	<td height="36" colspan="7">
+            		<button type="button" class="bt-primary" id="checkOk" >确定</button>
+            		<button type="button" onclick="_closePartnerOption()" class="bt-secondary">关闭</button>
+            	</td>
+            </tr>
+            </table>
+            <div id="pagination"></div>
+            </form>
+			<script type="text/javascript" src="${ctx}/js/ott/common/partner.js"></script>
+        </div>
+</div>
+#end
+
+#macro(dTypeList)
+<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/tinytree/themes/tinytree.css" />
+<script type="text/javascript" src="${ctx}/js/jquery/tinytree/jquery.tinytree.js"></script>
+<div class="dt-section" id="dTypeList" style="margin:15px auto;">
+    	<div class="header">
+    		<div id="dt-close" class="close" onclick="_closeDtypeOption()">关闭</div>
+    	</div>
+    	<div id="dt-options" class="options">
+			<div class="m-content">
+       		<div id="m-content-top" class="m-content-top">
+    			<ul id="m-boxtitle" class="m-boxtitle">
+    	          	<li>栏目选择</li>
+    	        </ul>
+    	    </div>
+    		<div class="m-content-center">
+    			<div id="drama_tree"></div>
+    		</div>
+			</div>
+		</div>
+		<div style="margin-left:100px;margin-bottom:15px;">
+			<button type="button" id="saveType" class="bt-primary">确定</button>
+		</div>
+</div>
+#end
+
+##----------------软件测试MAC---------------------------------##
+#macro(positionTestList)
+<div class="c-section" id="positionTestList" style="margin:25px 18px;">
+    	<div class="header" style="margin-left:10px;">
+    		<div id="c-close" class="close" onclick="_closeSoftOption()">关闭</div>
+    	</div>
+    	<div id="c-options" class="options" style="margin-left: 18px;">
+            <form id="from2" name="form2" method="get" action="">
+            <table border='0' cellpadding='0' cellspacing='0' height="36">
+			<tr class="search" >
+				<td>资产名称：<input type='text' id="name" name='name' style="width:120px;"/>
+	            	栏目：
+					<select id="parentId" name="parentId" style="width:100px;" onchange="changeNavigation(this, 'ttype');">
+						<option value="">=请选择=</option>
+						#foreach($c in $!dnList)
+							<option value="$!{c.id}">$!{c.name}</option>	
+						#end
+	                  </select>
+					<select id="ttype" name="ttype" style="width:100px;">
+						<option value="">=请选择=</option>
+		            </select>
+	            	资产类型：
+					<select id="ptype" name="ptype" style="width:100px;">
+						<option value="">=请选择=</option>
+						#foreach($ptype in $ptypes)
+						<option value="${ptype.dicValue}">${ptype.dicName}</option>
+						#end
+		            </select>
+				</td>
+            	<td align="left"><img id="querySoft" src="${ctx}/images/button_search.gif"/></td>
+             </tr>
+            </table>
+            <!--  内容列表   -->
+            <table id="list-table" width="98%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+            <thead>
+			<tr bgcolor="#CFCFCF">
+				<td height="28" colspan="5" style="padding-left:2px;">
+            	◆ 资产列表
+            	</td>
+            </tr>
+           <tr align="left" bgcolor="#eff2f7" height="30">
+            	<td width="4%" >选择</td>
+            	<td width="20%" >资产名称</td>
+				<td width="35%" >栏目</td>
+				<td width="10%" >内容提供商</td>
+				<td width="16%" >资产类型</td>
+            </tr>
+            </thead>
+            <tbody id="soft_data">
+            </tbody>
+            <tr bgcolor="#ffffff">
+            	<td height="36" colspan="5" style="padding-top:5px;">
+            		<button type="button" class="bt-primary" id="checkOk" >确定</button>
+            		<button type="button" onclick="_closeSoftOption();" class="bt-secondary">关闭</button>
+            	</td>
+            </tr>
+            </table>
+            <div id="pagination"></div>
+            </form>
+            <script type="text/javascript" src="${ctx}/js/ott/select/positionTest.js"></script>
+         </div>
+</div>
+#end

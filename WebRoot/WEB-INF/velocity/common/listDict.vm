@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>字典列表</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+#tagLibs()
+</head>
+<body>
+<div class="topline">
+	<a href="#" class="xzbtn" style="color:#FFFFFF">字典列表</a> | 
+    <a href="${ctx}/dict/toDict.do" class="wxbtn">新增字典</a>
+</div>
+	<!--  快速转换位置按钮  -->
+	
+	<form name="queryForm" id="queryForm" method="POST" action="" enctype="multipart/form-data">
+	<!--  搜索表单  -->
+	<table border='0' cellpadding='0' cellspacing='0' style="margin-top:13px;">
+		<tr class="search">
+			<td>字典名称：<input type='text' name='dicName' value="$!{dict.dicName}"/>
+			<input type='hidden'id='orderColumn' name="orderColumn" value='$!{dict.orderColumn}'/>
+			</td>
+			<td>字典代码值：<input type='text' name='dicValue' value="$!{dict.dicValue}"/></td>
+			<td><input id="queryDict" type="image" src="../images/button_search.gif"/></td>
+		</tr>
+	</table>
+		<!--  内容列表   -->
+		<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+			<tr align="left" bgcolor="#eff2f7" height="30">
+				<td width="5%"><input type="checkbox" id="allSelect" style="padding-top:5px;"  onclick="isCheckAll('arcID',this);"><label for="allSelect">全选</label></td>
+				<td width="20%"><a href="javascript:void(0);" onclick="orderBy(this);" name="dicName" lastOrderBy="$!{dict.orderColumn}" class="tb_head">字典名称</a></td>
+				<td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="dicValue" lastOrderBy="$!{dict.orderColumn}" class="tb_head">字典代码值</a></td>
+				<td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="creator" lastOrderBy="$!{dict.orderColumn}" class="tb_head">创建人</a></td>
+				<td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="dicType" lastOrderBy="$!{dict.orderColumn}" class="tb_head">上一级</a></td>
+				<td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="orderId" lastOrderBy="$!{dict.orderColumn}" class="tb_head">排序</a></td>
+			    <td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="status" lastOrderBy="$!{dict.orderColumn}" class="tb_head">状态</a></td>
+				<td width="10%">操作</td>
+			</tr>
+
+		#if ($null.isNull($dictList.pagedModelList) || $dictList.pagedModelList.size()==0)
+			<tr align='left' height="30"  onMouseMove="javascript:this.bgColor='#FCFDEE';" onMouseOut="javascript:this.bgColor='';">
+			 <td colspan="8"><h1>暂无相关数据内容</h1></td>
+		    </tr>
+		#end
+		  #foreach ($dict in $dictList.pagedModelList)
+			<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+				<td><input type="checkbox" id="arcID" name="arcID" class="np" value="$!{dict.id}"/></td>
+				<td>
+					<span title="$!{dict.dicName}">
+					#if(!$null.isNull($dict.dicName) && $dict.dicName.length() > 25)
+						$!{dict.dicName.substring(0,25)} ...
+					#else
+						$!{dict.dicName}
+					#end
+					</span>
+				</td>
+				<td>$!{dict.dicValue}</td>
+				<td>$!{dict.creator}</td>
+				<td>$!{dict.dicTypeName}</td>
+				<td>$!{dict.orderId}</td>
+				<td>$!{dict.statusName}</td>
+				 <td>
+    				<a href="${ctx}/dict/toDict.do?id=$!{dict.id}">编辑</a>
+					<a href="${ctx}/dict/dictDetail.do?id=$!{dict.id}">查看</a>
+    				#if($!{dict.status}=='0')
+						<a href="javascript:updateDictStatus(this, '$!{dict.id}', '$!{dict.status}');">启用</a>
+            		#else
+						<a href="javascript:updateDictStatus(this, '$!{dict.id}', '$!{dict.status}');">停用</a>
+            		#end
+				</td>
+			</tr>
+         #end	
+	</table>
+	<div height="36" align="right">
+	  	#rendPageInfo(${dictList})
+	</div>
+	<div height="36" align="left">
+   		<a href="javascript:void(0);" class="wxbtn" id="toDelDict">批量删除</a>
+   	</div>
+</form>
+<em id="top-message" class="top-message" style="display:none;margin-top:20px;"></em>
+    	<div id="uploadImg" style="display:none;margin:30px 500px;">
+    		<img src="${ctx}/images/loadinglit.gif" style="width:40px; height:40px;"/>
+    	</div>
+<form  id="form2" action="#"  enctype="multipart/form-data" method="post">
+		<table width="98%" border="0" cellpadding="2" cellspacing="1" bgcolor="#CFCFCF" align="center" style="margin-top:8px">
+		<tr bgcolor="#ffffff">
+			<td colspan="10"> 
+                 &nbsp;批量导入： 
+				  <input type="file" id="fileApp"  name="fileApp" class="text-writer9" 
+					onChange="checkFile(this,this.value)"/>
+    			 <button type="button" id="inputExcel" class="bt-primary">导入</button>
+               </td>
+		</tr>
+	</table>
+</form>		
+</body>
+    <script type="text/javascript" src="${ctx}/js/jquery/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="${ctx}/js/ott/common/listDict.js"></script>
+</html>

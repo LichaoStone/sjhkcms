@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>用户信息 </title>
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="this is my page">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	#tagLibs()
+</head>
+<body>
+	<table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+				<legend>用户信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">用户名：</td>
+							<td class="pn-fcontent" colspan="3">
+								$!{userInfo.userName}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">真实姓名：</td>
+							<td class="pn-fcontent">
+								$!{userInfo.loginname}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">手机号：</td>
+							<td class="pn-fcontent">
+								$!{userInfo.phone}
+							</td>
+						</tr>
+						
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">地区：</td>
+							<td class="pn-fcontent">
+								$!{userInfo.areaName}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">状态：</td>
+							<td class="pn-fcontent">
+									#if($!{userInfo.status} == 0) 未激活 #end
+									#if($!{userInfo.status} == 1) 正常 #end
+									#if($!{userInfo.status} == 2) 禁用 #end
+							</td>
+						</tr>
+						
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">所属组：</td>
+							<td class="pn-fcontent">
+								<select name="groupId" style="width:135px" id="groupId" disabled>
+										#foreach($gu in $!mgroup)
+                                            <option value="$!gu.id" #if ($!{userInfo.groupId} == $!gu.id) selected #end>$!gu.name</option>
+                    					#end
+								</select>
+								<em class="required">*</em>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">合作商：</td>
+							<td class="pn-fcontent">
+								$!{partner.partnerName}
+							</td>
+						</tr>
+					</table>
+				<legend>地市(仓库)信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">地市：</td>
+							<td class="pn-fcontent">
+								#foreach($area in $!areaNode)
+									<input type="checkbox" id="$!{area.id}_$velocityCount" name="nodes" value="$!area.id" disabled
+										#if($!area.isCheck()=='true') checked="checked" #end/>
+									<label for="$!{area.id}_$velocityCount">$!area.nodeName</label>
+									#if($velocityCount%7==0) </br>#end
+								#end
+								</br>
+								<input type="checkbox" id="all_area" disabled/>
+								<label for="all_area" class="bt-standout" >勾选所有</label>
+								<input type="hidden" id="nodeIds" name="nodeIds"/>
+							</td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+	</table>
+</body>
+</html>

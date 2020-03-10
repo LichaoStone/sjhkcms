@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>系统列表</title>
+#tagLibs()
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+
+<body>
+    <div class="topline">
+    	<a href="#" class="xzbtn" style="color:#FFFFFF">系统列表</a> | 
+        <a href="${ctx}/system/toSystem.do" class="wxbtn">新增系统</a>
+    </div>
+		<!--  搜索表单  -->
+	<form name="form2" action="" id="queryForm" method="get">
+		<table border='0' cellpadding='0' cellspacing='0' style="margin-top:13px;">
+			<tr class="search">
+					<td>系统名称：<input type='text' name='name' value='$!{syste.name}'/></td>
+					<td><input id="querySystem" type="image" src="${ctx}/images/button_search.gif"/></td>
+			</tr>
+		</table>
+	<!--  内容列表   -->
+		<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+			<tr align="left" bgcolor="#eff2f7" height="30">
+				<td width="15%">系统名</td>
+				<td width="15%">系统编码</td>
+				<td width="12%">创建日期</td>
+				<td width="10%">状态</td>
+				<td width="10%">版本</td>
+				<td width="25%">备注</td>
+				<td width="13%">操作</td>
+			</tr>
+			#if ($null.isNull($pml.pagedModelList) || $pml.pagedModelList.size()==0)
+            	<tr align='left' height="30"  onMouseMove="javascript:this.bgColor='#FCFDEE';" onMouseOut="javascript:this.bgColor='';">
+            	  <td colspan="7"><h1>暂无相关数据内容</h1></td>
+                </tr>
+            #end
+			#foreach ($syst in $pml.pagedModelList)
+			<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+				<td>$!{syst.name}</td>
+				<td>$!{syst.ename}</td>
+				<td>$!{syst.builddate}</td>
+				<td>#if($!{syst.status} == '1') 启用  #elseif ($!{syst.status} == '2')隐藏 #elseif ($!{syst.status} == '3')冻结  #else 弃用 #end </td>
+				<td>$!{syst.version}</td>
+				<td>
+					<span title="$!{syst.memo}">
+					#if(!$null.isNull($syst.memo) && $syst.memo.length() > 10)
+						$!{syst.memo.substring(0,10)} ...
+					#else
+						$!{syst.memo}
+					#end
+					</span>
+				</td>
+				<td>
+					<a href="${ctx}/system/toSystem.do?oid=$!{syst.id}">编辑</a> |
+					<a href="${ctx}/system/toViewSystem.do?oid=$!{syst.id}">查看</a>
+				</td>
+			</tr>
+			#end
+		</table>
+		<div height="36" align="right">
+        		#rendPageInfo(${pml})
+        </div>
+	</form>
+	<script language="javascript" src="${ctx}/js/ott/shiro/listSystem.js"></script>
+</body>
+</html>

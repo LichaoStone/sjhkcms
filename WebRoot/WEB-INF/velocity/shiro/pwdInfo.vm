@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>用户信息</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+#tagLibs()
+</head>
+<body>
+<form id="form1" name="form1" action="" method="post">
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" id="needset" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+				<legend>用户信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="30%" class="pn-flabel pn-flabel-h">用户名：</td>
+							<td class="pn-fcontent">
+								<input type="hidden" id="userId" name="userId" value="$!{userInfo.userId}"/>
+								<input type="hidden" id="userName" name="userName" value="$!{userInfo.userName}"/>
+								$!{userInfo.userName}
+							</td>
+						</tr>
+                        <tr>
+    						<td width="30%" class="pn-flabel pn-flabel-h">用户密码：</td>
+							<td class="pn-fcontent">
+        					    <input type="password" id="password" name="password"/> 
+								<em class="required">*</em>
+								<span style="display:inline-block; line-height: 15px;">
+					  				<div class="password-meter">
+					  					<div class="password-meter-message">&nbsp;</div>
+					  					<div class="password-meter-bg">
+						  					<div class="password-meter-bar"></div>
+					  					</div>
+					  				</div>
+					  			</span>
+							</td>
+    					</tr>
+						<tr>
+							<td width="30%" class="pn-flabel pn-flabel-h">确认密码：</td>
+							<td class="pn-fcontent">
+								<input type="password" id="password_confirm" name="password_confirm" class="log_input2" />
+								<em class="required">*</em>
+							</td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+        <td width="17%">&nbsp;</td>
+        <td width="83%">
+			<button type="button" id="savePwd" class="bt-primary">保存</button>
+			<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+        </td>
+   </tr>
+</table>
+</form>
+    <script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+   	<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+    <script type="text/javascript" src="${ctx}/js/ott/shiro/pwdInfo.js"></script>
+</body>
+</html>

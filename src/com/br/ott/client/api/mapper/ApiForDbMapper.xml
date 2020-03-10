@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.api.mapper.ApiForDbMapper">
+	<!-- 增添用户观看记录 -->
+	<insert id="addUserViewLog" useGeneratedKeys="true" keyProperty="logId" parameterType="Map" >
+	    insert into ott_user_viewlog(dramaId,phone,dramaChannel,savaTime<if test='dramaChannel != null and dramaChannel == "1"'>,sxTime</if>) values (#{dramaId,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{dramaChannel,jdbcType=VARCHAR},sysdate()<if test='dramaChannel != null and dramaChannel == "1"'>,adddate(sysdate(),interval 15 day)</if>)
+	</insert>
+	
+	<!--获取跟用户观看记录关联的资产信息-->
+	<select id="findZCByViewLogIds" parameterType="java.util.Map" resultType="java.util.Map">
+	    select m.id,m.name,m.coverXImg,m.coverDImg,m.recXImg,m.recDImg,m.pId from ott_drama_program m,ott_user_viewlog g 
+	       where m.id = g.dramaId and g.phone = #{phone,jdbcType=VARCHAR} and g.dramaChannel = #{dramaChannel,jdbcType=VARCHAR} and g.dramaType = #{dramaType,jdbcType=VARCHAR} and g.status='1' order by g.savaTime desc
+	</select>
+	
+ 	<!-- 每天24:00处理一次用户观看资产状态，清除15天前最近观看记录  -->
+ 	<!-- mysql中<号是非法的，所以要用<![CDATA[]]>来处理，表示所有的标记、实体引用都被忽略,而被XML处理程序一视同仁地当做字符数据看待  -->
+    <update id="updateViewLogStatusForPL">
+	  <![CDATA[
+	    UPDATE ott_user_viewlog SET status = '0' where dramaChannel = '1' and UNIX_TIMESTAMP(sxTime) <= UNIX_TIMESTAMP(sysdate())
+	    ]]>
+	</update>
+	
+	<!-- 取消用户观看资产 -->
+	<update id="updateViewLogStatus" parameterType="Map">
+	    UPDATE ott_user_viewlog SET status = '0' where dramaId = #{dramaId,jdbcType=VARCHAR} and phone=#{phone,jdbcType=VARCHAR} and dramaChannel = #{dramaChannel,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateProgramClickNum" parameterType="java.lang.String">
+	    update ott_drama_program m set m.clicknum=(m.clicknum + 1) where m.id=#{dramaId, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 根据点击量获取相同二级栏目的推荐资产 -->
+	<select id="getRecDramas" parameterType="java.util.Map" resultType="DramaProgram">
+	    select dp.id,dp.name,dp.pId,dp.ptype,dp.coverDImg,dp.coverXImg,dp.recDImg,dp.recXImg,dp.linkUrl
+		from ott_drama_program dp where dp.status=#{status,jdbcType=VARCHAR} and dp.id in <foreach collection="dramasList" item="item" open="(" separator="," close=")">#{item.dramaId, jdbcType=VARCHAR}</foreach> order by dp.clicknum desc
+	</select>
+	
+	<!-- 获取相同二级栏目的资产id集合 -->
+	<select id="getDramaIdsForList" parameterType="java.lang.String" resultType="java.util.Map">
+	    select pe.dramaId from ott_drama_type pe where pe.navId = (select navId from ott_drama_type where dramaId=#{dramaId, jdbcType=VARCHAR} limit 1)
+	</select>
+	
+	<!-- 判断某资产是否已经收藏 -->
+	<select id="findZCInfoForCol" parameterType="String" resultType="Map">
+	    select g.dramaId,g.status from ott_user_viewlog g where g.dramaId=#{dramaId,jdbcType=VARCHAR} and g.phone=#{phone,jdbcType=VARCHAR} and g.dramaChannel=#{dramaChannel,jdbcType=VARCHAR} and g.dramaType=#{dramaType,jdbcType=VARCHAR}<if test="status == null"> and g.status='1'</if>
+	</select>
+	
+	<update id="updateZCInfo" parameterType="Map">
+	    UPDATE ott_user_viewlog SET status = '1',savaTime=sysdate()<if test='dramaChannel != null and dramaChannel=="1"'>,sxTime=adddate(sysdate(),interval 15 day)</if> where dramaId=#{dramaId,jdbcType=VARCHAR} and phone=#{phone,jdbcType=VARCHAR} and dramaChannel=#{dramaChannel,jdbcType=VARCHAR}
+	</update>
+	
+</mapper>

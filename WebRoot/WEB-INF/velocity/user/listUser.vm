@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>账号管理</title>
+<link href="./../css/auto.css" rel="stylesheet" type="text/css" />
+<link href="./../css/default.css" rel="stylesheet" type="text/css" />
+#tagLibs()
+<script type="text/javascript">
+//jQuery(document).ready(function(){
+   // jQuery("#status").attr('value','$!status');
+//});	
+
+	function del(id){
+		if(window.confirm('确认删除？')){
+			jQuery.get("../userinfo/delUser.do?id="+id, function(result){
+    			if(result=='ok'){
+                     window.location.reload();
+				 } else {
+				 	alert(result);
+				 }
+              });
+		}
+	}
+	
+	function view(id,isEdit) {
+		window
+				.open(
+						'./../userinfo/toDetailUser.do?id='+id+'&isEdit='+isEdit,
+						'newwindow',
+						'height=500,width=950,top=30,left=250,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+	}
+</script>
+</head>
+<body>
+<!--  搜索表单  -->
+<form name='queryForm' method='get' >
+<input type='hidden' name='dopost' value='listArchives' />
+<table border='0' cellpadding='0' cellspacing='0' height="36">
+    <tr class="search">
+        <td>用户昵称：<input type='text' name='nickName' value='$!nickName'/></td>
+        <td>手机号码：<input type='text' name='phone' value='$!phone'/></td>
+        <td>邮箱：<input type='text' name='email' value='$!email'/></td>
+       <td><input type="image" src="./../images/button_search.gif"/></td>
+      </tr>
+     </table>
+</form>
+<!--  内容列表   -->
+<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+<tr align="left" bgcolor="#eff2f7" height="30">
+	<td><a href="javascript:void(0);" onclick="orderBy(this);" name="ID" lastOrderBy="$!orderColumn" class="tb_head" >账号ID</a></td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);" name="NICKNAME" lastOrderBy="$!orderColumn" class="tb_head">昵称</a></td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="SEX"  lastOrderBy="$!orderColumn"class="tb_head">性别</a></td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="CITY"  lastOrderBy="$!orderColumn"class="tb_head">城市</a></td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="PHONE"  lastOrderBy="$!orderColumn"class="tb_head">手机号码</a></td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);" name="registerTime"   lastOrderBy="$!orderColumn"class="tb_head">注册时间</a></td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);" name="resetBalance"  lastOrderBy="$!orderColumn" class="tb_head">剩余金额</a></td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="virtualBlance"  lastOrderBy="$!orderColumn"class="tb_head">剩余O币</a></td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="status"  lastOrderBy="$!orderColumn"class="tb_head">状态</a></td>
+	<td>操作</td>
+</tr>
+#if ($null.isNull($pagedModelList.pagedModelList) || $pagedModelList.pagedModelList.size()==0)
+	<tr align='left' height="30"  onMouseMove="javascript:this.bgColor='#FCFDEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td colspan="10"><h1>暂无相关数据内容</h1></td>
+    </tr>
+#end
+#foreach($u in $!pagedModelList.pagedModelList)
+<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	<td>$!u.id</td>
+	<td>$!u.nickName</td>
+	<td>
+		#if($!u.sex=='1')
+				男
+		#else
+				女
+		#end
+	</td>
+	<td>$!u.cityName</td>
+	<td>$!u.phone</td>
+	<td>$!u.regTime</td>
+	<td>$!u.resetBalance</td>
+	<td>$!u.virtualBlance</td>
+	<td>
+		#if($!u.status=='0')
+				正常
+		#else
+				已删除
+		#end
+	</td>
+	<td>
+		<a href="javascript:del('$!u.id');">删除</a>
+		<a href="javascript:view('$!u.id',true);">编辑</a>
+		<a href="javascript:view('$!u.id',false);">预览</a>
+	</td>
+</tr>
+#end
+</table>
+	<div height="36" align="right">
+    		#rendPageInfo(${pagedModelList})
+    </div>
+</form>
+
+
+</body>
+</html>

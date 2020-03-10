@@ -1,0 +1,300 @@
+* {
+	FONT-FAMILY: "Microsoft YaHei", "微软雅黑"; -webkit-text-size-adjust: none
+}
+#dialog_loading {
+	Z-INDEX: 2005; POSITION: absolute; PADDING-BOTTOM: 3px; PADDING-LEFT: 3px; WIDTH: 55px; PADDING-RIGHT: 3px; BACKGROUND: url(../../images/shrio/loading_bg.png) no-repeat; HEIGHT: 55px; PADDING-TOP: 3px; _background: none
+}
+#dialog_loading SPAN {
+	BACKGROUND-IMAGE: url(../../images/shrio/loading.gif); WIDTH: 50px; DISPLAY: block; BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: center 50%; HEIGHT: 50px; _background-color: #fff
+}
+.disable-select {
+	-khtml-user-selec: none; -webkit-user-select: none; -moz-user-select: none
+}
+#dialog_box {
+	Z-INDEX: 2015; POSITION: absolute; WIDTH: 360px
+}
+.dialog-top-left {
+	HEIGHT: 9px
+}
+.dialog-top {
+	HEIGHT: 9px
+}
+.dialog-top-right {
+	HEIGHT: 9px
+}
+.dialog-bottom-left {
+	HEIGHT: 16px
+}
+.dialog-bottom {
+	HEIGHT: 16px
+}
+.dialog-bottom-right {
+	HEIGHT: 16px
+}
+.dialog-left {
+	WIDTH: 9px
+}
+.dialog-top-left {
+	WIDTH: 9px
+}
+.dialog-bottom-left {
+	WIDTH: 9px
+}
+.dialog-right {
+	WIDTH: 15px
+}
+.dialog-top-right {
+	WIDTH: 15px
+}
+.dialog-bottom-right {
+	WIDTH: 15px
+}
+.dialog-top-left {
+	BACKGROUND: url(../../images/shrio/dialog_radius.png) no-repeat 0px 0px
+}
+.dialog-top-right {
+	BACKGROUND: url(../../images/shrio/dialog_radius.png) no-repeat -9px 0px
+}
+.dialog-bottom-left {
+	BACKGROUND: url(../../images/shrio/dialog_radius.png) no-repeat 0px -9px
+}
+.dialog-bottom-right {
+	BACKGROUND: url(../../images/shrio/dialog_radius.png) no-repeat -9px -9px
+}
+.dialog-top {
+	BACKGROUND: url(../../images/shrio/dialog_top.png) repeat-x
+}
+.dialog-left {
+	BACKGROUND: url(../../images/shrio/dialog_left.png) repeat-y
+}
+.dialog-right {
+	BACKGROUND: url(../../images/shrio/dialog_right.png) repeat-y
+}
+.dialog-bottom {
+	BACKGROUND: url(../../images/shrio/dialog_bottom.png) repeat-x
+}
+.dialog-content {
+	POSITION: relative; BACKGROUND: #fbfbfb; HEIGHT: 132px; _height: 155px
+}
+.dialog-title-bar {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 5px; PADDING-RIGHT: 5px; HEIGHT: 18px; FONT-SIZE: 12px; PADDING-TOP: 3px
+}
+.dialog-title {
+	FLOAT: left
+}
+.dialog-close {
+	WIDTH: 14px; DISPLAY: block; BACKGROUND: url(../../images/shrio/dialog_close.gif) no-repeat; FLOAT: right; HEIGHT: 14px; CURSOR: pointer
+}
+.dialog-close:hover {
+	BACKGROUND: url(../../images/shrio/dialog_close.gif) no-repeat 0px -14px
+}
+.dialog-info {
+	PADDING-BOTTOM: 50px; LINE-HEIGHT: 20px; PADDING-LEFT: 90px; PADDING-RIGHT: 10px; FONT-SIZE: 12px; PADDING-TOP: 20px
+}
+.dialog-alert {
+	BACKGROUND: url(../../images/shrio/dialog_alert.gif) no-repeat 33px 18px
+}
+.dialog-success {
+	BACKGROUND: url(../../images/shrio/dialog_success.gif) no-repeat 33px 18px
+}
+.dialog-confirm {
+	BACKGROUND: url(../../images/shrio/dialog_confirm.gif) no-repeat 33px 18px
+}
+.dialog-button-bar {
+	POSITION: absolute; TEXT-ALIGN: right; PADDING-BOTTOM: 10px; BOTTOM: 0px; PADDING-RIGHT: 8px; HEIGHT: 27px; RIGHT: 0px
+}
+.dialog-button {
+	BORDER-BOTTOM: #b3b3b3 1px solid; TEXT-ALIGN: center; BORDER-LEFT: #b3b3b3 1px solid; LINE-HEIGHT: 27px; WIDTH: 69px; DISPLAY: inline-block; BACKGROUND: #f9f9f9; HEIGHT: 27px; COLOR: #000; FONT-SIZE: 12px; BORDER-TOP: #b3b3b3 1px solid; MARGIN-RIGHT: 8px; BORDER-RIGHT: #b3b3b3 1px solid; TEXT-DECORATION: none; border-radius: 3px
+}
+.dialog-button:hover {
+	BORDER-BOTTOM: #014ad6 1px solid; BORDER-LEFT: #014ad6 1px solid; BACKGROUND: #fff; BORDER-TOP: #014ad6 1px solid; BORDER-RIGHT: #014ad6 1px solid
+}
+#dialog_ok {
+	BORDER-BOTTOM: #3b79ed 1px solid; BORDER-LEFT: #3b79ed 1px solid; BORDER-TOP: #3b79ed 1px solid; FONT-WEIGHT: bold; BORDER-RIGHT: #3b79ed 1px solid
+}
+.dialog-IE6 {
+	BORDER-BOTTOM: #818080 1px solid; BORDER-LEFT: #818080 1px solid; WIDTH: 360px; BACKGROUND: #fbfbfb; HEIGHT: 148px; BORDER-TOP: #818080 1px solid; BORDER-RIGHT: #818080 1px solid
+}
+.dialog-IE6 .dialog-title-bar {
+	PADDING-BOTTOM: 10px; PADDING-LEFT: 10px; PADDING-RIGHT: 10px; PADDING-TOP: 10px
+}
+.dialog-IE6 .dialog-close {
+	OVERFLOW: hidden
+}
+#iframe_box {
+	Z-INDEX: 2005; POSITION: absolute
+}
+.iframe-top-left {
+	HEIGHT: 38px
+}
+.iframe-title-box {
+	HEIGHT: 38px
+}
+.iframe-top-right {
+	HEIGHT: 38px
+}
+.iframe-bottom-left {
+	HEIGHT: 8px
+}
+.iframe-bottom {
+	HEIGHT: 8px
+}
+.iframe-bottom-right {
+	HEIGHT: 8px
+}
+.iframe-top-left {
+	WIDTH: 6px; BACKGROUND: url(../../images/shrio/iframe_radius.png) no-repeat 0px 0px
+}
+.iframe-title-box {
+	PADDING-LEFT: 8px; BACKGROUND: url(../../images/shrio/iframe_title.png) repeat-x 50% top
+}
+#iframe_title {
+	LINE-HEIGHT: 38px; FLOAT: left; FONT-SIZE: 12px; FONT-WEIGHT: bold
+}
+.iframe-top-right {
+	WIDTH: 12px; BACKGROUND: url(../../images/shrio/iframe_radius.png) no-repeat -6px 0px
+}
+.iframe-left {
+	WIDTH: 1px; BACKGROUND: #888787
+}
+.iframe-content {
+	POSITION: relative; BACKGROUND: #fff
+}
+.iframe-right {
+	WIDTH: 7px; BACKGROUND: url(../../images/shrio/iframe_right.png) repeat-y
+}
+.iframe-bottom-left {
+	WIDTH: 8px; BACKGROUND: url(../../images/shrio/iframe_radius.png) no-repeat 0px -38px
+}
+.iframe-bottom {
+	BACKGROUND: url(../../images/shrio/iframe_bottom.png) repeat-x 50% top; FONT-SIZE: 0px
+}
+.iframe-bottom-right {
+	WIDTH: 7px; BACKGROUND: url(../../images/shrio/iframe_radius.png) no-repeat -12px -38px
+}
+.iframe-close {
+	MARGIN: 13px 8px 0px 0px; WIDTH: 14px; DISPLAY: block; BACKGROUND: url(../../images/shrio/dialog_iframe_close.gif) no-repeat; FLOAT: right; HEIGHT: 14px; OVERFLOW: hidden; CURSOR: pointer; _margin: 12px 4px 0 0
+}
+.iframe-close:hover {
+	BACKGROUND: url(../../images/shrio/dialog_iframe_close.gif) no-repeat 0px -14px
+}
+.iframe-IE6 .iframe-title-box {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: #888787 1px solid; BORDER-TOP: 0px; BORDER-RIGHT: #888787 1px solid
+}
+.iframe-IE6 .iframe-content {
+	BORDER-BOTTOM: #888787 1px solid; BORDER-LEFT: #888787 1px solid; BORDER-TOP: 0px; BORDER-RIGHT: #888787 1px solid
+}
+#picture_box {
+	Z-INDEX: 2005; POSITION: absolute
+}
+.picture-top-left {
+	HEIGHT: 9px
+}
+.picture-top {
+	HEIGHT: 9px
+}
+.picture-top-right {
+	HEIGHT: 9px
+}
+.picture-bottom-left {
+	HEIGHT: 16px
+}
+.picture-bottom {
+	HEIGHT: 16px
+}
+.picture-bottom-right {
+	HEIGHT: 16px
+}
+.picture-left {
+	WIDTH: 9px
+}
+.picture-top-left {
+	WIDTH: 9px
+}
+.picture-bottom-left {
+	WIDTH: 9px
+}
+.picture-right {
+	WIDTH: 15px
+}
+.picture-top-right {
+	WIDTH: 15px
+}
+.picture-bottom-right {
+	WIDTH: 15px
+}
+.picture-top-left {
+	BACKGROUND: url(../../images/shrio/picture_radius.png) no-repeat 0px 0px
+}
+.picture-top-right {
+	BACKGROUND: url(../../images/shrio/picture_radius.png) no-repeat -9px 0px
+}
+.picture-bottom-left {
+	BACKGROUND: url(../../images/shrio/picture_radius.png) no-repeat 0px -9px
+}
+.picture-bottom-right {
+	BACKGROUND: url(../../images/shrio/picture_radius.png) no-repeat -9px -9px
+}
+.picture-top {
+	BACKGROUND: url(../../images/shrio/picture_top.png) repeat-x
+}
+.picture-left {
+	BACKGROUND: url(../../images/shrio/picture_left.png) repeat-y
+}
+.picture-right {
+	BACKGROUND: url(../../images/shrio/picture_right.png) repeat-y
+}
+.picture-bottom {
+	BACKGROUND: url(../../images/shrio/picture_bottom.png) repeat-x
+}
+.picture-content {
+	POSITION: relative; BACKGROUND: #fff
+}
+#picture_object {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; -MS-INTERPOLATION-MODE: bicubic; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px; image-rendering: optimizeQuality
+}
+.picture-info {
+	POSITION: absolute; WIDTH: 100%; BOTTOM: 0px; BACKGROUND: url(../../images/shrio/picture_bg.png); COLOR: #fff; FONT-SIZE: 12px; LEFT: 0px; _background: #000; _bottom: 15px
+}
+.picture-info SPAN {
+	PADDING-BOTTOM: 8px; LINE-HEIGHT: 20px; PADDING-LEFT: 8px; PADDING-RIGHT: 8px; DISPLAY: block; PADDING-TOP: 8px
+}
+.picture-close {
+	POSITION: absolute; WIDTH: 30px; DISPLAY: block; BACKGROUND: url(../../images/shrio/picture_close.png) no-repeat; HEIGHT: 30px; TOP: -23px; RIGHT: -23px; _display: none
+}
+.picture-IE6 {
+	BORDER-BOTTOM: #818080 1px solid; BORDER-LEFT: #818080 1px solid; PADDING-BOTTOM: 8px; PADDING-LEFT: 8px; PADDING-RIGHT: 8px; BACKGROUND: #fff; BORDER-TOP: #818080 1px solid; BORDER-RIGHT: #818080 1px solid; PADDING-TOP: 8px
+}
+.picture-IE6 .picture-content {
+	POSITION: relative
+}
+#message_box {
+	Z-INDEX: 2000; POSITION: absolute
+}
+#message_box .dialog-title {
+	FONT-WEIGHT: bold
+}
+.message-content {
+	BACKGROUND: #fbfbfb
+}
+.message-info {
+	PADDING-BOTTOM: 8px; LINE-HEIGHT: 20px; PADDING-LEFT: 8px; PADDING-RIGHT: 8px; FONT-SIZE: 12px; PADDING-TOP: 8px
+}
+.message-info A {
+	COLOR: #0095ff
+}
+.message-info A:hover {
+	COLOR: #ff0000
+}
+.message-IE6 {
+	BORDER-BOTTOM: #818080 1px solid; BORDER-LEFT: #818080 1px solid; BACKGROUND: #fbfbfb; BORDER-TOP: #818080 1px solid; BORDER-RIGHT: #818080 1px solid
+}
+.message-IE6 .dialog-title-bar {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 13px; PADDING-RIGHT: 13px; PADDING-TOP: 13px
+}
+.message-IE6 .message-info {
+	PADDING-BOTTOM: 13px; PADDING-LEFT: 13px; PADDING-RIGHT: 13px; PADDING-TOP: 8px
+}
+.message-IE6 .dialog-close {
+	OVERFLOW: hidden
+}

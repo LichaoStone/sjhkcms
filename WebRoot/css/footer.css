@@ -1,0 +1,15 @@
+* {
+	font-family: verdana,geneva,arial,helvetica,sans-serif;
+}
+body {
+	background: url("") repeat-x top rgb(238, 238, 238); margin: 0px; padding: 0px; text-align: center; overflow: hidden;
+}
+div {
+	color: rgb(0, 0, 0); line-height: 28px; font-size: 11px; -webkit-transform: scale(0.875); -o-transform: scale(1);
+}
+a {
+	color: rgb(75, 130, 187);
+}
+a:hover {
+	color: rgb(45, 73, 103); text-decoration: none; border-bottom-color: currentColor; border-bottom-width: 1px; border-bottom-style: dotted;
+}

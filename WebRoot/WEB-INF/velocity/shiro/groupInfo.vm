@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>分组编辑</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	#tagLibs()
+</head>
+<body>
+	<div>
+    	<a href="${ctx}/group/findGroupList.do" class="wxbtn">分组列表</a> | 
+        <a href="#" class="xzbtn" style="color:#FFFFFF">#if($!{group.id}==""|| !${group.id})增加分组#else 修改分组#end</a>
+	</div>
+	<form method="post"  name="fom" id="fom">
+	<table width="98%"  border="0" align="center" style="margin-top:13px;">
+    <tr>
+      <td colspan="2">
+				<legend>角色信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">组名：</td>
+							<td class="pn-fcontent">
+								<input name="id" value="$!{group.id}" type="hidden" />
+								<input name="oldName" id="oldName" type="hidden" value="$!{group.name}"/> 
+								<input name="name" id="name" type="text" class="text-writer" value="$!{group.name}"/> 
+								<em class="required">*</em>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">组编码：</td>
+							<td class="pn-fcontent">
+								<input name="oldEnName" id="oldEnName" type="hidden" class="text-writer"  value="$!{group.enName}"/> 
+								<input name="enName" id="enName" type="text" class="text-writer"value="$!{group.enName}" />
+								<em class="required">*</em>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">类别：</td>
+							<td class="pn-fcontent">
+								<input name="groupType" id="groupType" type="text" class="text-writer" value="$!{group.groupType}"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">状态：</td>
+							<td class="pn-fcontent">
+                                <select name="status" style="width:120px" id="status">
+										<option value="1" #if($!{group.status} == 1|| !${group.status}) selected #end >启用</option>
+										<option value="2" #if($!{group.status} == 2) selected #end >隐藏</option>
+										<option value="3" #if($!{group.status} == 3) selected #end >冻结</option>
+										<option value="4" #if($!{group.status} == 4) selected #end >弃用</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">上级组：</td>
+							<td class="pn-fcontent">
+								<select name="parentId" style="width:154px" id="parentId">
+        							<option value="">===请选择===</option>
+        							#foreach($gu in $!mgroup)
+                                        <option value="$!gu.id" #if ($!{group.parentId} == $!gu.id) selected #end>$!gu.name</option>
+                					#end
+								</select>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">排序：</td>
+							<td class="pn-fcontent">
+								<input name="orderId" id="orderId" type="text" class="text-writer" value="$!{group.orderId}"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">备注：</td>
+							<td class="pn-fcontent" colspan="3">
+								<textarea id="textarea" name="memo" rows="5" cols="100">$!{group.memo}</textarea>
+                            </td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" id="saveGroup" class="bt-primary">保存</button>
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/shiro/groupInfo.js"></script>
+	
+</body>
+</html>

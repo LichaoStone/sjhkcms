@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.user.mapper.UserOrderMapper">
+	<resultMap type="UserOrder" id="UserOrderMap">
+		<id property="id" column="id" />
+		<result property="orderId" column="orderId" />
+		<result property="account" column="account" />
+		<result property="mac" column="mac" />
+		<result property="type" column="type" />
+		<result property="programId" column="programId" />
+		<result property="programName" column="programName" />
+		<result property="price" column="price" />
+		<result property="orderTime" column="orderTime" />
+		<result property="status" column="status" />
+	</resultMap>
+	
+	<insert id="addUserOrder">
+		<selectKey keyProperty="id" resultType="String" order="AFTER">
+			  SELECT LAST_INSERT_ID()
+		</selectKey>
+		<![CDATA[
+			INSERT INTO OTT_USER_ORDER(orderId,account,mac,type,programId,programName,price,orderTime,status) 
+			VALUES(
+				#{orderId,jdbcType=VARCHAR},
+				#{account,jdbcType=VARCHAR},
+				#{mac,jdbcType=VARCHAR},
+				#{type,jdbcType=VARCHAR},
+				#{programId,jdbcType=VARCHAR},
+				#{programName,jdbcType=VARCHAR},
+				#{price},
+				now(),
+				'1'
+			)
+		]]>
+	</insert>
+	
+	<update id="updateStatusById">
+		update OTT_USER_ORDER set status=#{status,jdbcType=VARCHAR} where id=#{id,jdbcType=INTEGER} 
+	</update>
+	
+	<update id="updateStatusByAccountAndPid">
+		update OTT_USER_ORDER set status=#{status,jdbcType=VARCHAR} 
+		where account=#{account,jdbcType=INTEGER} and programId=#{programId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="findUserOrderByPage" resultMap="UserOrderMap">
+		select o.id, o.orderId,o.account,o.mac,o.programId,o.programName,o.type, o.price,o.orderTime,o.status
+		from OTT_USER_ORDER o
+		<where>
+			<if test="status != null and status != ''">
+				o.status =#{status}
+			</if>
+			<if test="type != null and type != ''">
+				and o.type =#{type}
+			</if>
+			<if test="account != null and account != ''">
+				and o.account =#{account}
+			</if>
+			<if test="mac != null and mac != ''">
+				and o.mac =#{mac}
+			</if>
+			<if test="programName != null and programName != ''">
+				and o.programName LIKE CONCAT(CONCAT('%', #{programName}),'%')
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			  order by o.id desc
+		</if>
+	</select>
+	<select id="getCountUserOrder" resultType="int">
+		select count(1)
+		from OTT_USER_ORDER o
+		<where>
+			<if test="status != null and status != ''">
+				o.status =#{status}
+			</if>
+			<if test="type != null and type != ''">
+				and o.type =#{type}
+			</if>
+			<if test="account != null and account != ''">
+				and o.account =#{account}
+			</if>
+			<if test="mac != null and mac != ''">
+				and o.mac =#{mac}
+			</if>
+			<if test="programName != null and programName != ''">
+				and o.programName LIKE CONCAT(CONCAT('%', #{programName}),'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="findUserOrderByCond" resultMap="UserOrderMap">
+		select o.id, o.orderId,o.account,o.mac,o.programId,o.programName,o.type, o.price,o.orderTime,o.status
+		from OTT_USER_ORDER o
+		<where>
+			<if test="status != null and status != ''">
+				o.status =#{status}
+			</if>
+			<if test="type != null and type != ''">
+				and o.type =#{type}
+			</if>
+			<if test="account != null and account != ''">
+				and o.account =#{account}
+			</if>
+			<if test="mac != null and mac != ''">
+				and o.mac =#{mac}
+			</if>
+			<if test="programName != null and programName != ''">
+				and o.programName LIKE CONCAT(CONCAT('%', #{programName}),'%')
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			  order by o.id desc
+		</if>
+	</select>
+	
+	<select id="getUserOrderById" resultMap="UserOrderMap">
+		select o.id, o.orderId,o.account,o.mac,o.programId,o.programName,o.type, o.price,o.orderTime,o.status
+		from OTT_USER_ORDER o where o.id=#{id,jdbcType=INTEGER} 
+	</select>
+	
+	<select id="getUserOrderByOrderId" resultMap="UserOrderMap">
+		select o.id, o.orderId,o.account,o.mac,o.programId,o.programName,o.type, o.price,o.orderTime,o.status
+		from OTT_USER_ORDER o where o.orderId=#{orderId} 
+	</select>
+</mapper>

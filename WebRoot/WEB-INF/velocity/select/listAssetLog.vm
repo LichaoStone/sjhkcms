@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>日志管理</title>
+#tagLibs()
+#calendar()
+</head>
+<body>
+<!--  快速转换位置按钮  --> 
+<!--  内容列表   -->
+<form id="queryForm" method="get">
+ <table border='0' cellpadding='0' cellspacing='0' height="36">
+    <tr class="search">
+		<td>资产id：<input type='text' id="assetId" name='assetId' value='$!{type.assetId}' style="width:80px;"/></td>
+        <td>资产名称：<input type='text' id="assetTitle" name='assetTitle' value='$!{type.assetTitle}' style="width:180px;"/></td>
+		<td>同步时间：
+				<input type="text" id="recordTimeMin" name="recordTimeMin" value="$!{type.recordTimeMin}" style="width:100px;"
+					readonly="readonly"	onclick="WdatePicker()" class="Wdate"/> 至
+				<input type="text" id="recordTimeMax" name="recordTimeMax" value="$!{type.recordTimeMax}" style="width:100px;"
+					readonly="readonly"	onclick="WdatePicker()" class="Wdate"/>
+		</td>
+		<td>结果码：<input type='text' id="result" name='result' value='$!{type.result}' style="width:80px;"/></td>
+		<td>
+			<input type="hidden" id="orderColumn" name="orderColumn" value="$!{type.orderColumn}" />
+            <img id="queryProgram" type="image" src="${ctx}/images/button_search.gif"/>
+        </td>
+	</tr>
+</table>
+<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+<tr align="left" bgcolor="#eff2f7" height="30">
+	<td width="5%"><input type="checkbox" id="allSelect" style="padding-top:5px;"  onclick="isCheckAll('arcID',this);"><label for="allSelect">全选</label></td>
+    <td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="assetId" lastOrderBy="$!{type.orderColumn}" class="tb_head">资产id</a></td>
+	<td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="assetTitle" lastOrderBy="$!{type.orderColumn}" class="tb_head">资产名称</a></td>
+    <td width="15%"><a href="javascript:void(0);" onclick="orderBy(this);" name="recordTime" lastOrderBy="$!{type.orderColumn}" class="tb_head">同步时间</a></td>
+    <td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="action" lastOrderBy="$!{type.orderColumn}" class="tb_head">操作动作</a></td>
+    <td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="result" lastOrderBy="$!{type.orderColumn}" class="tb_head">结果码</a></td>
+	<td width="10%">操作</td>
+</tr>
+#if ($null.isNull($list) || $list.size()==0)
+	<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td colspan="7"><h1>暂无相关数据内容</h1></td>
+    </tr>
+#end
+#foreach ($c in $list)
+<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	<td><input type="checkbox" id="arcID" name="arcID" class="np" value="$!{c.id}"/></td>
+	 <td >$!{c.assetId}</td>
+	 <td >$!{c.assetTitle}</td>
+     <td >$!{c.recordTime}</td>
+     <td >
+	     #if($!{c.action}=='ON')
+	     	上线
+	     #elseif($!{c.action}=='OFF')
+	     	下线
+	     #end
+     </td>
+     <td >$!{c.result}</td>
+	<td >
+        <a href="${ctx}/log/toAssetLog.do?id=$!{c.id}">详情</a>
+     </td>
+</tr>
+#end
+</table>
+<div height="36" align="right">
+    #pagination(${type})
+</div>
+<div height="36" align="left">
+   		<a href="javascript:void(0);" class="wxbtn" id="toDelDict">批量删除</a>
+   	</div>
+</form>
+<script type="text/javascript" src="${ctx}/js/ott/select/listAssetLog.js"></script>
+</body>
+</html>

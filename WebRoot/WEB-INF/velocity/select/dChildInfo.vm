@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>剧集信息<</title>
+#tagLibs()
+</head>
+<body >
+<div class="topline">
+	<a href="${ctx}/select/findDramaChild.do?dramaId=$!{dramaChildren.dramaId}&dramaName=$!{dramaChildren.dramaName}" class="wxbtn">$!{dramaChildren.dramaName}剧集列表</a> | 
+    <a href="#" class="xzbtn" style="color:#FFFFFF" >#if($!{dramaChildren.id})修改#else 新增#end$!{dramaChildren.dramaName}剧集</a>
+</div>
+<form id="form1" name="form1" action="" method="post">
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" id="needset" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="15%" class="pn-flabel pn-flabel-h">资产名称：</td>
+							<td class="pn-fcontent">
+								$!{dramaChildren.dramaName} 
+							</td>
+						</tr>
+						<tr>
+							<td width="15%" class="pn-flabel pn-flabel-h">剧集名称：</td>
+							<td class="pn-fcontent">
+								<input type="hidden" id="id" name="id" value="$!{dramaChildren.id}"/>
+								<input type="hidden" id="dramaId" name="dramaId" value="$!{dramaChildren.dramaId}"/>
+								<input type="hidden" id="dramaName" name="dramaName" value="$!{dramaChildren.dramaName}"/>
+								<input type="text" id="title"  name="title" value="$!{dramaChildren.title}"/>
+								<em class="required">*</em>
+							</td>
+						</tr>
+						<tr>
+							<td width="15%" class="pn-flabel pn-flabel-h">播放时长：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="timeLongth"  name="timeLongth" value="$!{dramaChildren.timeLongth}"/>  
+							</td>
+						</tr>
+						<!-- 
+						<tr>
+							<td width="15%" class="pn-flabel pn-flabel-h">播放价格(单)：</td>
+							<td class="pn-fcontent">
+        						<select id="price" name="price" style="width:140px;">
+									<option value="0">=请选择=</option>
+									#foreach($tariff in $tariffs)
+										<option value="${tariff.tariffValue}" #if (${tariff.tariffValue} == $!{dramaChildren.price}) selected #end>${tariff.tariffName}</option>
+									#end
+                                </select>
+							</td>
+						</tr>
+						 -->
+						<tr>
+							<td width="15%" class="pn-flabel pn-flabel-h">剧集描述：</td>
+							<td class="pn-fcontent">
+								<textarea id="dramaDesc" name="dramaDesc" rows="7" cols="60">$!{dramaChildren.dramaDesc}</textarea>
+							</td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" id="saveChild" class="bt-primary">保存</button>
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/select/dChildInfo.js"></script>
+</body>
+</html>

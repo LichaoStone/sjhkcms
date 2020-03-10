@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.select.mapper.DramaChildrenMapper">
+	<resultMap id="DramaChildrenMap" type="DramaChildren" >
+		<id property="id" column="id"></id>
+		<result property="dramaId" column="dramaId"/>
+		<result property="title" column="title"/>
+		<result property="timeLongth" column="timeLongth"/>
+		<result property="price" column="price"/>
+		<result property="dramaDesc" column="dramaDesc"/>
+		<result property="status" column="status"/>
+		<result property="createTime" column="createTime"/>
+		<result property="operator" column="operator"/>
+		<result property="playUrl" column="playUrl"/>
+	</resultMap>
+
+	<!--添加一个资产子节目源 -->
+	<insert id="addDramaChildren" parameterType="DramaChildren">
+       <selectKey keyProperty="id" resultType="String"  order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+		<![CDATA[ INSERT INTO OTT_DRAMA_Children (dramaId,title,timeLongth, price, dramaDesc, operator, createTime, status)
+			VALUES (
+			#{dramaId,jdbcType=VARCHAR},
+			#{title,jdbcType=VARCHAR},
+			#{timeLongth,jdbcType=VARCHAR},
+			#{price},
+			#{dramaDesc,jdbcType=VARCHAR},
+			#{operator,jdbcType=VARCHAR},
+			now(),
+			#{status,jdbcType=VARCHAR})   
+	 	]]>
+	</insert>
+	
+	<!-- 按ID查询资产子节目源类型 -->
+	<select id="getDramaChildrenById" resultMap="DramaChildrenMap">
+		SELECT ds.id, ds.dramaId, ds.title, ds.timeLongth, ds.price, ds.dramaDesc, ds.operator, 
+			date_format(ds.createTime,'%Y-%m-%d %H:%i:%s') createTime, ds.status
+		FROM  OTT_DRAMA_Children ds
+		WHERE ds.id = #{id, jdbcType=INTEGER}
+	</select>	
+	
+	<!-- 按分页查资产子节目源信息 -->
+	<select id="findDramaChildrenByPage" resultMap="DramaChildrenMap">
+		SELECT ds.id, ds.dramaId, ds.title, 
+			date_format(ds.createTime,'%Y-%m-%d %H:%i:%s') createTime, ds.status
+		FROM OTT_DRAMA_Children ds
+		<where>
+		    1 = 1
+		    <if test="dramaId != null and dramaId != ''">
+				and ds.dramaId = #{dramaId}
+			</if>
+			<if test="title != null and title != ''">
+				and ds.title = #{title}
+			</if>
+			<if test="status !=null and status != ''">
+				and ds.status = #{status}
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			order by ds.id desc
+		</if>
+	</select>
+	
+	<!-- 获取资产子节目全部信息 -->
+	<select id="findDramaChildren" resultMap="DramaChildrenMap">
+		SELECT ds.id, ds.dramaId, ds.title,
+			date_format(ds.createTime,'%Y-%m-%d %H:%i:%s') createTime, ds.status
+		FROM OTT_DRAMA_Children ds
+		<where>
+		    1 = 1
+		    <if test="dramaId != null and dramaId != ''">
+				and ds.dramaId = #{dramaId}
+			</if>
+			<if test="title != null and title != ''">
+				and ds.title = #{title}
+			</if>
+			<if test="status !=null and status != ''">
+				and ds.status = #{status}
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			order by cast(ds.title as SIGNED) desc
+		</if>
+	</select>
+	
+	<select id="getCountDramaChildren" resultType="int">
+		SELECT count(1)
+		FROM  OTT_DRAMA_Children ds
+		<where>
+		        1 = 1
+		    <if test="dramaId != null and dramaId != ''">
+				and ds.dramaId = #{dramaId}
+			</if>
+			<if test="title != null and title != ''">
+				and ds.title = #{title}
+			</if>
+			<if test="status !=null and status != ''">
+				and ds.status = #{status}
+			</if>
+		</where>
+	</select>
+	<!-- 修改资产子节目源信息 -->
+	<update id="updateDramaChildren" parameterType="DramaChildren">
+		<![CDATA[ UPDATE OTT_DRAMA_Children SET 
+				dramaId=#{dramaId,jdbcType=VARCHAR},
+				title=#{title,jdbcType=VARCHAR},
+				timeLongth=#{timeLongth,jdbcType=VARCHAR},
+				price=#{price},
+				dramaDesc=#{dramaDesc,jdbcType=VARCHAR},
+				operator=#{operator,jdbcType=VARCHAR}
+           WHERE id = #{id, jdbcType=INTEGER} ]]>
+	</update>
+	
+	<!-- 修改资产子节目源状态 -->
+	<update id="updateChildrenStatus">
+		<![CDATA[ UPDATE OTT_DRAMA_Children SET status = #{status,jdbcType=VARCHAR} 
+		WHERE id = #{id, jdbcType=INTEGER} ]]>
+	</update>
+	
+	<!-- 查询所有资产子节目源 -->
+	<select id="findDramaChildrenByCond" resultMap="DramaChildrenMap">
+		SELECT ds.id, ds.dramaId, ds.title, 
+			date_format(ds.createTime,'%Y-%m-%d %H:%i:%s') createTime, ds.status
+		FROM  OTT_DRAMA_Children ds
+		<where>
+			1 = 1
+			<if test="dramaId != null and dramaId != ''">
+				and ds.dramaId = #{dramaId}
+			</if>
+			<if test="title != null and title != ''">
+				and ds.title = #{title}
+			</if>
+			<if test="status !=null and status != ''">
+				and ds.status = #{status}
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			order by id desc
+		</if>
+	</select>
+</mapper>

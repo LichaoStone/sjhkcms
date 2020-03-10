@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>分组列表</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+#tagLibs()
+</head>
+<body>
+
+	<!--  快速转换位置按钮  -->
+<div class="topline">
+	<a href="#" class="xzbtn" style="color:#FFFFFF">分组列表</a> | 
+    <a href="${ctx}/group/toGroup.do" class="wxbtn">新增分组</a>
+</div>
+		<!--  搜索表单  -->
+<form id="queryForm" name='queryForm' action='' method='get'>
+		<table border='0' cellpadding='0' cellspacing='0' style="margin-top:13px;">
+        <tr class="search">
+				<td>组名：<input type='text' name='name' value='$!{groups.name}'/></td>
+                		<input type="hidden" id="orderColumn" name="orderColumn" value="$!{groups.orderColumn}" />
+				<td>状态：
+					<select name="status" id="status">
+        				<option value="1" #if($!{groups.status} == 1) selected #end>正常</option>
+        				<option value="2" #if($!{groups.status} == 2) selected #end>隐藏</option>
+        				<option value="3" #if($!{groups.status} == 3) selected #end>冻结</option>
+        				<option value="4" #if($!{groups.status} == 4) selected #end>弃用</option>
+					</select>
+					</td>
+				<td><input id="queryGroup"  type="image" src="${ctx}/images/button_search.gif"/></td>
+			</tr>
+		</table>
+	
+	<!--  内容列表   -->
+	
+		<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+			<tr align="left" bgcolor="#eff2f7" height="30">
+				<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="name"  lastOrderBy="$!{groups.orderColumn}" class="tb_head">组名</a></td>
+				<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="enName"  lastOrderBy="$!{groups.orderColumn}" class="tb_head">组编码</a></td>
+				<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="groupType"  lastOrderBy="$!{groups.orderColumn}" class="tb_head">组类别</a></td>
+				<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="parentId"  lastOrderBy="$!{groups.orderColumn}" class="tb_head">上级组</a></td>
+				<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="status"  lastOrderBy="$!{groups.orderColumn}" class="tb_head">状态</a></td>
+				<td width="15%">备注</td>
+				<td width="20%">操作</td>
+			</tr>
+			#if ($null.isNull($pml.pagedModelList) || $pml.pagedModelList.size()==0)
+            	<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+            	 <td colspan="7"><h1>暂无相关数据内容</h1></td>
+                </tr>
+            #end
+			#foreach ($role in $pml.pagedModelList)
+			<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+				<td>$!{role.name}</td>
+				<td>$!{role.enName}</td>
+				<td>$!{role.groupType}</td>
+				<td>$!{role.parnetName}</td>
+				<td>#if($!{role.status} == '1') 
+						启用  
+					#elseif ($!{role.status} == '2')
+						隐藏 
+					#elseif ($!{role.status} == '3')
+						冻结  
+					#else 
+						弃用 
+					#end
+				</td>
+				<td>$!{role.memo}</td>
+				<td>
+					<a href="${ctx}/group/toGroup.do?oid=$!{role.id}">编辑</a> |
+            		<a href="${ctx}/group/toViewGroup.do?oid=$!{role.id}">预览</a> |
+                	#if($!{role.enName} !='administrator' && $!{role.status} != '4')
+                		<a href="javascript:delGroup($!{role.id});">删除</a> |
+                	#end
+					<a href="${ctx}/group/findAllRole.do?id=$!{role.id}">组授权</a> |
+					<a href="${ctx}/group/findAllUser.do?id=$!{role.id}">组用户</a>
+				</td>
+			</tr>
+			#end
+		</table>
+	<div height="36" align="right">
+		#rendPageInfo(${pml})
+	</div>
+	</form>
+	<script language="javascript" src="${ctx}/js/ott/shiro/listGroup.js"></script>
+</body>
+</html>

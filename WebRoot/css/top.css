@@ -1,0 +1,45 @@
+* {
+	margin: 0px; padding: 0px;
+}
+body {
+	background: url("../images/admin_top_bg.jpg") rgb(21, 112, 165); overflow: hidden; font-size: 12px;
+}
+.logo {
+	background: url("../images/logo.png") no-repeat center; width: 225px; height: 45px; float: left;
+}
+.nav {
+	list-style: none; padding: 3px 20px 0px; float: left;
+}
+.nav li {
+	float: left;
+}
+.nav a {
+	padding: 5px 15px 0px; color: rgb(178, 213, 235); line-height: 40px; text-decoration: none; display: block;
+}
+.nav a:hover {
+	color: rgb(255, 255, 255);
+}
+.nav a.current {
+	background: url("../images/nav_arrow.gif") no-repeat top; color: rgb(255, 255, 255); font-weight: bold;
+}
+.right {
+	color: rgb(178, 213, 235); padding: 3px 20px 0px; line-height: 45px; float: right;
+}
+.right a {
+	color: rgb(178, 213, 235); text-decoration: none;
+}
+.right a:hover {
+	color: rgb(255, 255, 255); text-decoration: underline;
+}
+.right a.link {
+	color: rgb(255, 255, 255); text-decoration: underline;
+}
+.right .btn {
+	background: rgb(68, 109, 145); padding: 0px 8px; border-radius: 3px; text-align: center; color: rgb(178, 213, 235); line-height: 42px; text-decoration: none; margin-right: 3px; display: inline-block; -moz-border-radius: 3px; -webkit-border-radius: 3px;
+}
+.right .btn:hover {
+	color: rgb(255, 255, 255); text-decoration: none;
+}
+.right span {
+	padding-right: 8px;
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<TITLE>BCMS - 登录</TITLE>
+<META content="text/html; charset=utf-8" http-equiv="Content-Type">
+	#tagLibs()
+	<link href="${ctx}/css/shiro/login.css" rel="stylesheet" type="text/css" />
+	<link href="${ctx}/css/shiro/dialog.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="${ctx}/js/ott/md5.js"></script>
+	<SCRIPT type="text/javascript" src="${ctx}/js/ott/shiro/dialog.js"></SCRIPT>
+	<SCRIPT type="text/javascript" src="${ctx}/js/ott/shiro/login.js"></SCRIPT>
+</HEAD>
+<BODY>
+<DIV id="top"></DIV>
+<DIV class="form-box">
+<H3>BCMS管理中心</H3>
+<DIV class="logo"></DIV>
+<div id="login-tip" style="display: none;" class="login-tip">
+<div class="arrow"></div>
+<div id="login-tip-text" class="login-tip-text"></div>
+</div>
+<FORM name="form1" id="form1" method="post">
+<DIV class="txt-user"><INPUT id="loginName" type="text" name="loginName"/></DIV>
+<DIV class="txt-pass"><INPUT id="pass" type="password" name="pass"/><input type="hidden" id="password" name="password"/></DIV>
+<DIV class="txt-captcha"><INPUT id="vdcode" type="text" name="vdcode"></DIV>
+<A id="verifyImage" class="img-captcha" href=""><IMG id="vdcodeImg" src="${ctx}/common/getVeCode.htm"></A>
+<input type="hidden"  id="msg" value="$!{message}"/>
+<em id="tip_message" style="margin-left:100px;top:25px;">$!{message}</em>
+<INPUT id="loginSubmit" class="btn" value="" type="submit"/>
+</FORM>
+<DIV class="copyright">博瑞立方网络科技有限公司</DIV></DIV></BODY></HTML>

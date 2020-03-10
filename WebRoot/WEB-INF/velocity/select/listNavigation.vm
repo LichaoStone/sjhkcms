@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>频道分类管理</title>
+#tagLibs()
+</head>
+<body>
+<!--  快速转换位置按钮  --> 
+<!--  内容列表   -->
+<form id="queryForm" method="get">
+<div class="topline">
+	<p class="xzbtn" style="color:#FFFFFF">栏目列表</p> | 
+    <a href="${ctx}/type/toNavigation.do?xz=1" class="wxbtn">新增一级栏目</a> |
+	<a href="${ctx}/type/toNavigation.do?xz=2" class="wxbtn">新增二级栏目</a>
+</div>
+ <table border='0' cellpadding='0' cellspacing='0' height="36">
+    <tr class="search">
+        <td>栏目名称：<input type='text' id="name" name='name' value='$!{type.name}'/></td>
+        <td>所属栏目：
+			<select id="parentId" name="parentId" style="width:100px;">
+				<option value="">=请选择=</option>
+				<option value="0" #if ("0" == "$!{type.parentId}") selected #end>一级栏目</option>
+				#foreach($list in $oList)
+				<option value="${list.id}" #if (${list.id} == $!{type.parentId}) selected #end>${list.name}</option>
+				#end
+            </select>
+		</td>
+		<td>
+			<input type="hidden" id="orderColumn" name="orderColumn" value="$!{type.orderColumn}" />
+            <img id="queryProgram" type="image" src="${ctx}/images/button_search.gif"/>
+        </td>
+	</tr>
+</table>
+<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+<tr align="left" bgcolor="#eff2f7" height="30">
+	<td width="5%"><a href="javascript:void(0);" onclick="orderBy(this);" name="id" lastOrderBy="$!{type.orderColumn}" class="tb_head">编号</a></td>
+    <td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="name" lastOrderBy="$!{type.orderColumn}" class="tb_head">栏目名称</a></td>
+	<td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="parentId" lastOrderBy="$!{type.orderColumn}" class="tb_head">所属栏目</a></td>
+    <td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="code" lastOrderBy="$!{type.orderColumn}" class="tb_head">编码</a></td>
+    <td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="sequence" lastOrderBy="$!{type.orderColumn}" class="tb_head">排序</a></td>
+	<td width="5%"><a href="javascript:void(0);" onclick="orderBy(this);" name="status" lastOrderBy="$!{type.orderColumn}" class="tb_head">状态</a></td>
+	<td width="10%">操作</td>
+</tr>
+#if ($null.isNull($list) || $list.size()==0)
+	<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td colspan="7"><h1>暂无相关数据内容</h1></td>
+    </tr>
+#end
+#foreach ($c in $list)
+<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td >$!{c.id}</td>
+	 <td >$!{c.name}</td>
+	 <td >$!{c.parentName}</td>
+     <td >$!{c.code}</td>
+     <td>
+	 	<input type="text" name="queue" align="center" data-queue="$!{c.sequence}" data-id="$!{c.id}"  value="$!{c.sequence}" style="width:25px;"/>
+	 	<img src="${ctx}/images/0x2705.png" align="center" onclick="changeAueue(this);" title="修改排序" style="top:2px;display:none;"/>
+     </td>
+     <td >
+		#if('1'==$!{c.status})
+			已启动
+		#else
+			已停用
+		#end
+	</td>
+	<td >
+        <a href="${ctx}/type/toNavigation.do?id=$!{c.id}&parentId=$!{c.parentId}">编辑</a> |
+		#if($!{c.status}=='0')
+			<a href="javascript:updateTypeStatus(this, '$!{c.id}', '$!{c.status}');">启用</a>|
+		#else
+			<a href="javascript:updateTypeStatus(this, '$!{c.id}', '$!{c.status}');">停用</a>
+		#end
+		<!--<a href="javascript:changeUpSequence(this,'$!{c.sequence}','$!{c.parentId}','$!{c.id}');">上移</a>|
+		<a href="javascript:changeDownSequence(this,'$!{c.sequence}','$!{c.parentId}','$!{c.id}');">下移</a>-->
+     </td>
+</tr>
+#end
+</table>
+<div height="36" align="right">
+    #pagination(${type})
+</div>
+</form>
+<script type="text/javascript" src="${ctx}/js/ott/select/listNavigation.js"></script>
+</body>
+</html>

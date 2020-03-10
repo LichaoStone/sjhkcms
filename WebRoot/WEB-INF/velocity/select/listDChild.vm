@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>剧集管理</title>
+#tagLibs()
+</head>
+<body>
+<!--  快速转换位置按钮  --> 
+<!--  内容列表   -->
+<form id="queryForm" method="get">
+<div class="topline">
+	<a href="#" class="xzbtn" style="color:#FFFFFF">$!{dramaChildren.dramaName}剧集列表</a> | 
+    <a href="${ctx}/select/toDramaChild.do?dramaId=$!{dramaChildren.dramaId}&dramaName=$!{dramaChildren.dramaName}" class="wxbtn">新增$!{dramaChildren.dramaName}剧集</a>
+</div>
+ <table border='0' cellpadding='0' cellspacing='0' height="36">
+    <tr class="search">
+        <td>剧集名称：<input type='text' id="title" name='title' value='$!{dramaChildren.title}'/></td>
+		<td>
+			<input type="hidden" id="orderColumn" name="orderColumn" value="$!{dramaChildren.orderColumn}" />
+			<input type="hidden" id="dramaId" name="dramaId" value="$!{dramaChildren.dramaId}" />
+			<input type="hidden" id="dramaName" name="dramaName" value="$!{dramaChildren.dramaName}" />
+            <img id="queryProgram" type="image" src="${ctx}/images/button_search.gif"/>
+        </td>
+	</tr>
+</table>
+<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+<tr align="left" bgcolor="#eff2f7" height="30">
+	<td width="5%"><input type="checkbox" id="allSelect" style="padding-top:5px;"  onclick="isCheckAll('arcID',this);"><label for="allSelect">全选</label></td>
+    <td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="ds.title" lastOrderBy="$!{dramaChildren.orderColumn}" class="tb_head">剧集名称</a></td>
+    <td width="15%"><a href="javascript:void(0);" onclick="orderBy(this);" name="ds.timeLongth" lastOrderBy="$!{dramaChildren.orderColumn}" class="tb_head">播放时长</a></td>
+    <td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="ds.createTime" lastOrderBy="$!{dramaChildren.orderColumn}" class="tb_head">录入时间</a></td>
+	<td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="ds.status" lastOrderBy="$!{dramaChildren.orderColumn}" class="tb_head">状态</a></td>
+	<td width="10%">操作</td>
+</tr>
+#if ($null.isNull($list) || $list.size()==0)
+	<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td colspan="6"><h1>暂无相关数据内容</h1></td>
+    </tr>
+#end
+#foreach ($source in $list)
+<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+     <td><input type="checkbox" id="arcID" name="arcID" class="np" value="$!{source.id}"/></td>
+     <td >$!{source.title}</td>
+     <td >$!{source.timeLongth}</td>
+	 <td >$!{source.createTime}</td>
+     <td >$!{source.statusName}</td>
+	 <td >
+     	<a href="${ctx}/select/toDramaChild.do?id=$!{source.id}&dramaName=$!{dramaChildren.dramaName}">编辑</a>
+     	<a href="${ctx}/select/findDramaSource.do?childId=$!{source.id}">播放资源</a>
+		#if($!{source.status}=='1')
+			<a href="javascript:updateChildStatus(this,'$!{source.id}','$!{source.status}');">停用</a>
+		#else
+			<a href="javascript:updateChildStatus(this,'$!{source.id}','$!{source.status}');">启用</a>
+		#end
+     </td>
+</tr>
+#end
+</table>
+<div height="36" align="right">
+    #pagination(${dramaChildren})
+</div>
+<div height="36" align="left">
+  	<a href="javascript:void(0);" class="wxbtn" id="childReverse">批量启用</a>
+  	<a href="javascript:void(0);" class="wxbtn" id="childClose">批量停用</a>
+</div>
+</form>
+<script type="text/javascript" src="${ctx}/js/ott/select/listDChild.js"></script>
+</body>
+</html>

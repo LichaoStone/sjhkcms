@@ -1,0 +1,66 @@
+<project name="sjhkcms" default="build" basedir=".">
+	<property name="war.file" value="${basedir}/build/${ant.project.name}.war" />
+	<property name="build.dir" value="${basedir}/build/${ant.project.name}" />
+	<property name="class.dir" value="${basedir}/WebRoot/WEB-INF/classes" />
+	<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+	
+	<path id="classpath">
+		<fileset dir="${basedir}/lib-dev">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${basedir}/WebRoot/WEB-INF/lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+				
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+			<classpath>
+				<pathelement location="lib-dev/ant-contrib-1.0b3.jar" />
+			</classpath>
+	</taskdef>
+				
+	<target name="clean">
+		<delete dir="${build.dir}" failonerror="false" />
+		<delete dir="${class.dir}" failonerror="false" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${class.dir}" />
+	</target>
+
+	<target name="compile">
+		<javac srcdir="src" destdir="${class.dir}" source="1.7" target="1.7" includeantruntime="false" debug="on" nowarn="on" deprecation="off" optimize="on" encoding="UTF-8">
+			<classpath refid="classpath" />
+		</javac>
+		
+		<copy todir="${class.dir}" description="copy scr's file into class dir">
+			<fileset dir="src">
+				<include name="**\*.xml" />
+				<include name="**\*.properties" />
+				<exclude name="**\.svn\**" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dir}" description="copy WebRoot dir's files">
+			<fileset dir="${basedir}/WebRoot">
+				<exclude name="**\.svn\**" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="war">
+		<delete file="${war.file}" failonerror="no" />
+
+		<war warfile="${war.file}" webxml="${build.dir}/WEB-INF/web.xml">
+			<fileset dir="${build.dir}">
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</war>
+	</target>
+
+	<target name="build" depends="clean, compile, war">
+		<propertyregex property="src-drive" input="${build.dir}/" regexp="(.*):" select="\1"/>
+		<propertyregex property="src-file" input="${build.dir}/" regexp="(.*):(.*)" select="\2"/>
+
+		<echo message="rsync -zvaur --delete --progress '/cygdrive/${src-drive}${src-file}' root@192.168.1.222:/usr/local/tomcats/tomcat-quartz/webapps/${ant.project.name}/" />
+	</target>
+
+</project>

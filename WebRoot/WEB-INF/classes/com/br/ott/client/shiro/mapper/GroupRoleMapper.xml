@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.shiro.mapper.GroupRoleMapper">
+	<resultMap type="GroupRole" id="GroupRole">
+		<id property="id" column="id"></id>
+		<result property="groupid" column="groupid"></result>
+		<result property="roleid" column="roleid"></result>
+	</resultMap>
+	
+	<!--添加一个分组 -->
+	<insert id="addRoleToGroup" parameterType="GroupRole">
+		<![CDATA[   INSERT INTO ott_qx_grouprole (groupid, roleid)
+			VALUES (#{groupid,jdbcType=VARCHAR},
+				 	#{roleid,jdbcType=VARCHAR})
+	 	]]>
+	</insert>
+	
+	<!-- 根据组ID删除组 -->
+	<delete id="delGroupRole" parameterType="String">
+		<![CDATA[ DELETE FROM ott_qx_grouprole WHERE groupid = #{groupid} and roleid = #{roleid} ]]>
+	</delete>
+	
+	<resultMap type="GroupRole" id="GroupRoleMap">
+		<id property="id" column="id"></id>
+		<result property="groupid" column="groupid"></result>
+		<result property="groupName" column="groupName"></result>
+		<result property="roleid" column="roleid"></result>
+		<result property="roleName" column="roleName"></result>
+	</resultMap>
+	<select id="findGroupRoleByGroupId" resultMap="GroupRoleMap">
+		select gr.id, gr.roleid, gr.groupid, r.rolename as roleName, g.name as groupName
+		from ott_qx_grouprole gr
+		left outer join ott_qx_role r on gr.roleid=r.oid
+		left outer join ott_qx_group g on gr.groupid=g.id
+		where gr.groupid= #{groupid} 
+	</select>
+	
+	<select id="findGroupRoleByRoleId" resultMap="GroupRoleMap">
+		select gr.id, gr.roleid, gr.groupid, r.rolename as roleName, g.name as groupName
+		from ott_qx_grouprole gr
+		left outer join ott_qx_role r on gr.roleid=r.oid
+		left outer join ott_qx_group g on gr.groupid=g.id
+		 where gr.roleid= #{roleid} 
+	</select>
+	
+	<select id="getGroupRoleByRidAndGid" resultMap="GroupRoleMap">
+		select gr.id, gr.roleid, gr.groupid, r.rolename as roleName, g.name as groupName
+		from ott_qx_grouprole gr
+		left outer join ott_qx_role r on gr.roleid=r.oid
+		left outer join ott_qx_group g on gr.groupid=g.id
+		where gr.groupid= #{groupid}  and gr.roleid= #{roleid} 
+	</select>
+	
+</mapper>

@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>资源</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	#tagLibs()
+</head>
+<body>
+	<div>
+	<a href="${ctx}/resour/findResourList.do" class="wxbtn">资源列表</a> | 
+    <a href="${ctx}/resour/toAddResour.do" class="xzbtn" style="color:#FFFFFF">新增资源</a>
+</div>
+<form method="post"  name="fom" id="fom">
+ <table width="98%"  border="0" align="center" style="margin-top:13px;">
+    <tr>
+      <td colspan="2">
+				<legend>资源信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">资源名称：</td>
+							<td class="pn-fcontent">
+								$!{resour.name}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">资源编码：</td>
+							<td class="pn-fcontent">
+								$!{resour.enname}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">所属系统：</td>
+							<td class="pn-fcontent">
+									#foreach($syst in $!systems)
+                                        #if ($!{resour.systemid}==$!{syst.id}) $!syst.name #end
+                					#end
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">上级资源：</td>
+							<td class="pn-fcontent">
+    								#foreach($res in $!resourList)
+                                        #if ($!{resour.parentId} == ${res.id}) $!res.name #end
+    								#end
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">资源类型：</td>
+							<td class="pn-fcontent">
+								$!{resour.resourcetype}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">链接地址：</td>
+							<td class="pn-fcontent">
+								$!{resour.link}
+							</td>
+						</tr>
+						
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">图标：</td>
+							<td class="pn-fcontent">
+								$!{resour.icon}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">打开图标：</td>
+							<td class="pn-fcontent">
+								#if($!{resour.iconopen} == 1) 
+									打开 
+								#else
+									关闭
+								#end
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">是否打开：</td>
+							<td class="pn-fcontent">
+								#if($!{resour.isopen} == 1) 
+									是 
+								#else
+									否
+								#end
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">是否节点：</td>
+							<td class="pn-fcontent">
+								#if($!{resour.isleaf} == 1) 
+									是 
+								#else
+									否
+								#end
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">状态：</td>
+							<td class="pn-fcontent">
+								#if($!{resour.status} == 1)
+									启用
+								#elseif($!{resour.status} == 2)
+									隐藏
+								#elseif($!{resour.status} == 3)
+									冻结
+								#elseif($!{resour.status} == 0)
+									弃用
+								#end
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">排序：</td>
+							<td class="pn-fcontent">
+								$!{resour.orderid}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">备注：</td>
+							<td class="pn-fcontent" colspan="3">
+								$!{resour.memo}
+                            </td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+</body>
+</html>

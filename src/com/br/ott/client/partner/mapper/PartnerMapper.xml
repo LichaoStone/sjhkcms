@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.partner.mapper.PartnerMapper">
+	<!-- 列表Map -->
+	<resultMap id="listPartnerMap" type="Partner">
+		<id property="id" column="id"></id>
+		<result property="partnerName" column="partnerName"></result>
+		<result property="partnerType" column="partnerType"></result>
+		<result property="partnerAddress" column="partnerAddress"></result>
+		<result property="partnerCity" column="partnerCity"/>
+		<result property="partnerPhone" column="partnerPhone"/>
+		<result property="merchantImg" column="merchantImg"/>
+		<result property="linkman" column="linkman"/>
+		<result property="createTime" column="createTime"/>
+		<result property="status" column="status"></result>
+		<result property="SPid" column="SPid"/>
+		<result property="fullName" column="fullName"/>
+		<result property="simpleName" column="simpleName"/>
+	</resultMap>	
+	
+	<!--添加一个合作伙伴 -->
+	<insert id="addPartner" parameterType="Partner">
+		<![CDATA[ INSERT INTO ott_partnerinfo (id, partnerName, partnerType, partnerCity, partnerPhone,  
+				otherContact, linkman, partnerAddress, partnerDesc, createTime, merchantImg, identitycardImg,
+				 businesslicense, otherImg, SPid, legal, fullName, simpleName, funds, competent, competentPhone,
+				 competentEmail, contact, contactPhone, contactEmail, contractNumber)
+				VALUES (#{id,jdbcType=VARCHAR}, 
+						#{partnerName,jdbcType=VARCHAR}, 
+						#{partnerType,jdbcType=VARCHAR}, 
+						#{partnerCity,jdbcType=VARCHAR}, 
+						#{partnerPhone,jdbcType=VARCHAR}, 
+						#{otherContact,jdbcType=VARCHAR}, 
+						#{linkman,jdbcType=VARCHAR},
+						#{partnerAddress,jdbcType=VARCHAR},  
+						#{partnerDesc,jdbcType=VARCHAR}, 
+						now(), 
+						#{merchantImg,jdbcType=VARCHAR},
+						#{identitycardImg,jdbcType=VARCHAR},
+						#{businesslicense,jdbcType=VARCHAR},
+						#{otherImg,jdbcType=VARCHAR},
+						#{SPid,jdbcType=VARCHAR},
+						#{legal,jdbcType=VARCHAR},
+						#{fullName,jdbcType=VARCHAR},
+						#{simpleName,jdbcType=VARCHAR},
+						#{funds,jdbcType=VARCHAR},
+						#{competent,jdbcType=VARCHAR},
+						#{competentPhone,jdbcType=VARCHAR},
+						#{competentEmail,jdbcType=VARCHAR},
+						#{contact,jdbcType=VARCHAR},
+						#{contactPhone,jdbcType=VARCHAR},
+						#{contactEmail,jdbcType=VARCHAR},
+						#{contractNumber,jdbcType=VARCHAR})   
+	 	]]>
+	</insert>
+	
+	<!-- 按ID查询合作伙伴 -->
+	<select id="getPartnerById" resultType="Partner">
+		<![CDATA[ SELECT id, partnerName, partnerType, partnerCity, partnerPhone,  
+				  otherContact, linkman, partnerAddress, partnerDesc, merchantImg, identitycardImg,
+				  businesslicense, otherImg, status, date_format(createTime,'%Y-%m-%d %H:%i:%s') createTime ,
+				  SPid, legal, fullName, simpleName, funds, competent, competentPhone,
+				 competentEmail, contact, contactPhone, contactEmail,contractNumber
+				FROM  ott_partnerinfo WHERE id = #{id}
+		]]>
+	</select>	
+	
+	<select id="getPartnerBySPid" resultType="int">
+		<![CDATA[ SELECT count(id)
+				FROM  ott_partnerinfo WHERE SPid = #{SPid} and status='11'
+		]]>
+	</select>	
+	
+	<!-- 根据ID查找 -->
+	<select id="getPartnerId" resultType="Partner">
+		<![CDATA[ SELECT * FROM ott_partnerinfo WHERE id = #{id}
+		]]>
+	</select>	
+	
+	<!-- 按分页查询合作伙伴 -->
+	<select id="findPartner" resultMap="listPartnerMap">
+				SELECT id, partnerName, partnerType, partnerAddress, partnerCity, 
+				partnerPhone ,linkman, merchantImg ,date_format(createTime,'%Y-%m-%d %H:%i:%s') createTime, 
+				status, SPid, fullName, simpleName
+				FROM ott_partnerinfo 
+				<where>
+					<if test="partnerName != null and partnerName != ''">
+						partnerName LIKE CONCAT(CONCAT('%', #{partnerName}),'%')
+					</if>
+					<if test="partnerType != null and partnerType != ''">
+						and partnerType = #{partnerType}
+					</if>
+					<if test="partnerPhone != null and partnerPhone != ''">
+						and partnerPhone = #{partnerPhone}
+					</if>
+					<if test="status !=null and status != ''">
+						and status = #{status}
+					</if>
+					<if test="createTime != null and createTime != ''">
+						and date_format(createTime, '%Y-%m-%d')= #{createTime}
+					</if>
+					<if test="noShelf !=null and noShelf != ''">
+						and status != #{noShelf}
+					</if>
+					<if test="readyOrPass !=null and readyOrPass != ''">
+						and status in ( ${readyOrPass} )
+					</if>
+				</where>
+				<if test="orderColumn != null and orderColumn !=''">
+					order by ${orderColumn} 
+				</if>
+				<if test="orderColumn == null or orderColumn ==''">
+					order by  createTime desc
+				</if>
+	</select>
+	<select id="getCountPartner" resultType="int">
+				SELECT count(id) FROM ott_partnerinfo
+				<where>
+					<if test="partnerName != null and partnerName != ''">
+						partnerName LIKE CONCAT(CONCAT('%', #{partnerName}),'%')
+					</if>
+					<if test="partnerType != null and partnerType != ''">
+						and partnerType = #{partnerType}
+					</if>
+					<if test="partnerPhone != null and partnerPhone != ''">
+						and partnerPhone = #{partnerPhone}
+					</if>
+					<if test="status !=null and status != ''">
+						and status = #{status}
+					</if>
+					<if test="createTime != null and createTime != ''">
+					    and date_format(createTime, '%Y-%m-%d')= #{createTime}
+					</if>
+					<if test="noShelf !=null and noShelf != ''">
+						and status != #{noShelf}
+					</if>
+					<if test="readyOrPass !=null and readyOrPass != ''">
+						and status in ( ${readyOrPass} )
+					</if>
+				</where>
+	</select>
+	
+	<!-- 根据ID来删除对应的合作伙伴 -->
+	<delete id="delPartner">
+		DELETE FROM ott_partnerinfo 
+		WHERE id in  
+		<foreach collection="array" item="ids"  open="(" separator="," close=")">  
+        	#{ids}  
+     	</foreach>
+	</delete>
+	
+	<!-- 修改合作伙伴 -->
+	<update id="modifyPartner" parameterType="Partner">
+		<![CDATA[ UPDATE ott_partnerinfo SET 
+				partnerName = #{partnerName,jdbcType=VARCHAR},
+		 		partnerType = #{partnerType,jdbcType=VARCHAR}, 
+				partnerCity= #{partnerCity,jdbcType=VARCHAR},
+				partnerPhone = #{partnerPhone,jdbcType=VARCHAR}, 
+				otherContact = #{otherContact,jdbcType=VARCHAR}, 
+				linkman = #{linkman,jdbcType=VARCHAR}, 
+				partnerAddress=#{partnerAddress,jdbcType=VARCHAR},
+				partnerDesc= #{partnerDesc,jdbcType=VARCHAR}, 
+				merchantImg = #{merchantImg,jdbcType=VARCHAR}, 
+				identitycardImg=#{identitycardImg,jdbcType=VARCHAR},
+				businesslicense=#{businesslicense,jdbcType=VARCHAR},
+				otherImg=#{otherImg,jdbcType=VARCHAR},
+				SPid=#{SPid,jdbcType=VARCHAR},
+				legal=#{legal,jdbcType=VARCHAR},
+				fullName=#{fullName,jdbcType=VARCHAR},
+				simpleName=#{simpleName,jdbcType=VARCHAR},
+				funds=#{funds,jdbcType=VARCHAR},
+				competent=#{competent,jdbcType=VARCHAR},
+				competentPhone=#{competentPhone,jdbcType=VARCHAR},
+				competentEmail=#{competentEmail,jdbcType=VARCHAR},
+				contact=#{contact,jdbcType=VARCHAR},
+				contactPhone=#{contactPhone,jdbcType=VARCHAR},
+				contactEmail=#{contactEmail,jdbcType=VARCHAR},
+				status=#{status,jdbcType=VARCHAR}
+           WHERE id = #{id} ]]>
+	</update>
+	
+	<!-- 修改合作伙伴状态 -->
+	<update id="modifyPartnerStatus">
+		<![CDATA[ UPDATE ott_partnerinfo SET status = #{status} WHERE id = #{id} ]]>
+	</update>
+	
+	<!-- 修改合作伙伴合同编号 -->
+	<update id="modifyPartnerContract">
+		<![CDATA[ UPDATE ott_partnerinfo SET contractNumber = #{contractNumber} WHERE id = #{id} ]]>
+	</update>
+</mapper>

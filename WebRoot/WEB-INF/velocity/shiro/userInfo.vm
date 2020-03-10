@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>用户信息编辑 </title>
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="this is my page">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+#tagLibs()
+</head>
+<body onload="showCity('city','areaid','$proId','$cityId');">
+<div class="topline">
+	<a href="${ctx}/user/findUsersList.do" class="wxbtn">用户列表</a> | 
+    <a href="#" class="xzbtn" style="color:#FFF">#if($!{userInfo.userId}==""|| !${userInfo.userId})增加用户#else 修改用户#end</a>
+</div>
+<form method="post"  name="fom" id="fom">
+ <table width="98%"  border="0" align="center" style="margin-top:13px;">
+    <tr>
+      <td colspan="2">
+				<legend>用户信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">用户名：</td>
+							<td class="pn-fcontent">
+								<input name="userId" id="userId" value="$!{userInfo.userId}" type="hidden"/>
+								<input type="hidden" id="oldName" value="$!{userInfo.userName}"/>
+								<input name="userName" class="text" id="userName" type="text" value="$!{userInfo.userName}"/> 
+								<em class="required">*</em>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">密码：</td>
+							<td class="pn-fcontent">
+								#if($!{userInfo.userId}==''|| !${userInfo.userId})
+									<input name="password" id="password" type="password" value="$!{userInfo.password}"/>
+								#else
+    								<input name="password" id="password" type="password" value="$!{userInfo.password}" disabled/>
+								#end
+								<em class="required">*</em>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">真实姓名：</td>
+							<td class="pn-fcontent">
+								<input name="loginname" class="text" id="loginname" type="text" value="$!{userInfo.loginname}"/>
+								<em class="required">*</em>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系方式：</td>
+							<td class="pn-fcontent">
+								<input type="hidden" id="oldPhone" value="$!{userInfo.phone}"/>
+								<input name="phone" class="text" id="phone" type="text" value="$!{userInfo.phone}"/>
+								<em class="required">*</em>
+							</td>
+						</tr>
+						
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">地区：</td>
+							<td class="pn-fcontent">
+								<select name="city" id="city" style="width:132px" onchange="changeCity(this,'areaid');">
+                					<option value="">==请选择==</option>
+									#foreach($p in $!provins)
+                                        <option value="$!p.id">$!p.name</option>
+                					#end
+                                </select>
+                				<select name="areaid" id="areaid" style="width:132px">
+                					#foreach($c in $!citys)
+                                        <option value="$!c.areacode">$!c.name</option>
+                					#end
+                                </select><em class="required">*</em>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">状态：</td>
+							<td class="pn-fcontent">
+								<select name="status" style="width:132px" id="status">
+										<option value="0" #if($!{userInfo.status} == 0) selected #end>未激活</option>
+										<option value="1" #if($!{userInfo.status} == 1) selected #end>正常</option>
+										<option value="2" #if($!{userInfo.status} == 2) selected #end>禁用</option>
+								</select>
+							</td>
+						</tr>
+						
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">所属组：</td>
+							<td class="pn-fcontent" >
+								<select name="groupId" style="width:132px" id="groupId">
+										#foreach($gu in $!mgroup)
+                                            <option value="$!gu.id" #if ($!{userInfo.groupId} == $!gu.id) selected #end>$!gu.name</option>
+                    					#end
+								</select>
+								<em class="required">*</em>
+							</td>
+							<td class="pn-flabel pn-flabel-h">运营商：</td>
+							<td class="pn-fcontent" >
+								<select name="operators" id="operators" >
+					   					<option value="" >=请选择=</option>
+										<option value="1895,1893"  #if (${userInfo.operators} == '1895,1893') selected #end>融媒.电信</option>
+										<option value="1887"  #if (${userInfo.operators} == '1887') selected #end>融媒.移动</option>
+										<option value="1897"  #if (${userInfo.operators} == '1897') selected #end>融媒.P2P</option>
+								</select>
+								<em class="required">*</em>
+					        </td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" id="saveUser" class="bt-primary">保存</button>
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+	<script language="javascript" src="${ctx}/js/ott/shiro/userInfo.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.shiro.mapper.SystemsMapper">
+	<resultMap type="Systems" id="Systems">
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="ename" column="enname"></result>
+		<result property="builddate" column="builddate"></result>
+		<result property="contextPath" column="contextPath"></result>
+		<result property="icon" column="icon"></result>
+		<result property="logo" column="logo"></result>
+		<result property="memo" column="memo"></result>
+		<result property="order" column="orderid"></result>
+		<result property="status" column="status"></result>
+		<result property="tablePrefix" column="tablePrefix"></result>
+		<result property="version" column="version"></result>
+		
+	</resultMap>
+
+	<!--添加  -->
+	<insert id="addSystem" parameterType="Systems">
+		<![CDATA[   INSERT INTO ott_qx_system (name, enname,builddate,contextPath,
+					icon,logo,memo,orderid,status,tablePrefix,version)
+			VALUES (#{name,jdbcType=VARCHAR},
+				 	#{ename,jdbcType=VARCHAR},
+				 	#{builddate,jdbcType=VARCHAR},
+				 	#{contextPath,jdbcType=VARCHAR},
+				 	#{icon,jdbcType=VARCHAR},
+				 	#{logo,jdbcType=VARCHAR},
+				 	#{memo,jdbcType=VARCHAR},
+				 	#{order,jdbcType=VARCHAR},
+				 	#{status,jdbcType=VARCHAR},
+				 	#{tablePrefix,jdbcType=VARCHAR},
+				 	#{version,jdbcType=VARCHAR})
+	 	]]>
+	</insert>
+	
+	<!-- 修改 -->
+	<select id="modifySystem" parameterType="Systems">
+		<![CDATA[ UPDATE ott_qx_system 
+		SET name = #{name,jdbcType=VARCHAR}, 
+		enname = #{ename,jdbcType=VARCHAR}, 
+		builddate = #{builddate,jdbcType=VARCHAR}, 
+		contextPath = #{contextPath,jdbcType=VARCHAR},
+		 icon = #{icon,jdbcType=VARCHAR},
+		 logo = #{logo,jdbcType=VARCHAR},
+		 memo = #{memo,jdbcType=VARCHAR},
+		 orderid = #{order,jdbcType=VARCHAR},
+		 status = #{status,jdbcType=VARCHAR},
+		 tablePrefix = #{tablePrefix,jdbcType=VARCHAR},
+		 version = #{version,jdbcType=VARCHAR} 
+		 WHERE id = #{id,jdbcType=VARCHAR}]]>
+	</select>
+	
+	<!-- 根据ID删除 -->
+	<delete id="delSystem" parameterType="String">
+		<![CDATA[ DELETE FROM ott_qx_system WHERE id = #{id} ]]>
+	</delete>
+	
+	<!-- 查询总条数 -->
+	<select id="getCountSystem" resultType="int">
+		SELECT count(1) FROM ott_qx_system sys
+		<where>
+			<if test="name != null and name != ''">
+				sys.name = #{name}
+			</if>
+			<if test="status != null and status != ''">
+				and sys.status = #{status}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页查询所有角色 -->
+	<select id="findAllSystem" resultMap="Systems">
+		SELECT * FROM ott_qx_system s
+		<where>
+			<if test="name != null and name != ''">
+				s.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+		</where>
+		order by s.id desc 
+	</select>
+	
+	<!-- 根据角色ID查找角色  -->
+	<select id="getSystemById" resultMap="Systems">
+		<![CDATA[ SELECT * FROM ott_qx_system WHERE id = #{id}]]>
+	</select>
+	
+	<!-- 查询所有-->
+	<select id="getSystemList" resultMap="Systems">
+		<![CDATA[ SELECT * FROM ott_qx_system s where s.status = '1']]>
+	</select>
+	
+</mapper>

@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>资产节目信息</title>
+#tagLibs()
+</head>
+<body>
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td>
+				<legend>资产信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">资产名称：</td>
+							<td class="pn-fcontent">
+								$!{dp.name}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">资产别名：</td>
+							<td class="pn-fcontent">
+								$!{dp.otherName}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">资产类型：</td>
+							<td class="pn-fcontent">
+								$!{dp.ptypeName}
+                            </td>
+							<td width="10%" class="pn-flabel pn-flabel-h">栏目：</td>
+							<td class="pn-fcontent">
+								$!{dp.typeName}
+							</td>
+                        </tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">资产id：</td>
+							<td class="pn-fcontent">
+								$!{dp.assetId}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">内容商栏目：</td>
+							<td class="pn-fcontent">
+								$!{dp.oldType}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">内容提供商：</td>
+							<td class="pn-fcontent">
+									#foreach($cProvider in $cProviders)
+										#if(${cProvider.dicValue} == $!{dp.cProvider}) 
+											${cProvider.dicName} 
+										#end
+									#end
+									
+                            </td>
+							<td width="10%" class="pn-flabel pn-flabel-h">语言：</td>
+							<td class="pn-fcontent">
+									$!{dp.language}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">主演：</td>
+							<td class="pn-fcontent">
+								$!{dp.actor}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">导演：</td>
+							<td class="pn-fcontent">
+								$!{dp.director}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">产地：</td>
+							<td class="pn-fcontent">
+									$!{dp.origin}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">主持人：</td>
+							<td class="pn-fcontent">
+								$!{dp.compere}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">上映年份：</td>
+							<td class="pn-fcontent">
+								$!{dp.playyear}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">资产简拼：</td>
+							<td class="pn-fcontent">
+								$!{dp.pcode}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">看点：</td>
+							<td class="pn-fcontent">
+								$!{dp.summary}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">关键字：</td>
+							<td class="pn-fcontent">
+								$!{dp.keyword}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">连播剧：</td>
+							<td class="pn-fcontent">
+								#if($!{dp.pId}=='1')
+									是
+								#else
+									否
+								#end
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">资产状态：</td>
+							<td class="pn-fcontent">
+								$!{dp.statusName}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">录入时间：</td>
+							<td class="pn-fcontent">
+								$!{dp.createTime}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">操作人：</td>
+							<td class="pn-fcontent">
+								$!{dp.operator}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">图片状态：</td>
+							<td class="pn-fcontent">
+									$!{dp.loadName}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">跳转地址：</td>
+							<td class="pn-fcontent">
+									$!{dp.linkUrl}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">封面小图：</td>
+							<td class="pn-fcontent">
+								<div id="preview">
+									#if(!${dp.coverXImg}||$!{dp.coverXImg}=="")
+										<img id="imghead" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${sourceUrl}$!{dp.coverXImg}">
+									#end
+								</div>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">封面大图：</td>
+							<td class="pn-fcontent">
+								<div id="preview2">
+									#if(!${dp.coverDImg}||$!{dp.coverDImg}=="")
+										<img id="imghead2" style="width:230px;height:200px;border:1px;" alt="节目LOGO" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead2" style="width:230px;height:200px;border:1px;" alt="节目LOGO" src="${sourceUrl}$!{dp.coverDImg}">
+									#end
+								</div>
+							</td>
+						</tr> 
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">推荐小图：</td>
+							<td class="pn-fcontent">
+								<div id="preview3">
+									#if(!${dp.recXImg}||$!{dp.recXImg}=="")
+										<img id="imghead3" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead3" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${sourceUrl}$!{dp.recXImg}">
+									#end
+								</div>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">推荐大图：</td>
+							<td class="pn-fcontent">
+								<div id="preview4">
+									#if(!${dp.recDImg}||$!{dp.recDImg}=="")
+										<img id="imghead4" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead4" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${sourceUrl}$!{dp.recDImg}">
+									#end
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">简介说明：</td>
+							<td class="pn-fcontent" colspan="3">
+								$!{dp.remark}
+							</td>
+						</tr>
+					</table>	
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;
+		<button type="button" onClick="window.close();" class="bt-secondary">关闭</button>
+	</td>
+   </tr>
+</table>
+</form>
+</body>
+</html>

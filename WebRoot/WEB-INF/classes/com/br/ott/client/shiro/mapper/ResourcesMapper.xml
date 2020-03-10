@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.shiro.mapper.ResourcesMapper">
+	<resultMap type="Resources" id="Resources">
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="enname" column="enname"></result>
+		<result property="systemid" column="systemid"></result>
+		<result property="parentId" column="PARENT_ID"></result>
+		<result property="resourcetype" column="resourcetype"></result>
+		<result property="link" column="link"></result>
+		<result property="icon" column="icon"></result>
+		<result property="iconopen" column="iconopen"></result>
+		<result property="isopen" column="isopen"></result>
+		<result property="isleaf" column="isleaf"></result>
+		<result property="status" column="status"></result>
+		<result property="orderid" column="orderid"></result>
+		<result property="memo" column="memo"></result>
+	</resultMap>
+	
+	<!--添加资源信息-->
+	<insert id="addResour" parameterType="Resources">
+		<![CDATA[   INSERT INTO ott_qx_resource (name, enname,systemid,PARENT_ID, resourcetype,link,icon,iconopen,isopen,isleaf,status,orderid,memo)
+			VALUES (#{name,jdbcType=VARCHAR},
+			        #{enname,jdbcType=VARCHAR},
+			        #{systemid,jdbcType=VARCHAR},
+			        #{parentId,jdbcType=VARCHAR},
+				 	#{resourcetype,jdbcType=VARCHAR},
+				 	#{link,jdbcType=VARCHAR},
+				 	#{icon,jdbcType=VARCHAR},
+				 	#{iconopen,jdbcType=VARCHAR},
+				 	#{isopen,jdbcType=VARCHAR},
+				 	#{isleaf,jdbcType=VARCHAR},
+				 	#{status,jdbcType=VARCHAR},
+				 	#{orderid,jdbcType=VARCHAR},
+				 	#{memo,jdbcType=VARCHAR})
+	 	]]>
+	</insert>
+	
+	<!-- 查询总条数 -->
+	<select id="getCountResour" resultType="int">
+		SELECT count(1) FROM ott_qx_resource rol 
+		<where>
+			<if test="name != null and name != ''">
+				rol.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+		</where>
+	</select>
+	
+	<!-- 修改资源信息 -->
+	<select id="modifyResour" parameterType="Resources">
+		<![CDATA[ UPDATE ott_qx_resource 
+		SET name = #{name,jdbcType=VARCHAR}, 
+		enname = #{enname,jdbcType=VARCHAR}, 
+		systemid = #{systemid,jdbcType=VARCHAR}, 
+		PARENT_ID = #{parentId,jdbcType=VARCHAR},
+		resourcetype = #{resourcetype,jdbcType=VARCHAR},
+		link = #{link,jdbcType=VARCHAR},
+		icon = #{icon,jdbcType=VARCHAR},
+		isopen = #{isopen,jdbcType=VARCHAR},
+		isleaf = #{isleaf,jdbcType=VARCHAR},
+		status = #{status,jdbcType=VARCHAR},
+		 orderid = #{orderid,jdbcType=VARCHAR},
+		 memo = #{memo,jdbcType=VARCHAR}
+		 WHERE id = #{id,jdbcType=VARCHAR}]]>
+	</select>
+	
+	<!-- 根据ID查询资源信息 -->
+	<select id="getResourById" resultMap="Resources">
+		<![CDATA[ SELECT * FROM  ott_qx_resource WHERE id = #{id}]]>
+	</select>
+	
+	<!-- 根据名称查询资源信息 -->
+	<select id="checkName" resultMap="Resources">
+		<![CDATA[ SELECT * FROM  ott_qx_resource WHERE name = #{rname}]]>
+	</select>
+	
+	<!-- 根据编码查询资源信息 -->
+	<select id="getChekEnname" resultMap="Resources">
+		<![CDATA[ SELECT * FROM  ott_qx_resource WHERE enname = #{rname}]]>
+	</select>
+	
+	<!-- 根据资源信息ID删除资源信息 -->
+	<delete id="delResour" parameterType="String">
+		<![CDATA[ DELETE FROM ott_qx_resource WHERE id = #{id} ]]>
+	</delete>
+	
+	<!-- 根据资源信息名称查找资源信息 -->
+	<select id="findGroupByName" parameterType="String" resultMap="Resources">
+		<![CDATA[ SELECT * FROM  ott_qx_resource WHERE name = #{resourName}]]>
+	</select>
+	
+	<!-- 查询所有资源信息 -->
+	<select id="findAllResour" resultMap="Resources">
+		SELECT r.*,(select rr.name from ott_qx_resource rr where rr.id=r.parent_id) parnetName ,s.name as systemName
+		FROM ott_qx_resource r
+		left outer join ott_qx_system s on s.id=r.systemid
+		<where>
+			<if test="name != null and name != ''">
+				r.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+		</where>
+		order by r.id desc 
+	</select>
+	
+	<!-- 获得指定角色的可选资源操作对应的集合 -->
+	<select id="findAllResourByRoleId" resultMap="Resources">
+		<![CDATA[ SELECT * FROM ott_qx_resource r 
+				WHERE r.id not in (select t.id from ott_qx_roleauth t where t.oid = #{id}) and r.status = '1']]>
+	</select>
+	
+	<!-- 查询所有-->
+	<select id="findAllResourList" resultMap="Resources">
+		<![CDATA[ SELECT * FROM ott_qx_resource order by id desc ]]>
+	</select>
+	
+	<!-- 根据系统ID查找对应的资源ID-->
+	<select id="getResourId" resultType="java.lang.String">
+		<![CDATA[ select r.id
+					from ott_qx_system t ,ott_qx_resource r
+					where t.id = r.systemid
+					and t.name = r.name
+					and t.id = #{id} ]]>
+	</select>
+	
+	<!-- 指定模块下所有的资源-->
+	<select id="findAllResourByIdList" resultMap="Resources">
+			<![CDATA[ 
+			select id, name,parent_id from ott_qx_resource 
+				where parent_id=#{resId,jdbcType=VARCHAR} and systemid=#{id}
+			]]>
+	</select>
+
+	<resultMap type="Resources" id="roleResourcesMap">
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="enname" column="enname"></result>
+		<result property="parentId" column="parent_id"></result>
+		<result property="link" column="link"></result>
+		<result property="isopen" column="isopen"></result>
+		<result property="orderid" column="orderid"></result>
+	</resultMap>
+	<select id="findResourcesByRoleIds" resultMap="roleResourcesMap">
+		SELECT distinct t.id as id, t.name, t.enname, t.parent_id, t.link, t.isopen, t.orderid
+		FROM ott_qx_resource t
+			left outer join ott_qx_roleauth qr on qr.resourceid= t.id
+		WHERE t.status='1' and qr.roleid in 
+		<foreach collection="list" item="roleIds"  open="(" separator="," close=")">  
+        	#{roleIds}  
+     	</foreach>
+	</select>
+</mapper>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.select.mapper.DramaRecommendMapper">
+	<resultMap id="DramaRecommendMap" type="DramaRecommend" >
+		<id property="id" column="id"></id>
+		<result property="dramaId" column="dramaId"/>
+		<result property="dramaName" column="dramaName"/>
+		<result property="lasttime" column="lasttime"/>
+		<result property="lastopt" column="lastopt"/>
+		<result property="sort" column="sort"/>
+		<result property="prType" column="prType"/>
+	</resultMap>
+	
+	<select id="getCountRecommendPst" resultType="int">
+		SELECT count(1)
+		FROM  ott_drama_recommend ds
+		<where>
+			<if test="dramaId != null and dramaId != ''">
+				ds.dramaId = #{dramaId}
+			</if>
+			<if test="prType != null and prType != ''">
+				and ds.prType = #{prType}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 按分页查资产子节目源信息 -->
+	<select id="findRecommendPstByPage" resultMap="DramaRecommendMap">
+		SELECT ds.id, ds.dramaId, date_format(ds.lasttime,'%Y-%m-%d %H:%i:%s') lasttime, 
+			ds.lastopt, ds.sort,ds.prType,dp.name as dramaName
+		FROM  ott_drama_recommend ds
+		LEFT JOIN ott_drama_program dp on ds.dramaId= dp.id
+		<where>
+		    1 = 1
+			<if test="dramaId != null and dramaId != ''">
+				and ds.dramaId = #{dramaId}
+			</if>
+			<if test="prType != null and prType != ''">
+				and ds.prType = #{prType}
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			order by ds.sort desc
+		</if>
+	</select>
+	
+	
+	<select id="getRecommendPstById" resultMap="DramaRecommendMap">
+		select * from ott_drama_recommend where id=#{id, jdbcType=INTEGER}
+	</select>
+	
+	<!-- 删除资产推荐 -->
+	<delete id="delRecommend">
+		DELETE FROM ott_drama_recommend 
+		WHERE id in  
+		<foreach collection="array" item="ids"  open="(" separator="," close=")">  
+        	#{ids}  
+     	</foreach>
+	</delete>
+	
+	<insert id="addRecommendPst" parameterType="DramaRecommend">
+		<selectKey keyProperty="id" resultType="String"  order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+		<![CDATA[
+		insert into ott_drama_recommend(dramaId, lasttime,lastopt, sort,prType) 
+		values(#{dramaId,jdbcType=VARCHAR},
+			now(),
+			#{lastopt,jdbcType=VARCHAR},
+			#{sort,jdbcType=VARCHAR},
+			#{prType,jdbcType=VARCHAR}
+			)
+		]]>
+	</insert> 
+	
+	<update id="updateRecommendPst" parameterType="DramaRecommend">
+		update ott_drama_recommend set lasttime=now(),
+			lastopt=#{lastopt,jdbcType=VARCHAR},
+			sort=#{sort,jdbcType=VARCHAR}
+		where id=#{id, jdbcType=INTEGER}
+	</update>
+	
+	<select id="getMaxSortByPrType" resultType="DramaRecommend">
+		SELECT max(sort)+1 as sort FROM `ott_drama_recommend` 
+		<where>
+			<if test="_parameter != null and _parameter != ''">
+				prType = #{_parameter,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 按资产ID查询推荐 -->
+	<select id="findDramaRecByDramaId" resultType="DramaRecommend">
+		SELECT id, dramaId, prType,sort FROM  ott_drama_recommend where dramaId = #{dramaId}
+	</select>
+	<select id="findDramaRecByPrType" resultType="DramaRecommend">
+		SELECT id, dramaId, prType,sort FROM  ott_drama_recommend where prType = #{prType}
+	</select>
+	
+	<delete id="delDramaRecByDramaId">
+		DELETE FROM ott_drama_recommend where dramaId = #{dramaId}
+	</delete>
+	
+	<select id="findDramaRecommendBySortUp" resultType="DramaRecommend">
+		SELECT sort,id from ott_drama_recommend where prType =#{prType,jdbcType=VARCHAR} 
+		and sort > #{sort,jdbcType=VARCHAR}  ORDER BY sort ASC limit 1
+	</select>
+	
+	<select id="findDramaRecommendBySortDown" resultType="DramaRecommend">
+		<![CDATA[ 
+		SELECT sort,id from ott_drama_recommend where prType =#{prType,jdbcType=VARCHAR} 
+		and sort < #{sort,jdbcType=VARCHAR}  ORDER BY sort ASC limit 1
+		]]>
+	</select>
+	
+	<update id="updateDramaRecommendBySort">
+		update ott_drama_recommend set sort=#{sort,jdbcType=VARCHAR} where id=#{id,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="delRecommendPstById">
+		delete from ott_drama_recommend where id= #{id,jdbcType=VARCHAR}
+	</delete>
+</mapper>

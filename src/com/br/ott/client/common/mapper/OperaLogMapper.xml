@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.common.mapper.OperaLogMapper">
+	<resultMap id="OperaLog" type="OperaLog" >
+		<id property="id" column="id"></id>
+		<result property="operType" column="operType"></result>
+		<result property="content" column="content"></result>
+		<result property="cost" column="cost"></result>
+		<result property="createIp" column="createIp"></result>
+		<result property="createUser" column="createUser"></result>
+		<result property="createDate" column="createDate"></result>
+		<result property="businame" column="businame"></result>
+	</resultMap>
+	
+	<!-- 添加一条操作记录 -->
+	<insert id="addOperaLog" parameterType="OperaLog">
+		<![CDATA[
+			INSERT INTO OTT_QX_OPERLOG(operType,content,cost,createIp,createUser,createDate,businame)
+				VALUES(#{operType,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},#{cost,jdbcType=INTEGER},
+					#{createIp,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},now(),#{businame,jdbcType=VARCHAR})
+		]]>
+	</insert>
+	
+	<select id="findOperaLogs" resultMap="OperaLog" parameterType="OperaLog">
+		select id,operType,content,cost,createIp,createUser,businame,DATE_FORMAT(createDate,'%Y-%m-%d %H:%i:%s') as createDate from OTT_QX_OPERLOG
+		<where>
+			<if test="operType != null and operType != ''">
+				and operType = #{operType}
+			</if>
+			<if test="createUser != null and createUser != ''">
+				and createUser = #{createUser}
+			</if>
+			<if test="businame != null and businame != ''">
+				and businame like #{tmp}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				<if test="endTime != null and endTime != ''">
+					and (createDate BETWEEN #{createDate} and #{endTime}) 
+				</if>
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+		 	<![CDATA[
+			ORDER BY ${orderColumn}
+			]]>
+		</if> 
+	</select>
+	<select id="findCountOperaLogs" resultType="int" parameterType="OperaLog">
+		select count(id) from OTT_QX_OPERLOG 
+		<where>
+			<if test="operType != null and operType != ''">
+				and operType = #{operType}
+			</if>
+			<if test="createUser != null and createUser != ''">
+				and createUser = #{createUser}
+			</if>
+			<if test="businame != null and businame != ''">
+				and businame like #{tmp}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				<if test="endTime != null and endTime != ''">
+					and (createDate BETWEEN #{createDate} and #{endTime}) 
+				</if>
+			</if>
+		</where>
+	</select>
+</mapper>

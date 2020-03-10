@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>账号管理</title>
+#tagLibs()
+</head>
+<body>
+<div class="topline">
+	<a href="#" class="xzbtn" style="color:#FFFFFF">用户列表</a> | 
+    <a href="${ctx}/user/toUser.do" class="wxbtn">新增用户</a>
+</div>
+<!--  搜索表单  -->
+<form id="queryForm" name='queryForm' action='' method='get'>
+      <table border='0' cellpadding='0' cellspacing='0' style="margin-top:13px;">
+        <tr class="search">
+        <input type="hidden" id="orderColumn" name="orderColumn" value="$!{users.orderColumn}" />
+        <td>用户名：<input type='text' name='userName' value='$!{users.userName}'/> $!{user.operators}</td>
+        <td>手机号码：<input type='text' name='phone' value='$!{users.phone}'/></td>
+		<td>状态：
+			<select name="status" id="status">
+					<option value="" #if($!{users.status} == "" || !${users.status}) selected #end>==请选择==</option>
+    				<option value="0" #if($!{users.status} == 0) selected #end>未激活</option>
+    				<option value="1" #if($!{users.status} == 1) selected #end>正常</option>
+    				<option value="2" #if($!{users.status} == 2) selected #end>禁用</option>
+	       </select>
+        </td>
+       <td><input id="queryUser" type="image" src="${ctx}/images/button_search.gif"/></td>
+      </tr>
+     </table>
+<!--  内容列表   -->
+<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+<tr align="left" bgcolor="#eff2f7" height="30">
+	<td>用户名</td>
+	<td>真实姓名</td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="areaid"  lastOrderBy="$!{users.orderColumn}" class="tb_head">地区</a></td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="phone"  lastOrderBy="$!{users.orderColumn}" class="tb_head">手机号</a></td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="createdate"  lastOrderBy="$!{users.orderColumn}" class="tb_head">录入时间</a></td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="status"  lastOrderBy="$!{users.orderColumn}" class="tb_head">状态</a></td>
+	<td><a href="javascript:void(0);" onclick="orderBy(this);"  name="operators"  lastOrderBy="$!{users.orderColumn}" class="tb_head">所属运营商</a></td>
+	<td>操作</td>
+</tr>
+#if ($null.isNull($pagedModelList.pagedModelList) || $pagedModelList.pagedModelList.size()==0)
+<tr align='left' height="30"  onMouseMove="javascript:this.bgColor='#FCFDEE';" onMouseOut="javascript:this.bgColor='';">
+	<td colspan="7"><h1>暂无相关数据内容</h1></td>
+</tr>
+#end
+#foreach($u in $pagedModelList.pagedModelList)
+<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	<td>$!u.userName</td>
+	<td>$!u.loginname</td>
+	<td>$!u.areaName</td>
+	<td>$!u.phone</td>
+	<td>$!u.cdate</td>
+	<td>#if($!{u.status} == '0') 未激活  #elseif ($!{u.status} == '1')正常 #else 禁用  #end</td>
+	<td>$!u.operatorsName</td>
+	<td id="operate">
+		<a href="${ctx}/user/toUser.do?uid=$u.userId">编辑</a> |
+		<a href="${ctx}/user/toViewUser.do?uid=$u.userId">预览</a> |
+		<a href="${ctx}/user/toResetPwd.do?id=$u.userId">密码重置</a> |
+		#if($!u.loginname !="admin" && $!u.status !='2')
+    		<a href="javascript:del('$u.userId');">禁用</a> |
+		#end
+		<a href="${ctx}/user/findAllGroup.do?id=$u.userId">用户分组</a>
+	</td>
+</tr>
+#end
+</table>
+<div height="36" align="right">
+	#rendPageInfo(${pagedModelList})
+</div>
+</form>
+<script language="javascript" src="${ctx}/js/ott/shiro/listUser.js"></script>
+</body>
+</html>

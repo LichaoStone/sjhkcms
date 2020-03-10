@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>查看用户信息</title>
+<style type="text/css">
+
+body { background-image: url(./../images/allbg.gif); }
+.multipic {
+	border: 1px dashed #FC6;
+}
+.albCt {
+	border-bottom: 1px dashed #FC0;
+	margin-bottom: 10px;
+	padding-bottom:10px;
+}
+.albCt img{
+	cursor:pointer;
+}
+
+</style>
+<link href="./../css/base.css" rel="stylesheet" type="text/css">
+    <link type="text/css" rel="stylesheet" href="./../css/public.css"/>
+
+<script language="javascript" src="./../js/jquery/jquery-1.7.2.min.js"></script>
+<script language="javascript" src="./../js/ott/ott-all.min.js"></script>
+</head>
+<body topmargin="8"  onload="showCity('province','city','$proId','$cityId');">
+ 
+	<table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" id="needset" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+      	<fieldset style="height:100%;">
+				<legend>查看账号信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">用户ID：</td>
+							<td class="pn-fcontent">
+								$!u.id
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">用户名：</td>
+							<td class="pn-fcontent">
+								$!{u.trueName}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">注册时间：</td>
+							<td class="pn-fcontent">
+								$!{u.regTime}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">昵称：</td>
+							<td class="pn-fcontent">
+								$!{u.nickName}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">手机号码：</td>
+							<td class="pn-fcontent">
+								$!u.phone
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">邮箱：</td>
+							<td class="pn-fcontent">
+								$!{u.email}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">性别：</td>
+							<td class="pn-fcontent">
+								#if($!u.sex==1)
+                            	 男
+                			   #else
+                                 女
+                				#end
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">生日：</td>
+							<td class="pn-fcontent">
+								$!u.birthday
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">地址：</td>
+							<td class="pn-fcontent">
+								$!u.address
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">邮编：</td>
+							<td class="pn-fcontent">
+								$!{u.postCode}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">城市：</td>
+							<td class="pn-fcontent">
+								<select name="province" id="province" onchange="changeCity(this,'city');" disabled>
+                					<option value="">==请选择==
+                                    </option>
+                					#foreach($p in $!provins)
+                                        <option value="$!p.id">$!p.name</option>
+                					#end
+                                </select>
+                				<select name="city" id="city" disabled>
+                					#foreach($c in $!citys)
+                                        <option value="$!c.areacode">$!c.value.name</option>
+                					#end
+                                </select>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">状态：</td>
+							<td class="pn-fcontent">
+								<select name="status" id="status" style="width:150px" disabled>
+                					#if($!u.status==1)
+                	                <option value="0">正常</option>
+                	                <option value="1" selected >已删除</option>
+                					#else
+                					<option value="0" selected >正常</option>
+                	                <option value="1">已删除</option>	
+                					#end
+                	              </select>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">充值余额：</td>
+							<td class="pn-fcontent">
+								$!u.resetBalance
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">虚拟币余额：</td>
+							<td class="pn-fcontent">
+								$!{u.virtualBlance}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">积分兑换金额：</td>
+							<td class="pn-fcontent" colspan="3">
+								$!u.integralBlance
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">照片：</td>
+							<td class="pn-fcontent"  colspan="3">
+								#if($!u.photos)
+                					<img src="$!u.photos" width="100" height="100"/>
+                				#else
+                					无
+                				#end
+							</td>
+						</tr>
+						
+					</table>
+				</fieldset>		
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+        <img src="../images/button_close.gif" width="60" height="22" border="0" onClick="window.close();" style="cursor:pointer; "/>
+    </td>
+   </tr>
+</table>
+
+</body>
+</html>

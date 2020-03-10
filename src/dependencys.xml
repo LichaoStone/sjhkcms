@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<dependencies>  
+   <statements>  
+       <statement id="com.br.ott.client.select.mapper.DramaProgramMapper2.updateDramaProgramStatus">  
+          <observer id="com.br.ott.client.select.mapper.DramaProgramMapper2.getDramaProgramByIdAndStatus"/>
+          <observer id="com.br.ott.client.select.mapper.DramaProgramMapper2.getCountDramaProgram"/>
+          <observer id="com.br.ott.client.select.mapper.DramaProgramMapper2.findDramaProgram"/>
+          <observer id="com.br.ott.client.select.mapper.DramaProgramMapper2.findDramaProgram2"/>
+       </statement>
+       <statement id="com.br.ott.client.select.mapper.DramaChildrenMapper2.updateChildrenStatus">  
+          <observer id="com.br.ott.client.select.mapper.DramaChildrenMapper2.findDramaChildren"/>
+       </statement>
+       <statement id="com.br.ott.client.select.mapper.DramaTypeMapper2.delDramaTypeByNavId">  
+          <observer id="com.br.ott.client.select.mapper.DramaTypeMapper2.findDramaTypeByDramaId"/>
+          <observer id="com.br.ott.client.select.mapper.DramaTypeMapper2.findDramaTypeByNavId"/>
+          <observer id="com.br.ott.client.select.mapper.DramaTypeMapper2.findNavByDramaId"/>
+       </statement>
+   </statements>
+</dependencies>

@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>菜单权限信息<</title>
+#tagLibs()
+<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/tinytree/themes/tinytree.css" />
+</head>
+<body>
+	<div>
+    	<a href="${ctx}/role/findRoleList.do" class="wxbtn">角色列表</a> | 
+        <a href="#" class="xzbtn" style="color:#FFF">角色菜单权限</a>
+	</div>
+        <div class="m-content" style="margin:20px 150px;" >
+    			<input type="hidden" id="roleId" value="$!{roleId}"/>
+           		<div id="m-content-top" class="m-content-top">
+        			<ul id="m-boxtitle" class="m-boxtitle">
+        	          	<li>菜单选择</li>
+        	        </ul>
+        	    </div>
+        		<div class="m-content-center">
+        			<div id="resource_tree"></div>
+        		</div>
+        </div>
+    	<div class="btns-section" style="padding:120px 150px;">
+    		<button type="button" class="bt-primary" id="roleResource_save">保存</button>
+    		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    	</div>
+	<script type="text/javascript" src="${ctx}/js/jquery/tinytree/jquery.tinytree.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/shiro/roleResourTree.js"></script>
+</body>
+</html>	

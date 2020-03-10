@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>字典类型信息<</title>
+#tagLibs()
+<link rel="stylesheet" type="text/css" href="${ctx}/js/jquery/tinytree/themes/tinytree.css" />
+</head>
+<body>
+    <div class="m-content">
+       		<div id="m-content-top" class="m-content-top">
+    			<ul id="m-boxtitle" class="m-boxtitle">
+    	          	<li>类型选择</li>
+    	        </ul>
+    	    </div>
+    		<div class="m-content-center">
+    			<div id="dict_tree_left"></div>
+    		</div>
+    </div>
+	<script type="text/javascript" src="${ctx}/js/jquery/tinytree/jquery.tinytree.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/common/dict.js"></script>
+</body>
+</html>	

@@ -1,0 +1,42 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>HTTP&JSON接口通用测试页面2</title>
+    #tagLibs()
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+	<script language="javascript" src="${ctx}/js/jquery/jquery-1.7.2.min.js"></script>
+  </head>
+  <body>
+  	<form action="${ctx}/test2" name="form" method="post" align="center">
+  		<table align="center">
+        	<tr> <td colspan="2" align="center"><h1>HTTP&JSON接口通用测试页面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1></td></tr>
+        	<tr> <td> &nbsp;</td></tr>
+            <tr> 
+            <td>接口URL :</td>
+            <td><input type="text" name="url" id="urlValue" style="width:450px;" value="$!{url}"><font color="red">*url全地址，如：http://...</font></td></tr>
+            <tr> 
+            <td>公用请求参数 :</td>
+            <td><textarea cols="69" rows="1" name="publicReq" id="publicReq">$!{publicReq}</textarea><font color="red">*格式如：userId:123,userToken:235...</font></td></tr>
+            <tr> 
+            <td>业务请求参数 :</td>
+            <td><textarea cols="69" rows="4" name="businessReq" id="businessReq">$!{businessReq}</textarea><font color="red">标准json格式字符串</font></td></tr>
+            <tr>
+             <td colspan="2" align="center"><input type="submit" name="sub" id="subTest" value="提交"><br><br></td></tr>
+            <tr> <td colspan="2" align="center"><h1>接口返回结果&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1></td></tr>
+            <tr>
+             <td>返回码:</td>
+             <td><input type="text" name="returnCode" id="returnCode" style="width:55px;" value="$!{returnCode}">
+           	返回描述:<input type="text" name="returnMsg" id="returnMsg" style="width:225px;" value="$!{returnMsg}"></td></tr>
+            <tr>
+            <td>返回内容:</td>
+            <td><textarea cols="160" rows="36" name="results" id="results">$!{returnjson}</textarea></td></tr>
+             <div id="msg" style=" width:600px;text-align:center; margin-top:20px;"></div> 
+        </table>
+     </form>
+  </body>
+</html>

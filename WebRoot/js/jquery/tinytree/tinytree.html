@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>AsynTree Test</title>
+	<link rel="stylesheet" type="text/css" media="all" href="themes/tinytree.css"  />
+	<script type="text/javascript" src="../jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="./jquery.tinytree.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('#container').tinytree({
+				//url : 'http://localhost:8080/tinytree/servlet/AsynTreeServlet',
+				url : 'tree.xml',
+				//url : 'newfile.xml',
+				//radioSupport : true
+				autoload : false,
+				checkboxSupport : true,
+				selectLeafOnly : false,
+				alsoCheckChildren : false,
+				alsoCheckParent : true,
+				filter : true,
+				showChildren : true,
+				closeSameLevel : true,
+				//openAllNodes : true,
+				//timeToShowLoadingMessage : 0.5,
+				//nodeUrl : 'http://localhost:8080/tinytree/servlet/ResponseServlet'
+				nodeUrl : false
+				//nodeUrl : 'javascript:javascriptMethod'
+			});
+
+			var nodes = [
+			             {id:1,name:'节点1',children:[]},
+			             {id:2,name:'节点2',children:[{id:21,name:'节点21',leaf:true},{id:22,name:'节点22',leaf:true}]},
+			             {id:3,name:'节点3',leaf:true}
+			             ];
+			$('#container')[0].tinytree.addNodes(0, nodes);
+			
+			$('#getSelectedNodes').click(function(e) {
+				window.alert(parseReturnMessage($('#container')[0].tinytree.getSelecetedNodes()));
+			});
+			
+			$('#openAll').click(function(e) {
+				$('#container')[0].tinytree.openAll();
+			});
+			$('#closeAll').click(function(e) {
+				$('#container')[0].tinytree.closeAll();
+			});
+
+			$('#filter').keyup(function(e) {
+				if (e.keyCode == 13) {
+					$('#container')[0].tinytree.doFilter(this.value);
+				}
+			});
+			
+			$('#position').click(function() {
+				$('#container')[0].tinytree.position($('#nodeId').val());
+			});
+
+			$('#click').click(function() {
+				$('#container')[0].tinytree.click($('#nodeIdForClick').val());
+			});
+
+			$('#reload').click(function(e) {
+				$('#container')[0].tinytree.reload($('#nodeIdForReload').val());
+			});
+		});	
+		function parseReturnMessage(results) {
+			var log = '[\n';
+			$.each(results, function(i, result) {
+				log += '{nodeId=' + result.nodeId + ', nodeName=' + result.nodeName + '}\n';
+			});
+			log += ']\n';
+			return log;
+		}
+		function javascriptMethod(nodeId, nodeName) {
+			window.alert('节点被单击：' + nodeId + '-' + nodeName);
+		}
+	</script>
+	
+</head>
+<body>
+	<div id="container"></div>
+	
+	<input type="button" id="getSelectedNodes" value="getSelectedNodes" /> <br />
+	
+	
+	<input type="button" id="openAll" value="openAll" /> <br />
+	
+	
+	<input type="button" id="closeAll" value="closeAll" /> <br />
+	
+	<div>
+		树外的筛选功能：<input type="text" id="filter" />
+	</div>
+	
+	<div>
+		定位功能（节点ID）：<input type="text" id="nodeId" value="01" />
+		<input type="button" id="position" value="定位" />
+	</div>
+	<div>
+		单击功能（节点ID）：<input type="text" id="nodeIdForClick" value="011" />
+		<input type="button" id="click" value="点击" />
+	</div>
+	<div>
+		重新加载（节点ID）：<input type="text" id="nodeIdForReload" value="03" />
+		<input type="button" id="reload" value="加载" />
+	</div>
+</body>
+</html>

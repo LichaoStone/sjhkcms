@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.select.mapper.DramaTypeMapper2">
+	<!--mybatis二级缓存
+        1，size:表示缓存cache中能容纳的最大元素数。默认是1024；
+        2，flushInterval:定义缓存刷新周期，以毫秒计；
+        3，eviction:定义缓存的移除机制；默认是LRU(least recently userd，最近最少使用),还有FIFO(first in first out，先进先出)
+        4，readOnly:默认值是false，假如是true的话，缓存只能读。
+     -->
+	<cache size="2014" flushInterval="300000" eviction="LRU" readOnly="false"/>
+	<resultMap id="DramaTypeMap" type="DramaType" >
+		<id property="id" column="id"></id>
+		<result property="dramaId" column="dramaId"></result>
+		<result property="dramaName" column="dramaName"></result>
+		<result property="navId" column="navId"></result>
+	</resultMap>
+	
+	<delete id="delDramaTypeByNavId">
+		delete from OTT_DRAMA_TYPE where navId = #{navId}
+	</delete>
+	
+	<select id="findDramaTypeByDramaId" resultType="DramaType">
+	    SELECT dt.navId FROM OTT_DRAMA_TYPE dt where dt.dramaId = #{dramaId, jdbcType=VARCHAR} limit 1
+	</select>
+	
+	<select id="findDramaTypeByNavId" resultType="DramaType">
+	    SELECT dt.dramaId FROM OTT_DRAMA_TYPE dt where dt.navId = #{navId, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="findNavByDramaId" resultMap="DramaTypeMap">
+		SELECT dt.id,dt.navId
+		FROM OTT_DRAMA_TYPE dt
+		where dt.dramaId = #{dramaId}
+		order by dt.id desc
+	</select>
+	
+</mapper>

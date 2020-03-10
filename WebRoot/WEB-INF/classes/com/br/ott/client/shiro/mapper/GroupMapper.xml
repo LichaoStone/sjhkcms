@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.shiro.mapper.GroupMapper">
+	<resultMap type="Groups" id="Groups">
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="parentId" column="parentId"></result>
+		<result property="enName" column="enName"></result>
+		<result property="groupType" column="groupType"></result>
+		<result property="status" column="status"></result>
+		<result property="orderId" column="orderId"></result>
+		<result property="memo" column="memo"></result>
+		<result property="roleId" column="roleId"></result>
+	</resultMap>
+	
+	<resultMap type="Groups" id="groupUserMap" extends="Groups">  
+        <collection property="users" ofType="UserInfo">  
+            <id property="userId" column="userID" />  
+            <result property="userName" column="ADMINNAME" />  
+            <result property="password" column="ADMINPWD" />  
+            <result property="loginname" column="TRUENAME" />  
+            <result property="areaid" column="AREAID"></result>
+        </collection>  
+    </resultMap>  
+    
+    <resultMap type="Groups" id="groupRoleMap" extends="Groups">  
+        <collection property="roles" ofType="Role">  
+            <id property="oid" column="oid" />  
+            <result property="roleName" column="roleName" />
+            <result property="enname" column="enname" /> 
+        </collection>  
+    </resultMap>  
+    
+    <!-- 根据组ID取用户list -->
+	<select id="selectgroupUserMap" resultMap="groupUserMap">
+		<![CDATA[ SELECT u.ID as userID,u.ADMINNAME,u.ADMINPWD,u.TRUENAME,u.AREAID,
+		g.id,g,name,g.parentId,g.enName,g.groupType,g.status,g.orderId,g.memo,g.roleId
+		 FROM OTT_ADMIN u left join ott_qx_groupuser gu on u.ID = gu.userid  
+		left join ott_qx_group g on g.id = gu.groupid WHERE  g.id = #{id}]]>
+	</select>
+	
+	<!-- 根据组取角色 -->
+	<select id="getRoleByGroupId" resultMap="groupRoleMap">
+		<![CDATA[ SELECT r.oid,r.rolename,r.enname,g.id,g.name,g.parentid,g.enname as genname,g.grouptype,g.status,g.orderid,g.memo,g.roleid
+	     FROM ott_qx_role r left join ott_qx_grouprole gr on  r.oid = gr.roleid
+	    left join ott_qx_group g on g.id = gr.groupid WHERE  g.id = #{id} ]]>
+	</select>
+	
+	<!-- 根据组名称查找分组 -->
+	<select id="findGroupByName" parameterType="String" resultMap="Groups">
+		<![CDATA[ SELECT * FROM  ott_qx_group WHERE name = #{groupName}]]>
+	</select>
+	
+	<!-- 查询总条数 -->
+	<select id="getCountGroup" resultType="int">
+		SELECT count(rol.id) FROM ott_qx_group rol
+			<where>
+			<if test="name != null and name != ''">
+			    rol.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+			<if test="status != null and status != ''">
+				and rol.status = #{status}
+			</if>
+			<if test="orderColumn != null and orderColumn !=''">
+			ORDER BY ${orderColumn}
+		</if> 
+		</where>
+	</select>
+	
+	<!--添加一个分组 -->
+	<insert id="addGroup" parameterType="Groups">
+		<![CDATA[   INSERT INTO ott_qx_group (name, parentId,enName,groupType,status,orderId,memo,roleId)
+			VALUES (#{name,jdbcType=VARCHAR},
+				 	#{parentId,jdbcType=VARCHAR},
+				 	#{enName,jdbcType=VARCHAR},
+				 	#{groupType,jdbcType=VARCHAR},
+				 	#{status,jdbcType=VARCHAR},
+				 	#{orderId,jdbcType=VARCHAR},
+				 	#{roleId,jdbcType=VARCHAR},
+				 	#{memo,jdbcType=VARCHAR})
+	 	]]>
+	</insert>
+	
+	<!-- 修改分组 -->
+	<select id="modifyGroup" parameterType="Groups">
+		<![CDATA[ UPDATE ott_qx_group 
+		SET name = #{name,jdbcType=VARCHAR},
+		parentId = #{parentId,jdbcType=VARCHAR}, 
+		enName = #{enName,jdbcType=VARCHAR}, 
+		groupType = #{groupType,jdbcType=VARCHAR}, 
+		status = #{status,jdbcType=VARCHAR},
+		 orderId = #{orderId,jdbcType=VARCHAR},
+		 memo = #{memo,jdbcType=VARCHAR},
+		 roleId = #{roleId,jdbcType=VARCHAR} 
+		 WHERE id = #{id,jdbcType=VARCHAR}]]>
+	</select>
+	
+	<!-- 根据组ID删除分组 -->
+	<delete id="delGroup" parameterType="String">
+		<!-- <![CDATA[ DELETE FROM ott_qx_group WHERE id = #{id} ]]>  -->
+		<![CDATA[ UPDATE ott_qx_group
+		SET status = '4'
+		 WHERE id = #{id} ]]>
+	</delete>
+	
+	<!-- 根据组名称查找分组 -->
+	<select id="findGroupByEnName" parameterType="String" resultMap="Groups">
+		<![CDATA[ SELECT * FROM ott_qx_group 
+		WHERE enName = #{enName} order by id desc ]]>
+	</select>
+	
+	<!-- 根据名称查询资源信息 -->
+	<select id="checkName" resultMap="Groups">
+		<![CDATA[ SELECT * FROM  ott_qx_group WHERE name = #{rname}]]>
+	</select>
+	
+	<select id="checkenName" resultMap="Groups">
+		<![CDATA[ SELECT * FROM ott_qx_group WHERE enName = #{enName}]]>
+	</select>
+	
+	<!-- 查询所有分组 -->
+	<select id="findAllGroup" resultMap="Groups">
+		SELECT g.*,(select rr.name from ott_qx_group rr where rr.id=g.parentid) parnetName FROM ott_qx_group g
+		<where>
+			<if test="name != null and name != ''">
+			    g.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+			<if test="status != null and status != ''">
+				and g.status = #{status}
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+		 	<![CDATA[
+			ORDER BY ${orderColumn}
+			]]>
+		</if> 
+	</select>
+	
+	<!-- 查询所有分组  -->
+	<select id="getAllGroup" resultMap="Groups">
+		SELECT * FROM ott_qx_group g where g.status = '1' order by g.id desc 
+	</select>
+	
+	<!-- 根据ID查询分组 -->
+	<select id="getGroupById" resultMap="Groups">
+		<![CDATA[ SELECT * FROM  ott_qx_group WHERE id = #{id}]]>
+	</select>
+	
+	<!-- 根据组ID查找组所拥有的角色  -->
+	<select id="getRoleByIdList" resultMap="Groups">
+		<![CDATA[ SELECT * FROM ott_qx_group WHERE id = #{id}]]>
+	</select>
+	
+	<!-- 根据角色ID查找可选组  -->
+	<select id="getGroupByIdList" resultMap="Groups">
+		<![CDATA[ SELECT t.id,t.name FROM ott_qx_group t 
+				where t.id not in (select g.groupid from ott_qx_grouprole g where g.roleid=#{id}) and t.status = '1' ]]>
+	</select>
+	
+	<!-- 根据用户ID查询可选组  -->
+	<select id="getGroupByUserId" resultMap="Groups">
+		<![CDATA[ SELECT t.id,t.name FROM ott_qx_group t 
+					where t.id not in (select g.groupid from ott_qx_groupuser g where g.userid=#{id}) and t.status = '1' ]]>
+	</select>
+	
+</mapper>

@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>用户观看收藏信息</title>
+#tagLibs()
+</head>
+<body>
+<!--  内容列表   -->
+<form id="queryForm" method="get">
+	<div class="topline">
+		<a  class="xzbtn" style="color:#FFFFFF">用户观看收藏信息列表</a>
+	</div>
+ <table border='0' cellpadding='0' cellspacing='0' height="36">
+    <tr class="search">
+		<td>资产id：<input type='text' id="dramaId" name='dramaId' value='$!{viewLog.dramaId}' style="width:120px;"/></td>
+        <td>用户电话号码：<input type='text' id="phone" name='phone' value='$!{viewLog.phone}' style="width:120px;"/></td>
+        <td>资产类型：
+			<select id="dramaType" name="dramaType" style="width:100px;">
+				<option value="">=请选择=</option>
+				<option value="0" #if ("0" == "$!{viewLog.dramaType}") selected #end>点播</option>
+				<option value="1" #if ("1" == $!{viewLog.dramaType}) selected #end>直播</option>
+            </select>
+		</td>
+		<td>资产频道：
+			<select id="dramaChannel" name="dramaChannel" style="width:100px;">
+				<option value="">=请选择=</option>
+				<option value="0" #if ("0" == "$!{viewLog.dramaChannel}") selected #end>收藏</option>
+				<option value="1" #if ("1" == $!{viewLog.dramaChannel}) selected #end>最近收看</option>
+            </select>
+		</td>
+		<td>
+			<input type="hidden" id="orderColumn" name="orderColumn" value="$!{viewLog.orderColumn}" />
+            <img id="queryViewLog" type="image" src="$!{ctx}/images/button_search.gif"/>
+        </td>
+	</tr>
+</table>
+
+<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+<tr align="left" bgcolor="#eff2f7" height="30">
+		<td width="10%"> <a href="javascript:void(0);" onclick="orderBy(this);" name="dramaId" lastOrderBy="$!{viewLog.orderColumn}" class="tb_head">资产id</a></td>
+		<td width="20%"><a href="javascript:void(0);" onclick="orderBy(this);" name="phone" lastOrderBy="$!{viewLog.orderColumn}" class="tb_head">用户电话号码</a></td>
+		<td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="dramaChannel" lastOrderBy="$!{viewLog.orderColumn}" class="tb_head">资产频道</a></td>
+		<td width="10%"> <a href="javascript:void(0);" onclick="orderBy(this);" name="dramaType" lastOrderBy="$!{viewLog.orderColumn}" class="tb_head">资产类型</a></td>
+		<td width="20%"><a href="javascript:void(0);" onclick="orderBy(this);" name="savaTime" lastOrderBy="$!{viewLog.orderColumn}" class="tb_head">开始时间</a></td>
+		<td width="20%"> <a href="javascript:void(0);" onclick="orderBy(this);" name="sxTime" lastOrderBy="$!{viewLog.orderColumn}" class="tb_head">失效时间</a></td>
+		<td width="10%"> <a href="javascript:void(0);" onclick="orderBy(this);" name="status" lastOrderBy="$!{viewLog.orderColumn}" class="tb_head">是否有效</a></td>
+</tr>
+
+#if ($null.isNull($!viewLogs) || $!viewLogs.size()==0)
+	<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td colspan="7"><h1>暂无相关数据内容</h1></td>
+    </tr>
+#end
+#foreach ($!c in $!viewLogs)
+<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+			<td class='center'>$!{c.dramaId}</td>
+			<td class='center'>$!{c.phone}</td>
+			<td >
+        		#if('1'==$!{c.dramaChannel})
+        			最近收看
+        		#else
+        			收藏
+        		#end
+        	</td>
+			<td >
+        		#if('1'==$!{c.dramaType})
+        			直播
+        		#else
+        			点播
+        		#end
+        	</td>
+			<td class='center'>
+			$!date.format('yyyy-MM-dd HH:mm',$!{c.savaTime})
+			</td>
+			<td class='center'>
+			$!date.format('yyyy-MM-dd HH:mm',$!{c.sxTime})
+			</td>
+			<td >
+        		#if('1'==$!{c.status})
+        			有效
+        		#else
+        			无效
+        		#end
+        	</td>
+</tr>
+#end
+</table>
+<div height="36" align="right">
+    #pagination($!{viewLog})
+</div>
+</form>
+<script type="text/javascript" src="${ctx}/js/ott/select/listViewLog.js"></script>
+</body>
+</html>

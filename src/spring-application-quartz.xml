@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tool="http://www.springframework.org/schema/tool" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task" 
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/jee
+           http://www.springframework.org/schema/jee/spring-jee.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd
+           http://www.springframework.org/schema/tool
+           http://www.springframework.org/schema/tool/spring-tool.xsd
+           http://www.springframework.org/schema/task 
+           http://www.springframework.org/schema/task/spring-task-3.0.xsd
+           http://www.directwebremoting.org/schema/spring-dwr 
+           http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd">
+
+	<bean id="assetJob" class="com.br.ott.client.common.quartz.AssetQuartz" />
+	
+	<!-- 每2分钟扫描一次未抓取资产图片信息 -->
+	<bean id="checkAssetImageJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="assetJob"/><!-- ref: 指定调用的类 -->
+		<property name="targetMethod" value="checkLoadAssetImage"/><!-- value: 指定要执行的方法名称 -->
+		<property name="concurrent" value="false"/><!-- value设为false不执行并发任务 -->
+	</bean>
+	<bean id="checkAssetImageTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="checkAssetImageJob"></property>
+		<property name="cronExpression" value="0 0/2 * * * ?"></property>
+	</bean>
+	
+	<bean id="doAssetFileJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="assetJob"/><!-- ref: 指定调用的类 -->
+		<property name="targetMethod" value="doAssetFile"/><!-- value: 指定要执行的方法名称 -->
+		<property name="concurrent" value="false"/><!-- value设为false不执行并发任务 -->
+	</bean>
+	<bean id="doAssetFileTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="doAssetFileJob"></property>
+		<property name="cronExpression" value="0 0/5 * * * ?"></property>
+	</bean>
+	
+	
+	<!-- 目前在使用中的调度！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！ -->
+	<!-- 每5分钟更新一次JVM中的栏目 -->
+	<bean id="checkNavigationJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="assetJob"/><!-- ref: 指定调用的类 -->
+		<property name="targetMethod" value="checkNavigation"/><!-- value: 指定要执行的方法名称 -->
+		<property name="concurrent" value="false"/><!-- value设为false不执行并发任务 -->
+	</bean>
+	<bean id="checkNavigationTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="checkNavigationJob"></property>
+		<property name="cronExpression" value="0 0/5 * * * ?"></property>
+	</bean>
+	
+	<!-- 每隔5分钟，加载一次推荐资产信息到缓存 -->
+	<bean id="doRecDramaJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="assetJob"/><!-- ref: 指定调用的类 -->
+		<property name="targetMethod" value="doUpRecDrama"/><!-- value: 指定要执行的方法名称 -->
+		<property name="concurrent" value="false"/><!-- value设为false不执行并发任务 -->
+	</bean>
+	<bean id="doRecDramaTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="doRecDramaJob"></property>
+		<property name="cronExpression" value="0 0/5 * * * ?"></property>
+	</bean>
+	
+	<!-- 每天23:59处理一次用户观看资产状态 -->
+	<bean id="doViewLogJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="assetJob"/><!-- ref: 指定调用的类 -->
+		<property name="targetMethod" value="doUpViewLogStatus"/><!-- value: 指定要执行的方法名称 -->
+		<property name="concurrent" value="false"/><!-- value设为false不执行并发任务 -->
+	</bean>
+	<bean id="doViewLogTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="doViewLogJob"></property>
+		<property name="cronExpression" value="0 59 23 * * ?"></property>
+	</bean>
+	
+	<!-- 每20分处理一次内容提供商百途(csp)提供的文件路径下载情况 -->
+	<bean id="doCreateFileJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="assetJob"/><!-- ref: 指定调用的类 -->
+		<property name="targetMethod" value="doCreateFile"/><!-- value: 指定要执行的方法名称 -->
+		<property name="concurrent" value="false"/><!-- value设为false不执行并发任务 -->
+	</bean>
+	<bean id="doCreateFileTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="doCreateFileJob"></property>
+		<property name="cronExpression" value="0 0/20 * * * ?"></property>
+	</bean>
+	
+	<!-- 每20分钟处理一次内容提供商百途(csp)提供的文件图片下载情况 -->
+	<bean id="doCreateFilePicJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="assetJob"/><!-- ref: 指定调用的类 -->
+		<property name="targetMethod" value="doCreateFilePic"/><!-- value: 指定要执行的方法名称 -->
+		<property name="concurrent" value="false"/><!-- value设为false不执行并发任务 -->
+	</bean>
+	<bean id="doCreateFilePicTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="doCreateFilePicJob"></property>
+		<property name="cronExpression" value="0 0/20 * * * ?"></property>
+	</bean>
+	
+	<!-- 每30分钟处理一次内容提供商百途(csp)图片分发 -->
+	<bean id="doDispatchPicJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="assetJob"/><!-- ref: 指定调用的类 -->
+		<property name="targetMethod" value="doDispatchPic"/><!-- value: 指定要执行的方法名称 -->
+		<property name="concurrent" value="false"/><!-- value设为false不执行并发任务 -->
+	</bean>
+	<bean id="doDispatchPicTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="doDispatchPicJob"></property>
+		<property name="cronExpression" value="0 0/30 * * * ?"></property>
+	</bean>
+	
+	<!-- 每5分钟处理一次mybatis的二级缓存 -->
+	<bean id="doMybatisCacheJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="assetJob"/><!-- ref: 指定调用的类 -->
+		<property name="targetMethod" value="doMybatisCache"/><!-- value: 指定要执行的方法名称 -->
+		<property name="concurrent" value="false"/><!-- value设为false不执行并发任务 -->
+	</bean>
+	<bean id="doMybatisCacheTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="doMybatisCacheJob"></property>
+		<property name="cronExpression" value="0 0/5 * * * ?"></property>
+	</bean>
+	
+	<!-- 调度工厂 -->
+	<!-- 总管理类 : lazy-init='false',则容器启动时就会执行调度程序 ,如果lazy-init='true',则需要实例化该bean才能执行调度程序-->
+	<bean id="SpringJobSchedulerFactoryBean" lazy-init="true"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<!-- 指定触发器的bean ID -->
+				<!-- 
+				<ref bean="checkAssetImageTrigger"/>
+				<ref bean="doAssetFileTrigger"/>
+				 -->
+				<ref bean="checkNavigationTrigger"/>
+				<ref bean="doRecDramaTrigger"/>
+				<!--  <ref bean="doMybatisCacheTrigger"/>-->
+				<!--  <ref bean="doViewLogTrigger"/>
+  		        <ref bean="doCreateFileTrigger"/>
+		        <ref bean="doCreateFilePicTrigger"/>
+		        <ref bean="doDispatchPicTrigger"/>-->
+ 			</list>
+		</property>
+	</bean>
+
+</beans>
+
+<!-- 
+	cronExpression 参数说明：
+	字段 允许值 允许的特殊字符
+	秒 0-59 , - * /
+	分 0-59 , - * /
+	小时 0-23 , - * /
+	日期 1-31 , - * ? / L W C
+	月份 1-12 或者 JAN-DEC , - * /
+	星期 1-7 或者 SUN-SAT , - * ? / L C #
+	年（可选） 留空, 1970-2099 , - * /
+	表达式意义
+	"0 0 12 * * ?" 每天中午12点触发
+	"0 15 10 ? * *" 每天上午10:15触发
+	"0 15 10 * * ?" 每天上午10:15触发
+	"0 15 10 * * ? *" 每天上午10:15触发
+	"0 15 10 * * ? 2005" 2005年的每天上午10:15触发
+	"0 * 14 * * ?" 在每天下午2点到下午2:59期间的每1分钟触发
+	"0 0/5 14 * * ?" 在每天下午2点到下午2:55期间的每5分钟触发
+	"0 0/5 14,18 * * ?" 在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发
+	"0 0-5 14 * * ?" 在每天下午2点到下午2:05期间的每1分钟触发
+	"0 10,44 14 ? 3 WED" 每年三月的星期三的下午2:10和2:44触发
+	"0 15 10 ? * MON-FRI" 周一至周五的上午10:15触发
+	"0 15 10 15 * ?" 每月15日上午10:15触发
+	"0 15 10 L * ?" 每月最后一日的上午10:15触发
+	"0 15 10 ? * 6L" 每月的最后一个星期五上午10:15触发
+	"0 15 10 ? * 6L 2002-2005" 2002年至2005年的每月的最后一个星期五上午10:15触发
+	"0 15 10 ? * 6#3" 每月的第三个星期五上午10:15触发
+	每天早上6点
+	0 6 * * *
+	每两个小时
+	0 */2 * * *
+	晚上11点到早上8点之间每两个小时，早上八点
+	0 23-7/2，8 * * *
+	每个月的4号和每个礼拜的礼拜一到礼拜三的早上11点
+	0 11 4 * 1-3
+	1月1日早上4点
+	0 4 1 1 *
+	
+	==============================
+	
+	对应关系是
+	 0 0 * * * ？
+	秒 分钟 小时 天 月 周几
+	
+	0 代表具体时间，即0分0秒
+	*代表每的意思，即每月每天每小时
+	？代表不确定 
+
+ -->

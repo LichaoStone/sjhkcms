@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE urlrewrite
+		PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN"
+		"http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
+
+<urlrewrite>
+	<!-- 登陆规则 -->
+	<rule>
+		<from>^/app(/)?$</from>
+		<to type="forward">/shiro/index.htm</to>
+	</rule>
+	<!-- 平台主页规则 -->
+	<rule>
+		<from>^/portal(/)?$</from>
+		<to type="forward">/shiro/home.do</to>
+	</rule>
+	
+	<!-- 测试接口 -->
+	<rule>
+		<from>^/test(/)?$</from>
+		<to type="forward">/json/jsonTest.action</to>
+	</rule>
+	<rule>
+		<from>^/test2(/)?$</from>
+		<to type="forward">/json/jsonTest2.action</to>
+	</rule>
+	<rule>
+		<from>^/syncTvod(/)?$</from>
+		<to type="forward">/tvod/syncTvodsInfo.action</to>
+	</rule>
+</urlrewrite>

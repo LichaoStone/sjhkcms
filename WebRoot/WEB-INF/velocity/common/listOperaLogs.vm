@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>操作日志列表</title>
+#tagLibs()
+#calendar()
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="this is my page">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<script >
+		jQuery(document).ready(function(){
+            jQuery("#operType").attr('value','$!operType');
+        });	
+    </script>
+</head>
+
+<body>
+<div class="topline">
+	<a href="#" class="xzbtn" style="color:#FFFFFF">操作日志列表</a>
+</div>
+	<form id="queryForm" action="${ctx}/common/findOperaLogs.do" method="post">
+	<input type="hidden" id="orderColumn" name="orderColumn" value="$!{orderColumn}" />
+	<table border='0' cellpadding='0' cellspacing='0' style="margin-top:13px;">
+		<tr class="search">
+			<td>操作人：<input type='text' name='createUser' value='$!{createUser}'/></td>
+			<td>业务名称：<input type='text' name='businame' value='$!{businame}'/></td>
+			<td>操作类型：
+				<select name="operType" id="operType">
+                    <option value="">==请选择==</option>
+                    <option value="1">新增</option>
+                    <option value="2">修改</option>
+                    <option value="3">删除</option>
+                    <option value="4">批量导入</option>
+				</select>
+			</td>
+			<td>
+				操作时间：
+				<input type="text" id="startTime" name="startTime" value="$!startTime" style="width:100px;"
+					readonly="readonly"	onclick="WdatePicker()" class="Wdate"/> 至
+				<input type="text" id="endTime" name="endTime" value="$!endTime" style="width:100px;"
+					readonly="readonly"	onclick="WdatePicker()" class="Wdate"/>
+			</td>
+			<td><input type="image" src="../images/button_search.gif"/></td>
+		</tr>
+		</table>
+	<!--  内容列表   -->
+		<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+			<tr align="left" bgcolor="#eff2f7" height="30">
+				<td>编号</td>
+				<td><a href="javascript:void(0);" onclick="orderBy(this);" name="createUser" lastOrderBy="$!orderColumn" class="tb_head">操作人</a></td>
+				<td><a href="javascript:void(0);" onclick="orderBy(this);" name="createIP" lastOrderBy="$!orderColumn" class="tb_head">IP</a></td>
+				<td><a href="javascript:void(0);" onclick="orderBy(this);" name="busiName" lastOrderBy="$!orderColumn" class="tb_head">业务名称</a></td>
+				<td><a href="javascript:void(0);" onclick="orderBy(this);" name="operType" lastOrderBy="$!orderColumn" class="tb_head">操作类型</a></td>
+				<td><a href="javascript:void(0);" onclick="orderBy(this);" name="createDate" lastOrderBy="$!orderColumn" class="tb_head">操作时间</a></td>
+				<td><a href="javascript:void(0);" onclick="orderBy(this);" name="cost" lastOrderBy="$!orderColumn" class="tb_head">耗时(秒)</a></td>
+				<td>操作详情</td>
+			</tr>
+			#if ($null.isNull($pagedModelList.pagedModelList) || $pagedModelList.pagedModelList.size()==0)
+            	<tr align='left' height="30"  onMouseMove="javascript:this.bgColor='#FCFDEE';" onMouseOut="javascript:this.bgColor='';">
+            	 <td colspan="8"><h1>暂无相关数据内容</h1></td>
+                </tr>
+            #end
+			#foreach ($!b in $!pagedModelList.pagedModelList)
+			<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+				<td nowrap>$velocityCount</td>
+				<td>$!{b.createUser}</td>
+				<td>$!{b.createIp}</td>
+				<td>$!{b.businame}</td>
+				<td>$!{b.operaTypeStr}</td>
+				<td>$!{b.createDate}</td>
+				<td>$!{b.secondStr}</td>
+				<td style="width: 350px;">
+					<span title="$!{b.content}">
+					#if(!$null.isNull($b.content) && $b.content.length() > 30)
+						$!{b.content.substring(0,30)} ...
+					#else
+						$!{b.content}
+					#end
+					</span>
+				</td>
+			</tr>
+			#end
+			</form>
+		</table>
+		<div height="36" align="right">
+        		#rendPageInfo(${pagedModelList})
+        </div>
+</body>
+</html>

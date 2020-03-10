@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>  
+<head>  
+<TITLE>用户分组</TITLE>  
+#tagLibs()
+</head>
+<style>  
+    select {  
+        font-size:12px;  
+        color:green; 
+		width:240px;
+		height:200px;
+    }  
+</style>  
+<body>  
+<div>
+	<a href="${ctx}/user/findUsersList.do" class="wxbtn">用户列表</a> | 
+    <a href="#" class="xzbtn" style="color:#FFF">用户分组</a>
+</div>
+<form method="post"  name="myform" id="myform">
+		<table style="margin:20px 100px;" class="pn-ftable" align="center" cellpadding="2" cellspacing="1" border="0">
+			<tr>
+					<input type="hidden" name="userId"  value="$!{userId}"/>
+					<input type="hidden" name="oldGroupId" value="$!{oldGroupId}"/>
+				<td width="45%" class="pn-fcontent" style="text-align:center;">可选组</td>
+				<td width="10%" class="pn-fcontent"></td>
+				<td width="45%" class="pn-fcontent" style="text-align:center;">已有组</td>
+			</tr>
+			<tr>
+				<td width="45%"  class="pn-fcontent">
+					<select  multiple name="left" id="left" ondblclick="moveOption(document.getElementById('left'), document.getElementById('right'))">  
+                          #foreach ($lis in $groupList) 
+                        		<option value="${lis.id}">$!{lis.name}</option>
+                          #end
+                      </select>  
+				</td>
+				<td width="10%" class="pn-fcontent" style="text-align:center;">
+					<input type="button" value=" >> " onclick="moveOption(document.getElementById('left'),document.getElementById('right'))"><br><br>  
+					<input type="button" value=" << " onclick="moveOption(document.getElementById('right'), document.getElementById('left'))">  
+				</td>
+				<td width="45%" class="pn-fcontent">
+					<select  multiple name="right" id="right" ondblclick="moveOption(document.getElementById('right'), document.getElementById('left'))">  
+                    	   #foreach ($lis in $ruList) 
+                        		<option value="${lis.groupid}" selected>$!{lis.groupName}</option>
+                           #end
+                     </select> 
+				</td>
+			</tr>
+			<tr>
+                <td colspan="3" class="pn-fcontent" style="text-align:center;padding-top:15px;">
+            		<button type="button" class="bt-primary" onclick="saveAuthority(document.getElementById('right'));">保存</button>
+					<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+                </td>
+           </tr>
+		</table>
+</form>
+<script language="javascript" src="${ctx}/js/ott/shiro/selectUserGroup.js"></script>
+</body>  
+</html>  

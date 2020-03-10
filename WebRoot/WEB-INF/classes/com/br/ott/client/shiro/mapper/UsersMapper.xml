@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.shiro.mapper.UsersMapper">
+	<resultMap type="UserInfo" id="UserInfo">
+		<id property="userId" column="ID"></id>
+		<result property="userName" column="ADMINNAME"></result>
+		<result property="password" column="ADMINPWD"></result>
+		<result property="loginname" column="TRUENAME"></result>
+		<result property="areaid" column="AREAID"></result>
+		<result property="status" column="STATUS"></result>
+		<result property="groupId" column="QXGROUPID"></result>
+		<result property="partnerid" column="PARTNERID"></result>
+		<result property="phone" column="PHONE"></result>
+		<result property="createdate" column="CREATEDATE"></result>
+		<result property="operators" column="operators"></result>
+	</resultMap>
+	
+	<resultMap type="UserInfo" id="UserGroupMap" extends="UserInfo">
+		<collection property="groups" ofType="Groups">  
+            <id property="id" column="groupId"></id>
+		<result property="name" column="name"></result>
+		<result property="parentId" column="parentId"></result>
+		<result property="enName" column="enName"></result>
+		<result property="groupType" column="groupType"></result>
+        </collection>  
+	</resultMap>
+	
+	<!-- 根据用户ID查询组信息 -->
+	<select id="getLogin" resultMap="UserGroupMap">
+		<![CDATA[ SELECT u.ID,u.ADMINNAME,u.ADMINPWD,u.TRUENAME,u.AREAID,u.STATUS,u.QXGROUPID,u.PARTNERID,u.PHONE,u.CREATEDATE,u.operators,
+			g.id as groupId,g.name,g.parentId,g.enName,g.groupType
+		 FROM OTT_ADMIN u 
+		 	left join ott_qx_groupuser gu on u.ID = gu.userid  
+			left join ott_qx_group g on g.id = gu.groupid 
+		 WHERE u.status='1' 
+		 	and u.ADMINNAME = #{loginName}
+      		and u.ADMINPWD = #{password} ]]>
+	</select>
+
+	<!--添加一个用户 -->
+	<insert id="addUser" parameterType="UserInfo">
+		<selectKey keyProperty="userId"  resultType="String"  order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+		<![CDATA[   INSERT INTO OTT_ADMIN (ADMINNAME, ADMINPWD, TRUENAME,AREAID,STATUS,QXGROUPID,PARTNERID,PHONE,CREATEDATE,operators)
+			VALUES (#{userName,jdbcType=VARCHAR},
+				 	#{password,jdbcType=VARCHAR},
+				 	#{loginname,jdbcType=VARCHAR},
+				 	#{areaid,jdbcType=VARCHAR},
+				 	#{status,jdbcType=VARCHAR},
+				 	#{groupId,jdbcType=VARCHAR},
+				 	#{partnerid,jdbcType=VARCHAR},
+				 	#{phone,jdbcType=VARCHAR},
+				 	now(),
+				 	#{operators,jdbcType=VARCHAR})   
+	 	]]>
+	</insert>
+	
+	<!-- 修改用户信息 -->
+	<update id="modifyUser" parameterType="UserInfo">
+		<![CDATA[
+			UPDATE OTT_ADMIN SET  
+				ADMINNAME=#{userName,jdbcType=VARCHAR},
+				TRUENAME=#{loginname,jdbcType=VARCHAR},
+				AREAID=#{areaid,jdbcType=VARCHAR},
+				STATUS=#{status,jdbcType=VARCHAR},
+				QXGROUPID=#{groupId,jdbcType=VARCHAR},
+				PARTNERID=#{partnerid,jdbcType=VARCHAR},
+				PHONE=#{phone,jdbcType=VARCHAR},
+				operators=#{operators,jdbcType=VARCHAR}
+			WHERE ID=#{userId}
+		]]>
+	</update>
+	
+	<!-- 查询所有用户 -->
+	<select id="findAllUser" resultMap="UserInfo">
+		SELECT a.id,a.adminname,a.adminpwd,a.truename,a.areaid,a.status,a.qxgroupid,a.partnerid,a.phone,a.operators,
+		    date_format(a.createdate,'%Y-%m-%d %H:%i:%s') as cdate,(
+			select t.dicname from ott_dictionarys t 
+			     where t.dicvalue=a.areaid) dicname 
+		FROM OTT_ADMIN a 
+		<where>
+			<if test="status != null and status != ''">
+				 a.status = #{status}
+			</if>
+			<if test="userName != null and userName != ''">
+				and a.adminname LIKE CONCAT(CONCAT('%', #{userName}),'%')
+			</if>
+			<if test="phone != null and phone != ''">
+				and phone LIKE CONCAT(CONCAT('%', #{phone}),'%')
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+		 	<![CDATA[
+			ORDER BY ${orderColumn}
+			]]>
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			order by a.id desc
+		</if>
+	</select>
+	
+	<!-- 查询所有用户 -->
+	<select id="getUserList" resultMap="UserInfo">
+		<![CDATA[ SELECT * FROM OTT_ADMIN]]>
+	</select>
+	
+	<!-- 查询总条数 -->
+	<select id="getCountUser" resultType="int">
+		SELECT count(1) FROM OTT_ADMIN
+		<where>
+			<if test="status != null and status != ''">
+				 status = #{status}
+			</if>
+			<if test="userName != null and userName != ''">
+				and adminname LIKE CONCAT(CONCAT('%', #{userName}),'%')
+			</if>
+			<if test="phone != null and phone != ''">
+				and phone LIKE CONCAT(CONCAT('%', #{phone}),'%')
+			</if>
+			and status != '2'
+		</where>
+	</select>
+	
+	<!-- 查询当前登录用户 -->
+	<select id="getUser" resultMap="UserInfo">
+		<![CDATA[ SELECT * FROM OTT_ADMIN U WHERE U.ADMINNAME = #{username}]]>
+	</select>
+	
+	<!-- getPassword 根据登录名查找用户密码 -->
+	<select id="getPassword" resultType="string">
+		<![CDATA[ SELECT U.ADMINPWD FROM OTT_ADMIN U WHERE U.ADMINNAME = #{username}]]>
+	</select>
+	
+	<!-- 根据组ID 查找系统中可选用户  -->
+	<select id="findAllUserByGroupId" resultMap="UserInfo">
+		<![CDATA[ SELECT * FROM OTT_ADMIN WHERE ID not in (select t.userid from ott_qx_groupuser t where t.groupid=#{groupid}) and status = '1']]>
+	</select>
+	
+	<!-- 根据ID 删除用户 -->
+	<delete id="delUser" parameterType="String">
+		<!-- <![CDATA[ DELETE FROM OTT_ADMIN WHERE id = #{id} ]]> -->
+		<![CDATA[
+			UPDATE OTT_ADMIN SET  
+				STATUS='2'
+			WHERE ID=#{id}
+		]]>
+	</delete>
+	
+	<!-- 根据ID查找用户 -->
+	<select id="getUserById" resultMap="UserInfo">
+		<![CDATA[ SELECT * FROM  OTT_ADMIN WHERE id = #{id}]]>
+	</select>
+	
+	<!-- 根据用户名查找用户 -->
+	<select id="findUserByUserName" resultMap="UserInfo">
+		<![CDATA[ SELECT a.ID,a.ADMINNAME FROM  OTT_ADMIN as a WHERE a.ADMINNAME = #{userName}]]>
+	</select>
+	
+	<!-- 根据手机查找用户 -->
+	<select id="findUserByPhone" resultMap="UserInfo">
+		<![CDATA[ SELECT a.ID,a.ADMINNAME FROM  OTT_ADMIN as a WHERE a.phone = #{phone}]]>
+	</select>
+	
+	<!-- 按partnerId查询用户 -->
+	<select id="getUserInfoByPartnerId" resultMap="UserInfo">
+		SELECT * FROM OTT_ADMIN WHERE partnerid = #{partnerid,jdbcType=VARCHAR} 
+	</select>
+	
+	<!-- 修改密码 -->
+	<update id="editPwd" parameterType="String">
+		<![CDATA[
+			UPDATE OTT_ADMIN SET  
+				ADMINPWD=#{password,jdbcType=VARCHAR}
+			WHERE ID=#{userId}
+		]]>
+	</update>
+</mapper>

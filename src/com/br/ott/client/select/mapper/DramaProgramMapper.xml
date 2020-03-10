@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.select.mapper.DramaProgramMapper">
+	
+	<insert id="addDramaProgram" parameterType="DramaProgram">
+		<selectKey keyProperty="id" resultType="String"  order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+		<![CDATA[
+		insert into ott_drama_program(name, ptype,otherName, assetId,cProvider,playyear,language,pcode,oldType,
+		 summary,origin,director,actor,compere,keyword,isLoad,playUrl,coverDImg,coverXImg,recDImg,recXImg,
+		 remark,createTime, operator,limitFree, price, pId,linkUrl,status,updateTime,isAlbum) 
+		values(#{name,jdbcType=VARCHAR},
+			#{ptype,jdbcType=VARCHAR},
+			#{otherName,jdbcType=VARCHAR},
+			#{assetId,jdbcType=VARCHAR},
+			#{cProvider,jdbcType=VARCHAR},
+			#{playyear,jdbcType=VARCHAR},
+			#{language,jdbcType=VARCHAR},
+			#{pcode,jdbcType=VARCHAR},
+			#{oldType,jdbcType=VARCHAR},
+			#{summary,jdbcType=VARCHAR},
+			#{origin,jdbcType=VARCHAR},
+			#{director,jdbcType=VARCHAR},
+			#{actor,jdbcType=VARCHAR},
+			#{compere,jdbcType=VARCHAR},
+			#{keyword,jdbcType=VARCHAR},
+			#{isLoad,jdbcType=VARCHAR},
+			#{playUrl,jdbcType=VARCHAR},
+			#{coverDImg,jdbcType=VARCHAR},
+			#{coverXImg,jdbcType=VARCHAR},
+			#{recDImg,jdbcType=VARCHAR},
+			#{recXImg,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR},
+			now(),
+			#{operator,jdbcType=VARCHAR},
+			#{limitFree},
+			#{price},
+			#{pId,jdbcType=VARCHAR},
+			#{linkUrl,jdbcType=VARCHAR},
+			'1',
+			now(),
+			#{isAlbum,jdbcType=VARCHAR})
+		]]>
+	</insert> 
+	
+	<resultMap id="DetailDramaProgramMap" type="DramaProgram" > 
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="cProvider" column="cProvider"></result>
+		<result property="assetId" column="assetId"></result>
+		<result property="playyear" column="playyear"></result>
+		<result property="director" column="director"></result>
+		<result property="actor" column="actor"></result>
+		<result property="ptype" column="ptype"></result>
+		<result property="timeLongth" column="timeLongth"></result>
+		<result property="createTime" column="createTime"></result>
+		<result property="playyear" column="playyear"></result>
+		<result property="language" column="language"></result>
+		<result property="pcode" column="pcode"></result>
+		<result property="oldType" column="oldType"></result>
+		<result property="summary" column="summary"></result>
+		<result property="origin" column="origin"></result>
+		<result property="compere" column="compere"></result>
+		<result property="keyword" column="keyword"></result>
+		<result property="playUrl" column="playUrl"></result>
+		<result property="coverDImg" column="coverDImg"></result>
+		<result property="coverXImg" column="coverXImg"></result>
+		<result property="recDImg" column="recDImg"></result>
+		<result property="recXImg" column="recXImg"></result>
+		<result property="remark" column="remark"></result>
+		<result property="operator" column="operator"></result>
+		<result property="limitFree" column="limitFree"></result>
+		<result property="price" column="price"></result>
+		<result property="pId" column="pId"></result>
+		<result property="linkUrl" column="linkUrl"></result>
+		<result property="status" column="status"></result>
+		<result property="updateTime" column="updateTime"></result>
+		<result property="isAlbum" column="isAlbum"></result>
+		<collection property="dtList" column="id" javaType="ArrayList" 
+			ofType="DramaType" select="com.br.ott.client.select.mapper.DramaTypeMapper.findNavByDramaId"/>
+	</resultMap> 
+	
+	<select id="getDramaProgramById" resultMap="DetailDramaProgramMap">
+		select * from ott_drama_program p where id=#{id, jdbcType=INTEGER}
+	</select>
+	
+    <select id="getDramaProgramByIdAndStatus" resultMap="DetailDramaProgramMap">
+		select id,name,assetId,pId,actor,remark from ott_drama_program where id=#{id, jdbcType=INTEGER} and status=#{status, jdbcType=VARCHAR}
+	</select>
+	
+	<resultMap id="DramaProgramMap" type="DramaProgram" > 
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="pId" column="pId"></result>
+		<result property="cProvider" column="cProvider"></result>
+		<result property="assetId" column="assetId"></result>
+		<result property="isLoad" column="isLoad"></result>
+		<result property="director" column="director"></result>
+		<result property="actor" column="actor"></result>
+		<result property="ptype" column="ptype"></result>
+		<result property="oldType" column="oldType"></result>
+		<result property="createTime" column="createTime"></result>
+		<result property="status" column="status"></result>
+		<result property="updateTime" column="updateTime"></result>
+		<result property="coverDImg" column="coverDImg"></result>
+		<result property="coverXImg" column="coverXImg"></result>
+		<result property="recDImg" column="recDImg"></result>	
+	    <result property="recXImg" column="recXImg"></result>
+	    <result property="isAlbum" column="isAlbum"></result>
+		<collection property="dtList" column="id" javaType="ArrayList" 
+			ofType="DramaType" select="com.br.ott.client.select.mapper.DramaTypeMapper.findNavByDramaId"/>
+	</resultMap> 
+	<select id="findDramaProgramByPage" resultMap="DramaProgramMap">
+		select dp.id,dp.name,dp.pId,dp.ptype,dp.cProvider,dp.isLoad,dp.assetId,dp.updateTime,
+		 dp.director,dp.actor,dp.oldType,date_format(dp.createTime,'%Y-%m-%d %H:%i:%s') createTime, dp.status,dp.coverDImg,dp.coverXImg,dp.recDImg,dp.recXImg,dp.isAlbum
+		<if test="albumId !='' and albumId !=null">
+		 	,da.queue,da.id as daId
+		 </if>
+		from ott_drama_program dp
+		<if test="ttype != null and ttype != ''">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="albumId !='' and albumId !=null">
+			left outer join ott_drama_album da on da.dramaId=dp.id
+		</if>
+		<where>
+		    1 = 1
+			<if test="status !='' and status !=null">
+				and dp.status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="ptype !='' and ptype !=null">
+				and dp.ptype = #{ptype,jdbcType=VARCHAR}
+			</if>
+			<if test="ttype !='' and ttype !=null">
+				and dt.navId = #{ttype,jdbcType=VARCHAR}
+			</if>
+			<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+				and FIND_IN_SET(dt.navId, getNavList(#{parentId}))
+			</if>
+			<if test="actor !='' and actor !=null">
+				and dp.actor LIKE CONCAT(CONCAT('%', #{actor}),'%')
+			</if>
+			<if test="cProvider !='' and cProvider !=null">
+				and dp.cProvider LIKE CONCAT(CONCAT('%', #{cProvider}),'%')
+			</if>
+			<if test="name !='' and name !=null">
+				and dp.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+			<if test="pcode !='' and pcode !=null">
+				and dp.pcode LIKE CONCAT(CONCAT('%', #{pcode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="isAlbum !='' and isAlbum !=null">
+				and dp.isAlbum = #{isAlbum,jdbcType=VARCHAR}
+			</if>
+			<if test="albumId !='' and albumId !=null">
+				and da.albumId = #{albumId,jdbcType=VARCHAR}
+			</if>
+			<if test="noContainId !='' and noContainId !=null" >
+				and not FIND_IN_SET (dp.id, #{noContainId})
+			</if>
+		</where>
+		<if test="parentId !='' and parentId != null">
+			group by dp.assetId
+		</if>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			  order by dp.createTime DESC,dp.updateTime DESC
+		</if>
+	</select>
+	
+	<resultMap id="DramaProgramMap2" type="DramaProgram"> 
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="pId" column="pId"></result>
+		<result property="cProvider" column="cProvider"></result>
+		<result property="assetId" column="assetId"></result>
+		<result property="ptype" column="ptype"></result>
+		<result property="status" column="status"></result>
+		<result property="coverDImg" column="coverDImg"></result>
+		<result property="coverXImg" column="coverXImg"></result>
+		<result property="recDImg" column="recDImg"></result>	
+	    <result property="recXImg" column="recXImg"></result>
+	    <result property="isAlbum" column="isAlbum"></result>
+	</resultMap>
+	<select id="findDramaProgramByPage2" resultMap="DramaProgramMap2">
+		select dp.id,dp.name,dp.pId,dp.ptype,dp.cProvider,dp.assetId, dp.status,dp.coverDImg,dp.coverXImg,dp.recDImg,dp.recXImg,dp.isAlbum
+		<if test="albumId !='' and albumId !=null">
+		 	,da.queue,da.id as daId
+		 </if>
+		from ott_drama_program dp
+		<if test="ttype != null and ttype != ''">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="albumId !='' and albumId !=null">
+			left outer join ott_drama_album da on da.dramaId=dp.id
+		</if>
+		<where>
+		    1 = 1
+			<if test="status !='' and status !=null">
+				and dp.status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="ptype !='' and ptype !=null">
+				and dp.ptype = #{ptype,jdbcType=VARCHAR}
+			</if>
+			<if test="ttype !='' and ttype !=null">
+				and dt.navId = #{ttype,jdbcType=VARCHAR}
+			</if>
+			<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+				and FIND_IN_SET(dt.navId, getNavList(#{parentId}))
+			</if>
+			<if test="actor !='' and actor !=null">
+				and dp.actor LIKE CONCAT(CONCAT('%', #{actor}),'%')
+			</if>
+			<if test="cProvider !='' and cProvider !=null">
+				and dp.cProvider LIKE CONCAT(CONCAT('%', #{cProvider}),'%')
+			</if>
+			<if test="name !='' and name !=null">
+				and dp.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+			<if test="pcode !='' and pcode !=null">
+				and dp.pcode LIKE CONCAT(CONCAT('%', #{pcode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="isAlbum !='' and isAlbum !=null">
+				and dp.isAlbum = #{isAlbum,jdbcType=VARCHAR}
+			</if>
+			<if test="albumId !='' and albumId !=null">
+				and da.albumId = #{albumId,jdbcType=VARCHAR}
+			</if>
+			<if test="noContainId !='' and noContainId !=null" >
+				and not FIND_IN_SET (dp.id, #{noContainId})
+			</if>
+			<if test="containId !='' and containId != null" >
+				and FIND_IN_SET (dp.id, #{containId})
+			</if>
+		</where>
+		<if test="parentId !='' and parentId != null">
+			group by dp.assetId
+		</if>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			  order by dp.createTime DESC,dp.updateTime DESC
+		</if>
+	</select>
+	
+	
+	
+	<select id="findDramaProgramForAPI" resultMap="DramaProgramMap">
+		select dp.id,dp.name,dp.pId,dp.ptype, dp.cProvider,dp.isLoad,dp.assetId,dp.updateTime,
+		 dp.director,dp.actor,dp.oldType,date_format(dp.createTime,'%Y-%m-%d %H:%i:%s') createTime, dp.status,dp.coverDImg,dp.coverXImg,dp.recDImg,dp.recXImg,dp.isAlbum
+		<if test="albumId !='' and albumId !=null">
+		 	,da.queue,da.id as daId
+		 </if>
+		from ott_drama_program dp
+		<if test="ttype != null and ttype != ''">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="albumId !='' and albumId !=null">
+			left outer join ott_drama_album da on da.dramaId=dp.id
+		</if>
+		<where>
+		    1 = 1
+			<if test="status !='' and status !=null">
+				and dp.status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="ptype !='' and ptype !=null">
+				and dp.ptype = #{ptype,jdbcType=VARCHAR}
+			</if>
+			<if test="ttype !='' and ttype !=null">
+				and dt.navId = #{ttype,jdbcType=VARCHAR}
+			</if>
+			<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+				and FIND_IN_SET(dt.navId, getNavList(#{parentId}))
+			</if>
+			<if test="actor !='' and actor !=null">
+				and dp.actor LIKE CONCAT(CONCAT('%', #{actor}),'%')
+			</if>
+			<if test="cProvider !='' and cProvider !=null">
+				and dp.cProvider LIKE CONCAT(CONCAT('%', #{cProvider}),'%')
+			</if>
+			<if test="name !='' and name !=null">
+				and dp.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+			<if test="pcode !='' and pcode !=null">
+				and dp.pcode LIKE CONCAT(CONCAT('%', #{pcode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="isAlbum !='' and isAlbum !=null">
+				and dp.isAlbum = #{isAlbum,jdbcType=VARCHAR}
+			</if>
+			<if test="albumId !='' and albumId !=null">
+				and da.albumId = #{albumId,jdbcType=VARCHAR}
+			</if>
+			<if test="noContainId !='' and noContainId !=null" >
+				and not FIND_IN_SET (dp.id, #{noContainId})
+			</if>
+		</where>
+		<if test="parentId !='' and parentId != null">
+			group by dp.assetId
+		</if>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			  order by dp.createTime DESC,dp.updateTime DESC
+		</if>
+	</select>
+		
+	<select id="getCountDramaProgram" resultType="int">
+		select count(aa.id) from (
+		  select dp.id
+		<if test="albumId !='' and albumId !=null">
+		 	,da.queue,da.id as daId
+		 </if>
+		from ott_drama_program dp
+		<if test="ttype != null and ttype != ''">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="albumId !='' and albumId !=null">
+			left outer join ott_drama_album da on da.dramaId=dp.id
+		</if>
+		<where>
+		    1 = 1
+			<if test="status !='' and status !=null">
+				and dp.status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="ptype !='' and ptype !=null">
+				and dp.ptype = #{ptype,jdbcType=VARCHAR}
+			</if>
+			<if test="ttype !='' and ttype !=null">
+				and dt.navId = #{ttype,jdbcType=VARCHAR}
+			</if>
+			<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+				and FIND_IN_SET(dt.navId, getNavList(#{parentId}))
+			</if>
+			<if test="actor !='' and actor !=null">
+				and dp.actor LIKE CONCAT(CONCAT('%', #{actor}),'%')
+			</if>
+			<if test="cProvider !='' and cProvider !=null">
+				and dp.cProvider LIKE CONCAT(CONCAT('%', #{cProvider}),'%')
+			</if>
+			<if test="name !='' and name !=null">
+				and dp.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+			<if test="pcode !='' and pcode !=null">
+				and dp.pcode LIKE CONCAT(CONCAT('%', #{pcode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="isAlbum !='' and isAlbum !=null">
+				and dp.isAlbum = #{isAlbum,jdbcType=VARCHAR}
+			</if>
+			<if test="albumId !='' and albumId !=null">
+				and da.albumId = #{albumId,jdbcType=VARCHAR}
+			</if>
+			<if test="noContainId !='' and noContainId !=null" >
+				and not FIND_IN_SET (dp.id, #{noContainId})
+			</if>
+		</where>
+		<if test="parentId !='' and parentId != null">
+			group by dp.assetId
+		</if>) aa
+	</select>
+	
+	<select id="findDramaProgramByCond" resultType="DramaProgram">
+		select dp.*
+		from ott_drama_program dp
+		<where>
+		    1 = 1
+			<if test="status !='' and status !=null">
+				and dp.status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="ptype !='' and ptype !=null">
+				and dp.ptype = #{ptype,jdbcType=VARCHAR}
+			</if>
+			<if test="assetId !='' and assetId !=null">
+				and dp.assetId = #{assetId,jdbcType=VARCHAR}
+			</if>
+			<if test="isLoad !='' and isLoad !=null">
+				and dp.isLoad = #{isLoad,jdbcType=VARCHAR}
+			</if>
+			<if test="name !='' and name !=null">
+				and dp.name=#{name,jdbcType=VARCHAR}
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			  order by id desc
+		</if>
+	</select>
+	
+	<update id="updateDramaProgram" parameterType="DramaProgram">
+		update ott_drama_program set name=#{name,jdbcType=VARCHAR},pId=#{pId,jdbcType=VARCHAR},
+			ptype=#{ptype,jdbcType=VARCHAR},
+			otherName=#{otherName,jdbcType=VARCHAR},
+			cProvider=#{cProvider,jdbcType=VARCHAR},
+			playyear=#{playyear,jdbcType=VARCHAR},
+			language=#{language,jdbcType=VARCHAR},
+			pcode=#{pcode,jdbcType=VARCHAR},
+			summary=#{summary,jdbcType=VARCHAR},
+			origin=#{origin,jdbcType=VARCHAR},
+			director=#{director,jdbcType=VARCHAR},
+			actor=#{actor,jdbcType=VARCHAR},
+			compere=#{compere,jdbcType=VARCHAR},
+			keyword=#{keyword,jdbcType=VARCHAR},
+			playUrl=#{playUrl,jdbcType=VARCHAR},
+			coverDImg=#{coverDImg,jdbcType=VARCHAR},
+			coverXImg=#{coverXImg,jdbcType=VARCHAR},
+			recDImg=#{recDImg,jdbcType=VARCHAR},
+			recXImg=#{recXImg,jdbcType=VARCHAR},
+			remark=#{remark,jdbcType=VARCHAR},
+			operator=#{operator,jdbcType=VARCHAR},
+			limitFree=#{limitFree},
+			price=#{price},
+			updateTime=now(),
+			linkUrl=#{linkUrl,jdbcType=VARCHAR}
+		where id=#{id, jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateDramaImage">
+		update ott_drama_program set 
+				coverDImg=#{coverDImg,jdbcType=VARCHAR},
+				coverXImg=#{coverXImg,jdbcType=VARCHAR},
+				recDImg=#{recDImg,jdbcType=VARCHAR},
+				recXImg=#{recXImg,jdbcType=VARCHAR},
+				isLoad=#{isLoad,jdbcType=VARCHAR}
+		where id=#{id, jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateDramaProgramStatus">
+		update ott_drama_program set status=#{status,jdbcType=VARCHAR}
+		where id=#{id, jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateDramaProgramJP">
+		update ott_drama_program set pcode=#{pcode,jdbcType=VARCHAR}
+		where id=#{id, jdbcType=INTEGER}
+	</update>
+	
+	<select id="findDPListByName" parameterType="DramaProgram" resultType="DramaProgram">
+	    select dp.* from ott_drama_program dp where dp.name=#{name,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertDramaTypeByMap" parameterType="java.util.Map">
+	    insert into ${tablename}(dramaId,navId) values <foreach collection="navIdList" item="item" separator=",">(#{dramaId,jdbcType=VARCHAR},#{item})</foreach>
+	</insert>
+	
+	<update id="updateDPStatusForBatch" parameterType="java.util.Map">
+	    update ott_drama_program dp set dp.status = #{status,jdbcType=VARCHAR} where dp.id in (<foreach collection="id_array" item="item" separator=",">#{item,jdbcType=VARCHAR}</foreach>)
+	</update>
+	
+	<select id="findRecDramaByCloud" parameterType="java.util.Map" resultType="DramaProgram">
+	    select dp.id,dp.name,dp.cProvider,dp.assetId,dp.pId,dp.ptype,dp.summary,dp.origin,dp.language,dp.playyear,dp.director,dp.actor,dp.keyword,dp.remark,dp.coverXImg,
+	       dp.coverDImg,dp.recXImg,dp.recDImg,getNavNameForLevel1(dp.id) level1NavName from ott_drama_program dp where dp.status = '1' and dp.id in (<foreach collection="dramidList" item="item" separator=",">#{item.dramaId,jdbcType=VARCHAR}</foreach>)
+	</select>
+	
+	<select id="findDramaIdsAndSorts" resultType="java.util.Map">
+       SELECT dramaId,GROUP_CONCAT(prType) prTypes,GROUP_CONCAT(sort) sorts FROM ott_drama_recommend GROUP BY dramaId	
+    </select>
+	
+	<update id="updateDramaProgram2" parameterType="java.util.Map">
+	    update ott_drama_program set 
+	    coverXImg = 
+	    <foreach collection="dpList" item="item" index="index" separator=" " open="case ID" close="end">
+	        <if test="item.coverXImg != null and item.coverXImg != ''">
+	            when #{item.id} then #{item.coverXImg}
+	        </if>
+	    </foreach>
+	    ,coverDImg = 
+	    <foreach collection="dpList" item="item" index="index" separator=" " open="case ID" close="end">
+	        <if test="item.coverDImg != null and item.coverDImg != ''">
+	            when #{item.id} then #{item.coverDImg}
+	        </if>
+	    </foreach>
+	    ,recXImg = 
+	    <foreach collection="dpList" item="item" index="index" separator=" " open="case ID" close="end">
+	        <if test="item.recXImg != null and item.recXImg != ''">
+	            when #{item.id} then #{item.recXImg}
+	        </if>
+	    </foreach>
+	    ,recDImg=
+	    <foreach collection="dpList" item="item" index="index" separator=" " open="case ID" close="end">
+	        <if test="item.recDImg != null and item.recDImg != ''">
+	            when #{item.id} then #{item.recDImg}
+	        </if>
+	    </foreach>
+	    where id in
+	    <foreach collection="dpList" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=INTEGER}
+        </foreach>
+	</update>
+	
+	<update id="updateDramaImg" parameterType="DramaProgram">
+	   update ott_drama_program
+	    <set>
+	        <if test="coverXImg != null and coverXImg !=''">
+	            coverXImg = #{coverXImg},coverDImg = #{coverXImg}
+	        </if>
+	        <if test="recXImg != null and recXImg !=''">
+	            recXImg = #{recXImg},recDImg = #{recXImg}
+	        </if>
+	    </set>
+	    where id=#{id, jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateProgramClickNum">
+	   update ott_drama_program set clicknum=(clicknum + 1) where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+</mapper>

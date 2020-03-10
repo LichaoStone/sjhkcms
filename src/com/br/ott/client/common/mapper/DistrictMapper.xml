@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.common.mapper.DistrictMapper">
+	<resultMap id="District" type="District" >
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="level" column="level"></result>
+		<result property="areacode" column="areacode"></result>
+		<result property="postcode" column="postcode"></result>
+		<result property="upid" column="upid"></result>
+		<result property="displayorder" column="displayorder"></result>
+	</resultMap>
+	
+	<select id="getAllDistrict" resultMap="District">
+		<![CDATA[
+			select * from ott_district where level <= #{maxlevl}
+		]]>
+	</select>
+	
+	<select id="getDistrictByUpid" resultMap="District">
+		<![CDATA[
+			select * from ott_district where upid = #{upid}
+		]]>
+	</select>
+	
+</mapper>

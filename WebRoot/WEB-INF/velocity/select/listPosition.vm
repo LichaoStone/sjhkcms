@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>推荐位管理</title>
+#tagLibs()
+</head>
+<body>
+<!--  快速转换位置按钮  --> 
+<!--  内容列表   -->
+<form id="queryForm" method="get">
+<div class="topline">
+	<p class="xzbtn" style="color:#FFFFFF">推荐位列表</p> | 
+    <a href="${ctx}/position/toPosition.do" class="wxbtn" >新增推荐位</a>
+</div>
+ <table border='0' cellpadding='0' cellspacing='0' height="36">
+    <tr class="search">
+        <td>推荐位名称：<input type='text' id="name" name='name' value='$!{type.name}'/></td>
+        <td>推荐位编码：<input type='text' id="code" name='code' value='$!{type.code}'/></td>
+		<td>
+			<input type="hidden" id="orderColumn" name="orderColumn" value="$!{type.orderColumn}" />
+            <img id="queryProgram" type="image" src="${ctx}/images/button_search.gif"/>
+        </td>
+	</tr>
+</table>
+<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+<tr align="left" bgcolor="#eff2f7" height="30">
+    <td width="20%"><a href="javascript:void(0);" onclick="orderBy(this);" name="name" lastOrderBy="$!{type.orderColumn}" class="tb_head">推荐位名称</a></td>
+    <td width="20%"><a href="javascript:void(0);" onclick="orderBy(this);" name="code" lastOrderBy="$!{type.orderColumn}" class="tb_head">推荐位编码</a></td>
+    <td width="20%"><a href="javascript:void(0);" onclick="orderBy(this);" name="sort" lastOrderBy="$!{type.orderColumn}" class="tb_head">推荐位排序</a></td>
+    <td width="20%"><a href="javascript:void(0);" onclick="orderBy(this);" name="type" lastOrderBy="$!{type.orderColumn}" class="tb_head">推荐位类型</a></td>
+    
+	<td width="5%"><a href="javascript:void(0);" onclick="orderBy(this);" name="status" lastOrderBy="$!{type.orderColumn}" class="tb_head">状态</a></td>
+	<td width="10%">操作</td>
+</tr>
+#if ($null.isNull($list) || $list.size()==0)
+	<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td colspan="5"><h1>暂无相关数据内容</h1></td>
+    </tr>
+#end
+#foreach ($c in $list)
+<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td >$!{c.name}</td>
+     <td >$!{c.code}</td>
+  	 <td >$!{c.sort}</td>
+  	 <td >
+		#if('1'==$!{c.type})
+			首页
+		#else
+			默认
+		#end
+	</td>
+     <td >
+		#if('1'==$!{c.status})
+			已启用
+		#else
+			已停用
+		#end
+	</td>
+	
+	<td >
+        <a href="${ctx}/position/toPosition.do?id=$!{c.id}">编辑</a> |
+		#if($!{c.status}=='0')
+			<a href="javascript:updateTypeStatus(this, '$!{c.id}', '$!{c.status}');">启用</a>|
+		#else
+			<a href="javascript:updateTypeStatus(this, '$!{c.id}', '$!{c.status}');">停用</a>|
+		#end
+		 <a href="${ctx}/recommend/findRecommendPst.do?id=$!{c.id}">推荐资产</a>
+     </td>
+</tr>
+#end
+</table>
+<div height="36" align="right">
+    #pagination(${type})
+</div>
+</form>
+<script type="text/javascript" src="${ctx}/js/ott/select/listPosition.js"></script>
+</body>
+</html>

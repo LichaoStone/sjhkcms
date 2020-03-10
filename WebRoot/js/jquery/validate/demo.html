@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>jquery validator测试</title>
+	<style type="text/css">	
+		input.error {
+			border: 1px dotted red;
+		}
+		
+		.validate-error-tip {
+			display: none;
+			position: absolute;
+			padding: 5px 10px 5px 10px;
+			font-size: 12px;
+			background-color: white;
+			border: 1px solid #A6C9E2;
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+			z-index: 9999;
+		}
+		.validate-error-tip-img {
+			position: absolute;
+			top: -10px;
+			left: 5px;
+		}
+	</style>
+	<script type="text/javascript" src="../jquery-1.7.2.min.js"></script>
+	
+	<!-- 必须增加下面的两个js -->
+	<script type="text/javascript" src="./jquery.validate.min.js"></script>
+	<script type="text/javascript" src="./validate-tip.js"></script>
+	
+	<script type="text/javascript">
+		$(function() {
+			// validate signup form on keyup and submit
+			var validator = $("#form-4-validator").validate({
+				onsubmit : false,
+				rules: {
+					firstname: "required", // 前面的key是控件input的name属性的值
+					lastname: "required",
+					username: {
+						required: true,
+						minlength: 2
+					},
+					password: {
+						required: true,
+						minlength: 5
+					},
+					password_confirm: {
+						required: true,
+						minlength: 5,
+						equalTo: "#password"
+					},
+					email: {
+						required: true,
+						email: true
+					}
+				},
+				messages: { // 出错提示信息
+					firstname: "Enter your firstname",
+					lastname: "Enter your lastname",
+					username: {
+						required: "Enter a username",
+						minlength: jQuery.format("Enter at least {0} characters")
+					},
+					password: {
+						required: "Provide a password",
+						rangelength: jQuery.format("Enter at least {0} characters")
+					},
+					password_confirm: {
+						required: "Repeat your password",
+						minlength: jQuery.format("Enter at least {0} characters"),
+						equalTo: "Enter the same password as above"
+					},
+					email: {
+						required: "Please enter a valid email address",
+						minlength: "Please enter a valid email address"
+					}
+				},
+				// the errorPlacement has to take the table layout into account
+				errorPlacement: function(error, element) {
+					$.handleError(error, element); // 请用这个方法显示错误信息
+					//error.appendTo( element.parent().next() );
+				},
+				success: function(label) {
+					$.handleSuccess(label); // 请用这个方法隐藏错误信息
+				},
+				invalidHandler: function(e, validator) {
+					var errors = validator.numberOfInvalids();
+					if (errors) {
+						var message = errors == 1
+							? 'You missed 1 field. It has been highlighted below'
+							: 'You missed ' + errors + ' fields.  They have been highlighted below';
+						$("div.error span").html(message);
+						$("div.error").show();
+					} else {
+						$("div.error").hide();
+					}
+				}
+			});
+			$('#button-id').click(function(e) {
+				// alert($('#form-4-validator').valid());
+				alert(validator.form());
+			});
+		});
+	</script>
+</head>
+<body>
+	<form action="" id="form-4-validator">
+		<div class="error" style="display:none;"><span></span></div>
+		<table>
+			 <tr>
+	  		  	<td class="label"><label id="lfirstname">First Name</label></td>
+	  		  	<td class="field"><input id="firstname" name="firstname" type="text" value="" maxlength="100" /></td>
+	  		  </tr>
+	  		  <tr>
+	  			<td class="label"><label id="llastname" for="lastname">Last Name</label></td>
+	  			<td class="field"><input id="lastname" name="lastname" type="text" value="" maxlength="100" /></td>
+	  		  </tr>
+	  		  <tr>
+	  			<td class="label"><label id="lusername" for="username">Username</label></td>
+	  			<td class="field"><input id="username" name="username" type="text" value="" maxlength="50" /></td>
+	  		  </tr>
+	  		  <tr>
+	  			<td class="label"><label id="lpassword" for="password">Password</label></td>
+	  			<td class="field"><input id="password" name="password" type="password" maxlength="50" value="" /></td>
+	  		  </tr>
+	  		  <tr>
+	  			<td class="label"><label id="lpassword_confirm" for="password_confirm">Confirm Password</label></td>
+	  			<td class="field"><input id="password_confirm" name="password_confirm" type="password" maxlength="50" value="" /></td>
+	  		  </tr>
+	  		  <tr>
+	  			<td class="label"><label id="lemail" for="email">Email Address</label></td>
+	  			<td class="field"><input id="email" name="email" type="text" value="" maxlength="150" /></td>
+	  		  </tr>
+		</table>
+		<button id="button-id" type="button">提交</button>
+	</form>
+</body>
+</html>

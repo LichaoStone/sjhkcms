@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>资产点播节目信息</title>
+#tagLibs()
+#calendar()
+<script type="text/javascript" src="${ctx}/xheditor/xheditor-1.1.14-zh-cn.min.js"></script>
+<script type="text/javascript">
+$(pageInit);
+function pageInit(){
+	var pid= "99999";
+    $('#remark').xheditor({tools:'full',skin:'vista',upImgExt:'jpg,jpeg,gif,png',html5Upload: false});
+}
+</script>
+</head>
+<body>
+<div class="topline">
+	<a href="${ctx}/select/findDProgram.do" class="wxbtn">资产列表</a> | 
+    <a href="#" class="xzbtn" style="color:#FFFFFF">#if($!{dp.name})修改#else 新增#end资产</a>
+</div>
+#dTypeList()
+<form id="form1" name="form1" action="" method="post" enctype="multipart/form-data">
+  <table width="100%"  border="0" align="center" cellpadding="2" cellspacing="2" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+					<table width="99%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">资产名称：</td>
+							<td class="pn-fcontent">
+								<input type="hidden" id="id" name="id" value="$!{dp.id}"/>
+								<input type="hidden" id="oldName" name="oldName" value="$!{dp.name}"/>
+								<input type="text" id="name"  name="name" value="$!{dp.name}" style="width:230px;" class="text-writer"/>
+								<em class="required">*</em>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">内容提供商：</td>
+							<td class="pn-fcontent">
+								<select id="cProvider" name="cProvider" style="width:120px;">
+								<option value="">=请选择=</option>
+									#foreach($cProvider in $cProviders)
+										<option value="${cProvider.dicValue}" #if (${cProvider.dicValue} == $!{dp.cProvider}) selected #end>${cProvider.dicName}</option>
+									#end
+                                </select>
+                                <em class="required">*</em>
+                            </td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">资产别名：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="otherName"  name="otherName" value="$!{dp.otherName}" style="width:230px;" class="text-writer"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">资产类型：</td>
+							<td class="pn-fcontent">
+								<select id="ptype" name="ptype" style="width:120px;">
+									<option value="">=请选择=</option>
+									#foreach($ptype in $ptypes)
+										<option value="${ptype.dicValue}" #if (${ptype.dicValue} == $!{dp.ptype}) selected #end>${ptype.dicName}</option>
+									#end
+                                </select>
+                                <em class="required">*</em>
+                            </td>
+                        </tr>
+                        <tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">栏目：</td>
+							<td class="pn-fcontent">
+								<div class="drop-down" style="width:235px;">
+	    							 <input type="hidden" id="ttype"  name="ttype" value="$!{dp.dType}"/>
+	    							 <input type="hidden" id="dType2"  name="dType2" value="$!{dp.dType}"/>
+									 <input type="text" id="typeName" value="$!{dp.typeName2}" style="float:left;width:210px;" readonly/>
+	                                 <img src="${ctx}/images/main/threedot.gif" id="selectDType" title="请点击选择栏目"/>
+	    		                 </div>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">内容商栏目：</td>
+							<td class="pn-fcontent">
+								$!{dp.oldType}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">主演：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="actor"  name="actor" value="$!{dp.actor}" style="width:230px;" class="text-writer"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">语言：</td>
+							<td class="pn-fcontent">
+								<select id="language" name="language" style="width:120px;">
+								<option value="">=请选择=</option>
+									#foreach($language in $languages)
+										<option value="${language.dicName}" #if (${language.dicName} == $!{dp.language}) selected #end>${language.dicName}</option>
+									#end
+                                </select>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">导演：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="director"  name="director" value="$!{dp.director}" style="width:230px;" class="text-writer"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">产地：</td>
+							<td class="pn-fcontent">
+								<select id="origin" name="origin" style="width:120px;">
+									<option value="">=请选择=</option>
+									#foreach($origin in $origins)
+										<option value="${origin.dicName}" #if (${origin.dicName} == $!{dp.origin}) selected #end>${origin.dicName}</option>
+									#end
+                                </select>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">主持人：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="compere"  name="compere" value="$!{dp.compere}" style="width:230px;" class="text-writer"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">上映年份：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="playyear"  name="playyear" value="$!{dp.playyear}" style="width:115px;" class="text-writer Wdate"  onclick="WdatePicker({dateFmt:'yyyy'})"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">连播剧：</td>
+							<td class="pn-fcontent">
+								<input type="radio" id="yes_pId"  name="pId" value="1" #if ("1" == $!{dp.pId}) checked="checked" #end/><label for="yes_pId">是</label>
+								<input type="radio" id="no_pId"  name="pId" value="0" #if ("0" == $!{dp.pId} || !${dp.pId}) checked="checked" #end/><label for="no_pId">否</label>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">资产简拼：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="pcode"  name="pcode" value="$!{dp.pcode}" class="text-writer"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">关键字：</td>
+							<td class="pn-fcontent" colspan="3">
+								<input type="text" id="keyword"  name="keyword" value="$!{dp.keyword}" style="width:39.5%;" class="text-writer"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">跳转地址：</td>
+							<td class="pn-fcontent" colspan="3">
+								<input type="text" id="linkUrl"  name="linkUrl" value="$!{dp.linkUrl}" style="width:39.5%;" class="text-writer"/>
+								<span class="info-tip">资产类型是“专题”时，请填写HTTP地址</span>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">看点：</td>
+							<td class="pn-fcontent" colspan="3">
+								<textarea id="summary" name="summary" rows="7" cols="60" style="width:39.3%;">$!{dp.summary}</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">封面小图：</td>
+							<td class="pn-fcontent">
+								<div id="preview">
+									#if(!${dp.coverXImg}||$!{dp.coverXImg}=="")
+										<img id="imghead" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${sourceUrl}$!{dp.coverXImg}">
+									#end
+								</div>
+							    <input type="hidden" id="coverXImg"  name="coverXImg" value="$!{dp.coverXImg}"/>
+								<input type="file" id="coverXImgFile" name="coverXImgFile" value="上传" class="text-writer7"/>&nbsp;&nbsp;
+								<button type="button" id="saveCoverXImg" style="width:100px;" class="bt-primary">上传</button>
+								<input type="hidden" id="picAssetAddress" value="${sourceUrl}"/>
+							</td>
+							<div id="uploadImg" style="display:none;height:15px; width:15px; margin:15px auto;">
+                        			<img src="${ctx}/images/loadinglit.gif"/>
+                        	</div>
+                            <em id="top-message" class="top-message" style="display:none;margin-top:20px;"></em>
+							<td width="10%" class="pn-flabel pn-flabel-h">封面大图：</td>
+							<td class="pn-fcontent">
+								<div id="preview2">
+									#if(!${dp.coverDImg}||$!{dp.coverDImg}=="")
+										<img id="imghead2" style="width:230px;height:200px;border:1px;" alt="节目LOGO" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead2" style="width:230px;height:200px;border:1px;" alt="节目LOGO" src="${sourceUrl}$!{dp.coverDImg}">
+									#end
+								</div>
+							   <input type="hidden" id="coverDImg"  name="coverDImg" value="$!{dp.coverDImg}"/>
+								<input type="file" id="coverDImgFile" name="coverDImgFile" value="上传" class="text-writer7"/>&nbsp;&nbsp;
+								<button type="button" id="saveCoverDImg" style="width:100px;" class="bt-primary">上传</button>
+							</td>
+						</tr> 
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">推荐小图：</td>
+							<td class="pn-fcontent">
+								<div id="preview3">
+									#if(!${dp.recXImg}||$!{dp.recXImg}=="")
+										<img id="imghead3" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead3" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${sourceUrl}$!{dp.recXImg}">
+									#end
+								</div>
+							   <input type="hidden" id="recXImg"  name="recXImg" value="$!{dp.recXImg}"/>
+								<input type="file" id="recXImgFile" name="recXImgFile" value="上传" class="text-writer7"/>&nbsp;&nbsp;
+								<button type="button" id="saveRecXImg" style="width:100px;" class="bt-primary">上传</button>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">推荐大图：</td>
+							<td class="pn-fcontent">
+								<div id="preview4">
+									#if(!${dp.recDImg}||$!{dp.recDImg}=="")
+										<img id="imghead4" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead4" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${sourceUrl}$!{dp.recDImg}">
+									#end
+								</div>
+							   <input type="hidden" id="recDImg"  name="recDImg" value="$!{dp.recDImg}"/>
+								<input type="file" id="recDImgFile" name="recDImgFile" value="上传" class="text-writer7"/>&nbsp;&nbsp;
+								<button type="button" id="saveRecDImg" style="width:100px;" class="bt-primary">上传</button>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">简介说明：</td>
+							<td class="pn-fcontent" colspan="3">
+								<textarea id="remark" name="remark" rows="12" cols="50" style="width:100%">$!{dp.remark}</textarea>
+							</td>
+						</tr>
+					</table>	
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" id="saveProgram" class="bt-primary">保存</button>
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+	<script type="text/javascript" src="${ctx}/js/jquery/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/uploadPreview.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/common/py.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/select/dProgramInfo.js"></script>
+</body>
+</html>

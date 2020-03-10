@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.select.mapper.DramaProgramMapper2">
+    <!--mybatis二级缓存
+        1，size:表示缓存cache中能容纳的最大元素数。默认是1024；
+        2，flushInterval:定义缓存刷新周期，以毫秒计；
+        3，eviction:定义缓存的移除机制；默认是LRU(least recently userd，最近最少使用),还有FIFO(first in first out，先进先出)
+        4，readOnly:默认值是false，假如是true的话，缓存只能读。
+     -->
+	<cache size="2014" flushInterval="300000" eviction="LRU" readOnly="false"/>
+	<resultMap id="DetailDramaProgramMap" type="DramaProgram" > 
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="assetId" column="assetId"></result>
+		<result property="actor" column="actor"></result>
+		<result property="remark" column="remark"></result>
+		<result property="pId" column="pId"></result>
+		<result property="coverXImg" column="coverXImg"></result>
+		<collection property="dtList" column="id" javaType="ArrayList" 
+			ofType="DramaType" select="com.br.ott.client.select.mapper.DramaTypeMapper2.findNavByDramaId"/>
+	</resultMap> 
+	
+    <select id="getDramaProgramByIdAndStatus" resultMap="DetailDramaProgramMap">
+		select id,name,assetId,pId,actor,remark,coverXImg from ott_drama_program where id=#{id, jdbcType=INTEGER} and status=#{status, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getCountDramaProgram" resultType="int">
+		select COUNT(dp.id) from ott_drama_program dp
+		<if test="ttype != null and ttype != ''">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="albumId !='' and albumId !=null">
+			left outer join ott_drama_album da on da.dramaId=dp.id
+		</if>
+		<where>
+		    1 = 1
+			<if test="status !='' and status !=null">
+				and dp.status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="ptype !='' and ptype !=null">
+				and dp.ptype = #{ptype,jdbcType=VARCHAR}
+			</if>
+			<if test="ttype !='' and ttype !=null">
+				and dt.navId = #{ttype,jdbcType=VARCHAR}
+			</if>
+			<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+				and FIND_IN_SET(dt.navId, getNavList(#{parentId}))
+			</if>
+			<if test="actor !='' and actor !=null">
+				and dp.actor LIKE CONCAT(CONCAT('%', #{actor}),'%')
+			</if>
+			<if test="cProvider !='' and cProvider !=null">
+				and dp.cProvider LIKE CONCAT(CONCAT('%', #{cProvider}),'%')
+			</if>
+			<if test="name !='' and name !=null">
+				and dp.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+			<if test="pcode !='' and pcode !=null">
+				and dp.pcode LIKE CONCAT(CONCAT('%', #{pcode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="isAlbum !='' and isAlbum !=null">
+				and dp.isAlbum = #{isAlbum,jdbcType=VARCHAR}
+			</if>
+			<if test="albumId !='' and albumId !=null">
+				and da.albumId = #{albumId,jdbcType=VARCHAR}
+			</if>
+			<if test="noContainId !='' and noContainId !=null" >
+				and not FIND_IN_SET (dp.id, #{noContainId})
+			</if>
+			<if test="containId !='' and containId != null" >
+				and FIND_IN_SET (dp.id, #{containId})
+			</if>
+		</where>
+		<if test="parentId !='' and parentId != null">
+			group by dp.assetId
+		</if>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			  order by dp.createTime DESC,dp.updateTime DESC
+		</if>
+	</select>
+	
+	<resultMap id="DramaProgramMap" type="DramaProgram"> 
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="pId" column="pId"></result>
+		<result property="cProvider" column="cProvider"></result>
+		<result property="assetId" column="assetId"></result>
+		<result property="ptype" column="ptype"></result>
+		<result property="status" column="status"></result>
+		<result property="updateTime" column="updateTime"></result>
+		<result property="coverDImg" column="coverDImg"></result>
+		<result property="coverXImg" column="coverXImg"></result>
+		<result property="recDImg" column="recDImg"></result>	
+	    <result property="recXImg" column="recXImg"></result>
+	    <result property="isAlbum" column="isAlbum"></result>
+	</resultMap>
+	<select id="findDramaProgram" resultMap="DramaProgramMap">
+		select dp.id,dp.name,dp.pId,dp.ptype,dp.cProvider,dp.assetId,dp.updateTime
+		 ,dp.status,dp.coverDImg,dp.coverXImg,dp.recDImg,dp.recXImg,dp.isAlbum
+		<if test="albumId !='' and albumId !=null">
+		 	,da.queue,da.id as daId
+		 </if>
+		from ott_drama_program dp
+		<if test="ttype != null and ttype != ''">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="albumId !='' and albumId !=null">
+			left outer join ott_drama_album da on da.dramaId=dp.id
+		</if>
+		<where>
+		    1 = 1
+			<if test="status !='' and status !=null">
+				and dp.status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="ptype !='' and ptype !=null">
+				and dp.ptype = #{ptype,jdbcType=VARCHAR}
+			</if>
+			<if test="ttype !='' and ttype !=null">
+				and dt.navId = #{ttype,jdbcType=VARCHAR}
+			</if>
+			<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+				and FIND_IN_SET(dt.navId, getNavList(#{parentId}))
+			</if>
+			<if test="actor !='' and actor !=null">
+				and dp.actor LIKE CONCAT(CONCAT('%', #{actor}),'%')
+			</if>
+			<if test="cProvider !='' and cProvider !=null">
+				and dp.cProvider LIKE CONCAT(CONCAT('%', #{cProvider}),'%')
+			</if>
+			<if test="name !='' and name !=null">
+				and dp.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+			<if test="pcode !='' and pcode !=null">
+				and dp.pcode LIKE CONCAT(CONCAT('%', #{pcode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="isAlbum !='' and isAlbum !=null">
+				and dp.isAlbum = #{isAlbum,jdbcType=VARCHAR}
+			</if>
+			<if test="albumId !='' and albumId !=null">
+				and da.albumId = #{albumId,jdbcType=VARCHAR}
+			</if>
+			<if test="noContainId !='' and noContainId !=null" >
+				and not FIND_IN_SET (dp.id, #{noContainId})
+			</if>
+			<if test="containId !='' and containId != null" >
+				and FIND_IN_SET (dp.id, #{containId})
+			</if>
+		</where>
+		<if test="parentId !='' and parentId != null">
+			group by dp.assetId
+		</if>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			  order by dp.createTime DESC,dp.updateTime DESC
+		</if>
+	</select>
+	
+	
+	<select id="findDramaProgram2" resultMap="DramaProgramMap">
+		select dp.id,dp.name,dp.pId,dp.ptype,dp.cProvider,dp.assetId,dp.updateTime
+		 ,dp.status,dp.coverDImg,dp.coverXImg,dp.recDImg,dp.recXImg,dp.isAlbum
+		<if test="albumId !='' and albumId !=null">
+		 	,da.queue,da.id as daId
+		 </if>
+		from ott_drama_program dp
+		<if test="ttype != null and ttype != ''">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+			left outer join ott_drama_type dt on dt.dramaId=dp.id
+		</if>
+		<if test="albumId !='' and albumId !=null">
+			left outer join ott_drama_album da on da.dramaId=dp.id
+		</if>
+		<where>
+		    1 = 1
+			<if test="status !='' and status !=null">
+				and dp.status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="ptype !='' and ptype !=null">
+				and dp.ptype = #{ptype,jdbcType=VARCHAR}
+			</if>
+			<if test="ttype !='' and ttype !=null">
+				and dt.navId = #{ttype,jdbcType=VARCHAR}
+			</if>
+			<if test="(parentId !='' and parentId != null) and (ttype =='' or ttype == null)">
+				and FIND_IN_SET(dt.navId, getNavList(#{parentId}))
+			</if>
+			<if test="actor !='' and actor !=null">
+				and dp.actor LIKE CONCAT(CONCAT('%', #{actor}),'%')
+			</if>
+			<if test="cProvider !='' and cProvider !=null">
+				and dp.cProvider LIKE CONCAT(CONCAT('%', #{cProvider}),'%')
+			</if>
+			<if test="name !='' and name !=null">
+				and dp.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+			</if>
+			<if test="pcode !='' and pcode !=null">
+				and dp.pcode LIKE CONCAT(CONCAT('%', #{pcode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="isAlbum !='' and isAlbum !=null">
+				and dp.isAlbum = #{isAlbum,jdbcType=VARCHAR}
+			</if>
+			<if test="albumId !='' and albumId !=null">
+				and da.albumId = #{albumId,jdbcType=VARCHAR}
+			</if>
+			<if test="noContainId !='' and noContainId !=null" >
+				and not FIND_IN_SET (dp.id, #{noContainId})
+			</if>
+			<if test="containId !='' and containId != null" >
+				and FIND_IN_SET (dp.id, #{containId})
+			</if>
+		</where>
+		<if test="parentId !='' and parentId != null">
+			group by dp.assetId
+		</if>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			  order by dp.createTime DESC,dp.updateTime DESC
+		</if>
+	</select>
+	
+</mapper>

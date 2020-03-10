@@ -1,0 +1,262 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>合作伙伴信息</title>
+#tagLibs()
+<script >
+function initPartner() {
+	var parnerType = $('#parnerType').val();
+	if (parnerType == '个人内容提供者') {
+		$('#form1').show();
+		$('#form2').hide();
+	} else {
+		$('#form1').hide();
+		$('#form2').show();
+	}
+}
+</script>
+</head>
+<body onload="initPartner()">
+<input type="hidden" id="parnerType" value="$!{partner.partnerTypeName}" />
+<form id="form1" name="form1" action="" method="post">
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+      	<fieldset>
+				<legend>基本信息</legend>
+					<table width="100%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">个人名称：</td>
+							<td class="pn-fcontent">
+								$!{partner.partnerName}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">合作类型：</td>
+							<td class="pn-fcontent">
+								$!{partner.partnerTypeName}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">合同编号：</td>
+							<td class="pn-fcontent">
+								$!{partner.contractNumber}
+							</td>
+                        </tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系人：</td>
+							<td class="pn-fcontent">
+								$!{partner.linkman}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系电话：</td>
+							<td class="pn-fcontent">
+								$!{partner.partnerPhone}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">所在城市：</td>
+							<td class="pn-fcontent">
+								$!{partner.partnerCityName}
+							</td>
+						</tr> 
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系方式：</td>
+							<td class="pn-fcontent">
+								$!{partner.otherContact}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">SPid：</td>
+							<td class="pn-fcontent">
+								$!{partner.SPid}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">地址：</td>
+							<td class="pn-fcontent">
+								$!{partner.partnerAddress}
+							</td>
+						</tr>
+		</table>
+		</fieldset>
+		   <fieldset>
+    				<legend>其他信息</legend>
+					<table width="100%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+						    <td width="10%" class="pn-flabel pn-flabel-h">描述:</td>
+						    <td colspan="5" class="pn-fcontent">
+						    	$!{partner.partnerDesc}
+						    </td>
+						  </tr>
+                         <tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">身份证: <em class="required">*</em></td>	
+							<td class="pn-fcontent" colspan="5">
+								<div id="preview2">
+									#if(!${partner.identitycardImg}||$!{partner.identitycardImg}=="")
+										<img id="imghead2" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="暂无商家身份证" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead2" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="商家身份证" src="${sourceUrl}$!{partner.identitycardImg}">
+									#end
+							   </div>
+							</td>
+						 </tr>
+					</table>
+				</fieldset>
+			</td>
+    </tr>
+</table>
+</form>
+
+<form id="form2" name="form2" action="" method="post">
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" id="needset" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+      	<fieldset>
+				<legend>基本信息</legend>
+					<table width="100%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">公司全称：</td>
+    						<td class="pn-fcontent">
+								$!{partner.partnerName}
+    						</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">合作类型：</td>
+							<td class="pn-fcontent">
+								$!{partner.partnerTypeName}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">合同编号：</td>
+							<td class="pn-fcontent">
+								$!{partner.contractNumber}
+							</td>
+                        </tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系人：</td>
+							<td class="pn-fcontent">
+								$!{partner.linkman}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系电话：</td>
+							<td class="pn-fcontent">
+								$!{partner.partnerPhone}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">所在城市：</td>
+							<td class="pn-fcontent">
+								$!{partner.partnerCityName}
+							</td>
+						</tr> 
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">联系方式：</td>
+							<td class="pn-fcontent">
+								$!{partner.otherContact}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">SPid：</td>
+							<td class="pn-fcontent">
+								$!{partner.SPid}
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">地址：</td>
+							<td class="pn-fcontent">
+								$!{partner.partnerAddress}
+							</td>
+						</tr>
+		</table>
+		</fieldset>
+    	<fieldset  id="company_info">
+            	<legend>公司信息</legend>
+            		<table width="100%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+        						<tr>
+        							<td width="10%" class="pn-flabel pn-flabel-h">公司简称：</td>
+        							<td class="pn-fcontent">
+        								$!{partner.simpleName}
+        							</td>
+        							<td width="10%" class="pn-flabel pn-flabel-h">法人代表：</td>
+        							<td class="pn-fcontent">
+        								$!{partner.legal}
+        							</td>
+        							<td width="10%" class="pn-flabel pn-flabel-h">注册资金：</td>
+        							<td class="pn-fcontent">
+										$!{partner.funds}
+        							</td>
+        						</tr>
+        						
+        						<tr>
+        							<td width="10%" class="pn-flabel pn-flabel-h">业务负责人：</td>
+        							<td class="pn-fcontent">
+        								$!{partner.competent}
+        							</td>
+        							<td width="10%" class="pn-flabel pn-flabel-h">业务电话：</td>
+        							<td class="pn-fcontent">
+        								$!{partner.competentPhone}
+        							</td>
+        							<td width="10%" class="pn-flabel pn-flabel-h">业务邮箱：</td>
+        							<td class="pn-fcontent">
+        								$!{partner.competentEmail}
+        							</td>
+        						</tr>
+        						
+        						<tr>
+        							<td width="10%" class="pn-flabel pn-flabel-h">客服联系人：</td>
+        							<td class="pn-fcontent">
+        								$!{partner.contact}
+        							</td>
+        							<td width="10%" class="pn-flabel pn-flabel-h">客服电话：</td>
+        							<td class="pn-fcontent">
+        								$!{partner.contactPhone}
+        							</td>
+        							<td width="10%" class="pn-flabel pn-flabel-h">客服邮箱：</td>
+        							<td class="pn-fcontent">
+        								$!{partner.contactEmail}
+        							</td>
+        						</tr>
+					</table>
+           </fieldset>
+		   <fieldset>
+    				<legend>其他信息</legend>
+					<table width="100%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+						    <td width="10%" class="pn-flabel pn-flabel-h">描述: </td>
+						    <td colspan="5" class="pn-fcontent">
+						    	$!{partner.partnerDesc}
+						    </td>
+						  </tr>
+                         <tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">商家图片: </td>	
+							<td class="pn-fcontent">
+								<div id="preview">
+									#if(!${partner.merchantImg}||$!{partner.merchantImg}=="")
+										<img id="imghead" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="暂无商家LOGO" src="${ctx}/images/nopic.gif" />
+									#else
+										<img id="imghead" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="商家LOGO" src="${sourceUrl}$!{partner.merchantImg}"/>
+									#end
+							   </div>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">身份证: </td>	
+							<td class="pn-fcontent" colspan="3">
+								<div id="preview5">
+									#if(!${partner.identitycardImg}||$!{partner.identitycardImg}=="")
+										<img id="imghead5" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="暂无商家LOGO" src="${ctx}/images/nopic.gif" />
+									#else
+										<img id="imghead5" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="商家LOGO" src="${sourceUrl}$!{partner.identitycardImg}" />
+									#end
+							   </div>
+							</td>
+						 </tr>
+                         <tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">营业执照：</td>	
+							<td class="pn-fcontent">
+							   <div id="preview3">
+									#if(!${partner.businesslicense}||$!{partner.businesslicense}=="")
+										<img id="imghead3" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="暂无商家营业执照" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead3" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="商家营业执照" src="${sourceUrl}$!{partner.businesslicense}">
+									#end
+							   </div>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">其它证件：</td>	
+							<td class="pn-fcontent" colspan="3">
+								<div id="preview4">
+									#if(!${partner.otherImg}||$!{partner.otherImg}=="")
+										<img id="imghead4" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="暂无商家其它证件" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead4" style="width:230px;height:200px;border:1px;" title="只上传一张" alt="商家其它证件" src="${sourceUrl}$!{partner.otherImg}">
+									#end
+							   </div>
+							</td>
+						 </tr>
+					</table>
+				</fieldset>
+			</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

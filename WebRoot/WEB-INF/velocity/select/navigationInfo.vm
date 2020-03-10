@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>栏目信息</title>
+#tagLibs()
+</head>
+<body>
+<form id="form1" name="form1" action="" method="post">
+<div class="topline">
+	<a href="${ctx}/type/findNavigation.do" class="wxbtn">栏目列表</a> | 
+	#if('2'==$!{xz})
+		<a href="${ctx}/type/toNavigation.do?xz=1" class="wxbtn">新增一级栏目</a> |
+		<p class="xzbtn" style="color:#FFFFFF">#if($!{type.id})修改#else 新增#end二级栏目 </p>
+	#else
+		<p class="xzbtn" style="color:#FFFFFF">#if($!{type.id})修改#else 新增#end一级栏目</p> |
+		<a href="${ctx}/type/toNavigation.do?xz=2" class="wxbtn">新增二级栏目</a>
+	#end
+</div>
+#py()
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						#if('2'==$!{xz})
+                			<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">所属栏目：</td>
+							<td class="pn-fcontent">
+								<select name="parentId" id="parentId" style="margin:2px 2px;width:120px;" >
+                   					<option value="">=请选择=</option>
+                   					#foreach($o in $olist)
+           								<option value="${o.id}" #if (${o.id} == $!{type.parentId}) selected #end>${o.name}</option>
+           							#end
+           						</select>
+   								<em class="required">*</em>
+							</td>
+						</tr>
+                		#end
+						#if('1'==$!{tj})
+							<input type="hidden" id="tj" name="tj" value="$!{tj}"/>
+							<input type="hidden" id="id" name="id" value="$!{type.id}"/>
+							<input type="hidden" id="name" name="name" value="$!{type.name}"/>
+							<input type="hidden" id="operators" name="operators" value="$!{type.operators}"/>
+							<input type="hidden" id="code" name="code" value="$!{type.code}"/>
+							<input type="hidden" id="sequence" name="sequence" value="$!{type.sequence}"/>
+							<tr>
+    							<td width="20%" class="pn-flabel pn-flabel-h">排序：</td>
+    							<td class="pn-fcontent">
+    								<input type="text" readonly id="sequence" name="sequence" value="$!{type.sequence}" class="text-writer"/>
+    							</td>
+							</tr>
+						#else
+						<tr>
+							<input type="hidden" id="id" name="id" value="$!{type.id}"/>
+							<td width="20%" class="pn-flabel pn-flabel-h">栏目名称：</td>
+							<td class="pn-fcontent">
+								<input type="hidden" id="oldName"  value="$!{type.name}" class="text-writer"/>
+								<input type="text" id="name"  name="name" value="$!{type.name}" class="text-writer"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">编码：</td>
+							<td class="pn-fcontent">
+								<input type="hidden" id="oldCode"  value="$!{type.code}"/>
+								<input type="text" id="code"  name="code" value="$!{type.code}" class="text-writer"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">排序：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="sequence" readonly name="sequence" value="$!{type.sequence}" class="text-writer"/>
+							</td>
+						</tr>
+						
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">独立展示(0否1是)：</td>
+							<td class="pn-fcontent">
+							    <select name="isdl_display" id="isdl_display" style="margin:2px 2px;width:120px;">
+                   					<option value="0" #if ($!{type.isdl_display} == '0') selected #end>0</option>
+                   					<option value="1" #if ($!{type.isdl_display} == '1') selected #end>1</option>
+           						</select>
+							</td>
+						</tr>
+						
+						#end
+						#if('2'!=$!{xz})
+							<input type="hidden" id="xz" name="xz" value="$!{xz}"/>
+							<input type="hidden" id="parentId" name="parentId" value="0"/>
+							<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">logo图：</td>
+							<td class="pn-fcontent">
+								<div id="preview">
+									#if(!${type.imgurl}||$!{type.imgurl}=="")
+										<img id="imghead" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${ctx}/images/nopic.gif">
+									#else
+										<img id="imghead" style="width:230px;height:200px;border:1px;" alt="LOGO" src="${sourceUrl}$!{type.imgurl}">
+									#end
+								</div>
+								<input type="hidden" id="imgurl"  name="imgurl" value="$!{type.imgurl}"/>
+								<input type="file" id="imgurlFile" name="imgurlFile" value="上传" class="text-writer7"/>&nbsp;&nbsp;
+								<button type="button" id="saveImgurl" style="width:100px;" class="bt-primary">上传</button>
+							</td>
+							<div id="uploadImg" style="display:none;height:15px; width:15px; margin:15px auto;">
+                        			<img src="${ctx}/images/loadinglit.gif"/>
+                        	</div>
+                            <em id="top-message" class="top-message" style="display:none;margin-top:20px;"></em>
+							</tr>
+						#end	
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" id="saveType" class="bt-primary">保存</button>
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+	<script type="text/javascript" src="${ctx}/js/jquery/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/common/py.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/uploadPreview.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/select/navigationInfo.js"></script>
+</body>
+</html>

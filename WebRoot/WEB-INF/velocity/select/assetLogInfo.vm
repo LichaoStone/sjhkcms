@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>日志详情页面</title>
+#tagLibs()
+</head>
+<body>
+<form id="form1" name="form1" action="" method="post">
+<div class="topline">
+	<a href="${ctx}/log/findAssetLog.do" class="wxbtn">日志列表</a> | 
+    <a href="#" class="xzbtn" style="color:#FFFFFF">日志详情</a>
+</div>
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">编号：</td>
+							<td class="pn-fcontent">
+								$!{type.id}
+							</td>
+						</tr>
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">资产id：</td>
+							<td class="pn-fcontent">
+								$!{type.assetId}
+							</td>
+						</tr>
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">资产名称：</td>
+							<td class="pn-fcontent">
+								$!{type.assetTitle}
+							</td>
+						</tr>
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">时间：</td>
+							<td class="pn-fcontent">
+								$!{type.recordTime}
+							</td>
+						</tr>
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">操作方式：</td>
+							<td class="pn-fcontent">
+								$!{type.action}
+							</td>
+						</tr>
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">同步结果码：</td>
+							<td class="pn-fcontent">
+								$!{type.result}
+							</td>
+						</tr>
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">同步报文：</td>
+							<td class="pn-fcontent">
+								$!{type.assetInfo}
+							</td>
+						</tr>
+						<tr>
+							<td width="20%" class="pn-flabel pn-flabel-h">返回报文：</td>
+							<td class="pn-fcontent">
+								$!{type.returnInfo}
+							</td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

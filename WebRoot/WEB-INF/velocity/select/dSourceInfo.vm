@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>资产资源信息<</title>
+#tagLibs()
+</head>
+<body >
+<div class="topline">
+	<a href="${ctx}/select/findDramaSource.do?childId=$!{dramaSource.childId}" class="wxbtn">资产资源列表</a> | 
+    <a href="#" class="xzbtn" style="color:#FFFFFF" >#if($!{tariff.id})修改#else 新增#end资产资源</a>
+</div>
+<form id="form1" name="form1" action="" method="post">
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" id="needset" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="15%" class="pn-flabel pn-flabel-h">码率：</td>
+							<td class="pn-fcontent">
+								<input type="hidden" id="id" name="id" value="$!{dramaSource.id}"/>
+								<input type="hidden" id="childId" name="childId" value="$!{dramaSource.childId}"/>
+								<input type="text" id="bitrate"  name="bitrate" value="$!{dramaSource.bitrate}"/>
+								<em class="required">*</em>
+							</td>
+						</tr>
+						<tr>
+							<td width="15%" class="pn-flabel pn-flabel-h">播放地址：</td>
+							<td class="pn-fcontent">
+                                <input type="text" id="playUrl"  name="playUrl" value="$!{dramaSource.playUrl}" style="width:50%;"/>  
+								<em class="required">*</em>
+							</td>
+						</tr>
+						<tr>
+							<td width="15%" class="pn-flabel pn-flabel-h">ftp地址：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="ftpUrl"  name="ftpUrl" value="$!{dramaSource.ftpUrl}" style="width:50%;"/>  
+							</td>
+						</tr>
+						<tr>
+							<td width="15%" class="pn-flabel pn-flabel-h">md5值：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="md5"  name="md5" value="$!{dramaSource.md5}"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="15%" class="pn-flabel pn-flabel-h">文件ID：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="fileId"  name="fileId" value="$!{dramaSource.fileId}"/>  
+							</td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" id="saveSource" class="bt-primary">保存</button>
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+	<script type="text/javascript" src="${ctx}/js/ott/select/dSourceInfo.js"></script>
+</body>
+</html>

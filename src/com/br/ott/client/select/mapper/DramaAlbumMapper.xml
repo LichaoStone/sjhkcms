@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.select.mapper.DramaAlbumMapper">
+	
+	<resultMap type="DramaAlbum" id="DramaAlbumMap">
+			<id property="id" column="id"></id>
+			<result property="albumId" column="albumId"></result>
+			<result property="dramaId" column="dramaId"></result>
+			<result property="queue" column="queue"></result>
+	</resultMap>
+	
+	<!--表名 -->
+	<sql id="tableName">ott_drama_album</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		id
+		,albumId
+		,dramaId
+		,queue
+	</sql>
+	
+	<!-- 不包含ID字段 -->
+	<sql id="FieldNoID">
+			albumId
+			,dramaId
+			,queue
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{id}
+		,#{albumId}
+		,#{dramaId}
+		,#{queue}
+	</sql>
+	<!-- 字段值不包含ID -->
+	<sql id="FieldValueNoID">
+			#{albumId}
+			,#{dramaId}
+			,#{queue}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="insertDramaAlbum">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="FieldNoID"></include>
+		) values (
+	<include refid="FieldValueNoID"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="deleteDramaAlbumById">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			id = #{id}
+	</delete>
+	
+	<delete id="deleteDramaAlbumByDramaId">
+		delete from
+		<include refid="tableName"></include>
+		where dramaId = #{dramaId}
+	</delete>
+	
+	<delete id="deleteDramaAlbumByAlbumId">
+		delete from
+		<include refid="tableName"></include>
+		where  albumId = #{albumId}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateDramaAlbum">
+		update
+		<include refid="tableName"></include>
+		set 
+				albumId = #{albumId}
+				,dramaId = #{dramaId}
+				,queue = #{queue}
+		where 
+		id = #{id}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="getDramaAlbumById"  resultMap="DramaAlbumMap">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			id = #{id}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="findDramaAlbumByPage"  resultMap="DramaAlbumMap">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 总数量 -->
+	<select id="getCountDramaAlbum"  resultType="int">
+		select COUNT(1) FROM 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="findDramaAlbumByCond" resultMap="DramaAlbumMap">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		<where>
+			<if test="albumId !='' and albumId !=null">
+				albumId = #{albumId}
+			</if>
+			<if test="dramaId !='' and dramaId !=null">
+				and dramaId = #{dramaId}
+			</if>
+		</where>
+		order by queue
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteDramaAlbumByList">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<select id="getMaxQueue" resultType="int">
+		SELECT IFNULL(max(queue)+1,1) as queue  FROM ott_drama_album WHERE albumId=#{albumId,jdbcType=VARCHAR}
+	</select>
+	
+	<!--大变小，数值+1， 5变为1 -->
+	<update id="updateDAAddSequence">
+		update ott_drama_album set queue=queue+1
+		where albumId= #{albumId} 
+			and queue >= #{queue}
+			<![CDATA[ 
+				and queue < #{oldQueue}
+			]]>	
+	</update> 
+	
+	<!--小变大，数值-1， oldQueue=5 变为 queue=6 -->
+	<update id="updateDASubSequence">
+		update ott_drama_album  set queue=queue-1
+		where albumId= #{albumId} 
+			and queue > #{oldQueue}
+			<![CDATA[ 
+				and queue <= #{queue}
+			]]>	
+	</update> 
+	
+	<update id="updateDASequence">
+		update ott_drama_album set queue = #{queue, jdbcType=VARCHAR} where id = #{id}
+	</update>
+	
+	<select id="findDramaAlbumForAPI" resultMap="DramaAlbumMap">
+	    select am.id ,am.albumId ,am.dramaId ,am.queue from ott_drama_album am, ott_drama_program dp
+	       <where>
+	            am.dramaId = dp.id and dp.status='1'
+	        <if test="albumId !='' and albumId !=null">
+				and am.albumId = #{albumId}
+			</if>
+			<if test="dramaId !='' and dramaId !=null">
+				and am.dramaId = #{dramaId}
+			</if>
+			<if test="queue == 0">
+			    and am.queue=(SELECT max(queue) FROM ott_drama_album WHERE albumId=#{albumId,jdbcType=VARCHAR}) order by dp.createTime desc limit 1
+			</if>
+	       </where>
+	</select>
+	
+</mapper>

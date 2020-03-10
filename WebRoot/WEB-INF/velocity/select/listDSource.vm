@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>资产资源管理</title>
+#tagLibs()
+</head>
+<body>
+<!--  快速转换位置按钮  --> 
+<div class="topline">
+	<a href="#" class="xzbtn" style="color:#FFFFFF">资产资源列表</a> | 
+    <a href="${ctx}/select/toDramaSource.do?childId=$!{dramaSource.childId}" class="wxbtn">新增资产资源</a>
+</div>
+<!--  内容列表   -->
+<form id="queryForm" method="get">
+<input type="hidden" id="orderColumn" name="orderColumn" value="$!{dramaSource.orderColumn}" />
+<input type="hidden" id="childId" name="childId" value="$!{dramaSource.childId}" />
+<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+<tr align="left" bgcolor="#eff2f7" height="30">
+	<td width="5%"><input type="checkbox" id="allSelect" style="padding-top:5px;"  onclick="isCheckAll('arcID',this);"><label for="allSelect">全选</label></td>
+    <td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="ds.bitrate" lastOrderBy="$!{dramaSource.orderColumn}" class="tb_head">清晰度</a></td>
+    <td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="ds.bitrate" lastOrderBy="$!{dramaSource.orderColumn}" class="tb_head">码率</a></td>
+    <td width="50%"><a href="javascript:void(0);" onclick="orderBy(this);" name="ds.playUrl" lastOrderBy="$!{dramaSource.orderColumn}" class="tb_head">播放源地址</a></td>
+	<td width="10%"><a href="javascript:void(0);" onclick="orderBy(this);" name="ds.status" lastOrderBy="$!{dramaSource.orderColumn}" class="tb_head">状态</a></td>
+	<td width="10%">操作</td>
+</tr>
+#if ($null.isNull($list) || $list.size()==0)
+	<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td colspan="6"><h1>暂无相关数据内容</h1></td>
+    </tr>
+#end
+#foreach ($source in $list)
+<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td><input type="checkbox" id="arcID" name="arcID" class="np" value="$!{source.id}"/></td>
+     <td >$!{source.bitrateTypeStr}</td>
+     <td >$!{source.bitrate}</td>
+     <td >$!{source.playUrl}</td>
+     <td >$!{source.statusName}</td>
+	 <td >
+     	<a href="${ctx}/select/toDramaSource.do?id=$!{source.id}">编辑</a>
+		#if($!{source.status}=='1')
+			<a href="javascript:updateSourceStatus(this,'$!{source.id}','$!{source.status}');">停用</a>
+		#else
+			<a href="javascript:updateSourceStatus(this,'$!{source.id}','$!{source.status}');">启用</a>
+			<a href="javascript:delSource(this,'$!{source.id}');">删除</a>
+		#end
+     </td>
+</tr>
+#end
+</table>
+<div height="36" align="right">
+    #pagination(${dramaSource})
+</div>
+<div height="36" align="left">
+  	<a href="javascript:void(0);" class="wxbtn" id="sourceReverse">批量启用</a>
+  	<a href="javascript:void(0);" class="wxbtn" id="sourceClose">批量停用</a>
+</div>
+</form>
+<script type="text/javascript" src="${ctx}/js/ott/select/listDSource.js"></script>
+</body>
+</html>

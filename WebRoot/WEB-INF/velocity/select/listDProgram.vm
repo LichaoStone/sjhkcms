@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>资产管理</title>
+#tagLibs()
+</head>
+<body>
+<!--  快速转换位置按钮  --> 
+<!--  内容列表   -->
+
+<div class="topline">
+	<a href="#" class="xzbtn" style="color:#FFFFFF">资产列表</a> | 
+    <a href="${ctx}/select/toDProgram.do" class="wxbtn">新增资产</a>
+</div>
+<form id="queryForm" method="get">
+ <table border='0' cellpadding='0' cellspacing='0' height="36">
+    <tr class="search">
+        <td>资产名称：<input type='text' id="name" name='name' value='$!{dprogram.name}' style="width:100px;"/></td>
+		<td>栏目：
+			<select id="parentId" name="parentId" style="width:100px;" onchange="changeNavigation(this, 'ttype');">
+				<option value="">=请选择=</option>
+				#foreach($c in $!dnList)
+					<option value="$!{c.id}" #if($!{c.id}==$!{dprogram.parentId}) selected #end>$!{c.name}</option>	
+				#end
+                  </select>
+			<select id="ttype" name="ttype" style="width:100px;">
+				#if ($!{dprogram.parentId} !='') 
+						<option value="">=请选择=</option>
+					#foreach($c in $!dnList2)
+						<option value="$!{c.id}" #if($!{c.id}==$!{dprogram.ttype}) selected #end>$!{c.name}</option>	
+					#end
+				#end
+           </select>
+		</td>
+		<td>内容提供商：
+			<select id="cProvider" name="cProvider" style="width:100px;">
+				<option value="">=请选择=</option>
+				#foreach($cProvider in $cProviders)
+					<option value="${cProvider.dicValue}" #if (${cProvider.dicValue} == $!{dprogram.cProvider}) selected #end>${cProvider.dicName}</option>
+				#end
+            </select>
+		</td>
+		 <td>资产类型：
+			<select id="ptype" name="ptype" style="width:100px;">
+				<option value="">=请选择=</option>
+				#foreach($ptype in $ptypes)
+				<option value="${ptype.dicValue}" #if (${ptype.dicValue} == $!{dprogram.ptype}) selected #end>${ptype.dicName}</option>
+				#end
+            </select>
+		</td>
+		<td>资产状态:
+			<select id="status" name="status" style="width:100px;">
+				<option value="all">=请选择=</option>
+				<option value="1" #if($!{dprogram.status}=="1") selected #end>已上线</option>
+				<option value="0" #if($!{dprogram.status}=="0") selected #end>待上线</option>
+				<option value="2" #if($!{dprogram.status}=="2") selected #end>已下线</option>
+			</select>
+		</td>
+		<td>
+			<input type="hidden" id="orderColumn" name="orderColumn" value="$!{dprogram.orderColumn}" />
+            <img id="queryProgram" type="image" src="${ctx}/images/button_search.gif"/>
+        </td>
+	</tr>
+</table>
+<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+<tr align="left" bgcolor="#eff2f7" height="30">
+    <td width="30%"><a href="javascript:void(0);" onclick="orderBy(this);" name="dp.name" lastOrderBy="$!{dprogram.orderColumn}" class="tb_head">资产名称</a></td>
+    <td width="20%"><a href="javascript:void(0);" onclick="orderBy(this);" name="dp.id" lastOrderBy="$!{dprogram.orderColumn}" class="tb_head">栏目</a></td>
+	 <td width="5%"><a href="javascript:void(0);" onclick="orderBy(this);" name="dp.cProvider" lastOrderBy="$!{dprogram.orderColumn}" class="tb_head">内容提供商</a></td>
+    <td width="5%"><a href="javascript:void(0);" onclick="orderBy(this);" name="dp.ptype" lastOrderBy="$!{dprogram.orderColumn}" class="tb_head">资产类型</a></td>
+	<td width="12%"><a href="javascript:void(0);" onclick="orderBy(this);" name="dp.createTime" lastOrderBy="$!{dprogram.orderColumn}" class="tb_head">录入时间</a></td>
+	<td width="8%"><a href="javascript:void(0);" onclick="orderBy(this);" name="dp.status" lastOrderBy="$!{dprogram.orderColumn}" class="tb_head">资产状态</a></td>
+	<td width="8%"><a href="javascript:void(0);" onclick="orderBy(this);" name="dp.isLoad" lastOrderBy="$!{dprogram.orderColumn}" class="tb_head">图片状态</a></td>
+	<td width="12%">操作</td>
+</tr>
+
+#if ($null.isNull($list) || $list.size()==0)
+	<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td colspan="7"><h1>暂无相关数据内容</h1></td>
+    </tr>
+#end
+#foreach ($dprogram in $list)
+<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+     <td ><a href="javascript:dProgramDetail(this,'$!{dprogram.id}');">$!{dprogram.name}</a></td>
+     <td >$!{dprogram.typeName}</td>
+	 <td >$!{dprogram.providerName}</td>
+     <td >$!{dprogram.ptypeName}</td>
+	 <td >$!{dprogram.createTime}</td>
+     <td >$!{dprogram.statusName}</td>
+     <td >$!{dprogram.loadName}</td>
+	 <td >
+     	<a href="${ctx}/select/toDProgram.do?id=$!{dprogram.id}">编辑</a>
+     	<a href="${ctx}/select/toDramaTypeList.do?dramaId=$!{dprogram.id}&dramaName=$!{dprogram.name}&oldType=$!{dprogram.oldType}">栏目</a>
+     	<a href="${ctx}/select/findDramaChild.do?dramaId=$!{dprogram.id}&dramaName=$!{dprogram.name}">剧集</a>
+     	#if($!{dprogram.status}=='0')
+			<a href="${ctx}/select/toCloseProgram.do?id=$!{dprogram.id}">下线</a>
+		#elseif($!{dprogram.status}=='2')
+			<a href="javascript:updateDPStatus(this,'$!{dprogram.id}','$!{dprogram.status}');" >待上线</a>
+		#end
+     	<a href="${ctx}/recommend/toRecommendPst.do?dramaId=$!{dprogram.id}&dramaName=$!{dprogram.name}">推荐</a>
+     </td>
+</tr>
+#end
+</table>
+<div height="36" align="right">
+    #pagination(${dprogram})
+</div>
+</form>
+<em id="top-message" class="top-message" style="display:none;margin-top:20px;"></em>
+<div id="uploadImg" style="display:none;margin:30px 500px;">
+ 	<img src="${ctx}/images/loadinglit.gif" style="width:40px; height:40px;"/>
+</div>
+<!--
+<form  id="form2" action="#"  enctype="multipart/form-data" method="post">
+	<table width="98%" border="0" cellpadding="2" cellspacing="1" bgcolor="#CFCFCF" align="center" style="margin-top:8px">
+		<tr bgcolor="#ffffff">
+			<td colspan="10"> 
+                 &nbsp;批量导入： 
+				  <input type="file" id="fileApp"  name="fileApp" class="text-writer9" 
+					onChange="checkFile(this,this.value)"/>
+    			 <button type="button" id="inputExcel" class="bt-primary">导入</button>
+    			 <a href="${ctx}/file/asset.xls" class="xzbtn" style="background:#2c7eae;color:#FFFFFF">导出模板</a>
+               </td>
+		</tr>
+	</table>
+</form>
+<script type="text/javascript" src="${ctx}/js/jquery/ajaxfileupload.js"></script>-->
+<script type="text/javascript" src="${ctx}/js/ott/select/listDProgram.js"></script>
+</body>
+</html>

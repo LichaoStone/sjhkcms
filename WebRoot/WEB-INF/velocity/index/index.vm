@@ -1,0 +1,17 @@
+<HTML>
+<HEAD>
+<META content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>手机IPTV 海看cms管理</title>
+
+</HEAD>
+#tagLibs()
+<FRAMESET frameSpacing="0" border="0" frameBorder="no" rows="52,*,28">
+<FRAME id="top" noResize="noresize" src="${ctx}/shiro/top.do" name="topFrame" scrolling="No">
+<FRAMESET id="bodyFrame" frameSpacing="0" border="0" cols="165,6,*" frameBorder="0">
+<FRAME id="menu" noResize="noresize" src="${ctx}/shiro/getIndexMenu.do" name="menu" scrolling="No">
+<FRAME noResize="noresize" src="${ctx}/shiro/drag.do" scrolling="No">
+<FRAME id="main" noResize="noresize" src="" name="main">
+</FRAMESET>
+<FRAME noResize="noresize" src="${ctx}/shiro/footer.do" scrolling="No">
+</FRAMESET>
+</HTML>

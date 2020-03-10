@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>menu</title>
+		#tagLibs()
+		<link rel="stylesheet" href="${ctx}/css/style.css" type="text/css" />
+	</head>
+	<body target="main" style="overflow-y:hidden;">
+		<table width="180" align="left" border='0' cellspacing='0' cellpadding='0' style="text-align: left;">
+			<tr>
+				<td width='160' id='mainct'>
+					#foreach ($root in $userMenuPri)
+						<div id='ct_$!{root.id}' #if($velocityCount !=1) class="invisible" #end>
+    						<!-- Item 2 Strat -->
+							#foreach($child in $!{root.children})
+        						<dl class='bitem2' id='sunitems_$!{root.id}_$!{child.id}'>
+        							<dt onClick='isShowMenu("items_$!{root.id}_$!{child.id}")'>
+        								<font color="#4D6C2F">$!{child.name}<font>
+        							</dt>
+        							<dd #if($velocityCount !=1) style='display: none;' #end class='sitem' id='items_$!{root.id}_$!{child.id}'>
+        								<ul class='sitemu' style="margin-left:20px;">
+											#foreach($son in $!{child.children})
+												<li><a 
+													#if('true'== $!{son.hide})
+														class="url-disabled" title="功能正在开发中..."
+													#else
+														href='${ctx}/$!{son.url}' onclick="changeCurrent(this, '$!{son.name}');"
+													#end
+													target='main' >$!{son.name}</a></li>
+											#end
+        								</ul>
+        							</dd>
+        						</dl>
+							#end
+						</div>
+					#end	
+				</td>
+			</tr>
+		</table>
+		<script language="javascript" type="text/javascript" src="${ctx}/js/ott/leftmenu.js"></script>
+	</body>
+</html>

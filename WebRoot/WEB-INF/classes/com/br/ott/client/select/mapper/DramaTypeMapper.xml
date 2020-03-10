@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.select.mapper.DramaTypeMapper">
+	<resultMap id="DramaTypeMap" type="DramaType" >
+		<id property="id" column="id"></id>
+		<result property="dramaId" column="dramaId"></result>
+		<result property="dramaName" column="dramaName"></result>
+		<result property="navId" column="navId"></result>
+	</resultMap>
+
+	<!--添加-->
+	<insert id="addDramaType" parameterType="DramaType">
+       <selectKey keyProperty="id" resultType="String"  order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+		<![CDATA[ INSERT INTO OTT_DRAMA_TYPE (dramaId, navId)
+			VALUES (#{dramaId,jdbcType=VARCHAR},
+			#{navId,jdbcType=VARCHAR})   
+	 	]]>
+	</insert>
+	
+	<!-- 按条件查询-->
+	<select id="findDramaTypeByCond" resultMap="DramaTypeMap">
+		SELECT dt.id, dt.dramaId, dt.navId ,dp.name as dramaName
+		FROM OTT_DRAMA_TYPE dt
+		left outer join OTT_DRAMA_PROGRAM dp on dp.id=dt.dramaId
+		<where>
+			<if test="dramaId !=null and dramaId != ''">
+				dt.dramaId = #{dramaId}
+			</if>
+			<if test="navId != null and navId != ''">
+				and dt.navId = #{navId}
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			order by dt.id desc
+		</if>
+	</select>
+	
+	<select id="findDramaTypeByDramaId" resultMap="DramaTypeMap">
+		SELECT dt.id, dt.dramaId, dt.navId, dp.name as dramaName
+		FROM OTT_DRAMA_TYPE dt
+		left outer join OTT_DRAMA_PROGRAM dp on dp.id=dt.dramaId
+		where dt.dramaId = #{dramaId}
+		order by dt.id desc
+	</select>
+	
+	<select id="findDramaTypeByDramaId2" resultType="DramaType">
+	    SELECT dt.navId FROM OTT_DRAMA_TYPE dt where dt.dramaId = #{dramaId, jdbcType=VARCHAR} limit 1
+	</select>
+	
+	<select id="findNavByDramaId" resultMap="DramaTypeMap">
+		SELECT dt.id,dt.navId
+		FROM OTT_DRAMA_TYPE dt
+		where dt.dramaId = #{dramaId}
+		order by dt.id desc
+	</select>
+	
+	<delete id="delDramaTypeByNavId">
+		delete from OTT_DRAMA_TYPE where navId = #{navId}
+	</delete>
+	
+	<delete id="delDramaTypeByDramaId">
+		delete from OTT_DRAMA_TYPE where dramaId = #{dramaId}
+	</delete>
+	
+	<select id="findDramaTypeByNavId" resultType="DramaType">
+	    SELECT dt.dramaId FROM OTT_DRAMA_TYPE dt where dt.navId = #{navId, jdbcType=VARCHAR}
+	</select>
+</mapper>

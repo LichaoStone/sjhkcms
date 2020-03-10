@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.shiro.mapper.RoleMapper">
+	<resultMap type="Role" id="Role">
+		<id property="oid" column="oid"></id>
+		<result property="roleName" column="roleName"></result>
+		<result property="description" column="description"></result>
+		<result property="enname" column="enname"></result>
+		<result property="status" column="status"></result>
+		<result property="orderid" column="orderid"></result>
+		<result property="memo" column="memo"></result>
+	</resultMap>
+	
+	<resultMap type="Role" id="RolegroupMap" extends="Role">  
+        <collection property="groups" ofType="Groups">  
+            <id property="id" column="id" />  
+            <result property="name" column="name" />  
+            <result property="enName" column="enName" />  
+        </collection>  
+    </resultMap>
+    
+    <resultMap type="Role" id="RoleResourMap" extends="Role">  
+        <collection property="resources" ofType="Resources">  
+            <id property="id" column="id"></id>
+			<result property="name" column="name"></result>
+			<result property="enname" column="enname"></result>
+			<result property="systemid" column="systemid"></result>
+			<result property="parentId" column="PARENT_ID"></result>
+			<result property="resourcetype" column="resourcetype"></result>
+			<result property="link" column="link"></result>
+			<result property="icon" column="icon"></result>
+			<result property="iconopen" column="iconopen"></result>
+			<result property="isopen" column="isopen"></result>
+			<result property="isleaf" column="isleaf"></result>
+			<result property="status" column="status"></result>
+			<result property="orderid" column="orderid"></result>
+			<result property="memo" column="memo"></result>
+        </collection>  
+    </resultMap>
+    
+    <!-- 根据角色取组 -->
+	<select id="selectRolegroupMap" resultMap="RolegroupMap">
+		<![CDATA[ SELECT r.oid,r.rolename,r.enname,g.id,g.name,g.enname as genname,
+					r.description,r.status,r.orderid,r.memo
+				  FROM ott_qx_group g 
+				  	left join ott_qx_grouprole gr on g.id = gr.groupid
+				  	left join ott_qx_role r on r.oid = gr.roleid 
+				  WHERE g.status = '1' and  r.oid = #{id}]]>
+	</select>
+	
+	<!-- 根据角色取资源 -->
+	<select id="getResourByRoleId" resultMap="RoleResourMap">
+		<![CDATA[ SELECT rol.oid,rol.rolename,rol.enname,rol.description,
+					  rol.status as roleStu,rol.orderid,rol.memo,
+			          r.id,r.name,r.enname as resEname ,r.systemid,
+			          r.parent_id,r.resourcetype,r.link,r.icon,r.iconopen,r.isopen,
+			          r.isleaf,r.status ,r.orderid as resOrder,r.memo as resMemo
+	             FROM ott_qx_resource r 
+		             left join ott_qx_roleauth ra on r.id = ra.resourceid
+		             left join ott_qx_role rol on rol.oid = ra.roleid 
+	             WHERE  r.status = '1' and rol.oid = #{id}]]>
+	</select>
+
+	<!--添加权限 -->
+	<insert id="addRole" parameterType="Role">
+		<![CDATA[   INSERT INTO ott_qx_role (roleName, description,enname,status,orderid,memo)
+			VALUES (#{roleName,jdbcType=VARCHAR},
+				 	#{description,jdbcType=VARCHAR},
+				 	#{enname,jdbcType=VARCHAR},
+				 	#{status,jdbcType=VARCHAR},
+				 	#{orderid,jdbcType=VARCHAR},
+				 	#{memo,jdbcType=VARCHAR})
+	 	]]>
+	</insert>
+	
+	<!-- 修改角色 -->
+	<select id="modifyRole" parameterType="Role">
+		<![CDATA[ UPDATE ott_qx_role SET roleName = #{roleName}, description = #{description}, enname = #{enname}, status = #{status},
+		 orderid = #{orderid},memo = #{memo} WHERE oid = #{oid}]]>
+	</select>
+	
+	<!-- 根据ID修改角色 -->
+	<select id="modifyRoleById" parameterType="String">
+		<![CDATA[ UPDATE ott_qx_role SET roleName = #{roleName}, description = #{description}, enname = #{enname}, status = #{status},
+		 orderid = #{orderid},memo = #{memo} WHERE oid = #{id}]]>
+	</select>
+	
+	<!-- 根据角色ID删除角色 -->
+	<delete id="delRole" parameterType="String">
+		<!-- <![CDATA[ 
+		DELETE FROM ott_qx_role WHERE oid = #{oid} 
+		]]> -->
+		<![CDATA[ UPDATE ott_qx_role SET status = '0' WHERE oid = #{oid}]]>
+	</delete>
+	
+	<!-- 根据角色名称查找角色 -->
+	<select id="findRoleByName" parameterType="String" resultMap="Role">
+		<![CDATA[ SELECT * FROM ott_qx_role WHERE roleName = #{roleName}]]>
+	</select>
+	
+	<!-- 查询总条数 -->
+	<select id="getCountRole" resultType="int">
+		SELECT count(1) FROM ott_qx_role rol
+		<where>
+			<if test="roleName != null and roleName != ''">
+				rol.roleName = #{roleName}
+			</if>
+			<if test="status != null and status != ''">
+				and rol.status = #{status}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页查询所有角色 -->
+	<select id="findAllRole" resultMap="Role">
+		SELECT * FROM ott_qx_role r
+		<where>
+			<if test="roleName != null and roleName != ''">
+				r.roleName LIKE CONCAT(CONCAT('%', #{roleName}),'%')
+			</if>
+			<if test="status != null and status != ''">
+				and r.status = #{status}
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+		 	<![CDATA[
+			ORDER BY ${orderColumn}
+			]]>
+		</if> 
+	</select>
+	
+	<!-- 查询所有角色 -->
+	<select id="getRoleList" resultMap="Role">
+		<![CDATA[ SELECT * FROM ott_qx_role]]>
+	</select>
+	
+	<!-- 根据用户ID查找用户所拥有的角色  -->
+	<select id="getRoleByIdList" resultMap="Role">
+		<![CDATA[ SELECT * FROM ott_qx_role WHERE oid = #{id}]]>
+	</select>
+	
+	<!-- 根据角色ID查找角色  -->
+	<select id="getRoleById" resultMap="Role">
+		<![CDATA[ SELECT * FROM ott_qx_role WHERE oid = #{id}]]>
+	</select>
+	
+	<!-- 根据组ID 查找系统中可选权限  -->
+	<select id="findAllRoleByGroupId" resultMap="Role">
+		<![CDATA[ SELECT * FROM ott_qx_role 
+			WHERE status = '1' and oid not in (select t.roleid from ott_qx_grouprole t where t.groupid=#{id}) 
+		]]>
+	</select>
+
+	<resultMap type="Role" id="RoleMap">
+		<id property="oid" column="oid"></id>
+		<result property="roleName" column="roleName"></result>
+		<result property="enname" column="enname"></result>
+	</resultMap>
+	<select id="findRoleByGroupIds" resultMap="RoleMap">
+		SELECT distinct r.oid as oid,r.rolename, r.enname 
+		FROM ott_qx_role r
+			left outer join ott_qx_grouprole gr on gr.roleid=r.oid
+		WHERE r.status='1' and gr.groupid in 
+		<foreach collection="list" item="groupIds"  open="(" separator="," close=")">  
+        	#{groupIds}  
+     	</foreach>
+	</select>
+	
+	
+	<!-- 根据名称查询角色信息 -->
+	<select id="checkName" resultMap="Role">
+		<![CDATA[ SELECT * FROM  ott_qx_role WHERE roleName = #{rname}]]>
+	</select>
+	
+	<select id="checkEname" resultMap="Role">
+		<![CDATA[ SELECT * FROM  ott_qx_role WHERE enname = #{enName}]]>
+	</select>
+	
+</mapper>

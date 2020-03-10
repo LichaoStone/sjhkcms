@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>角色信息</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	#tagLibs()
+</head>
+<body>
+	<div>
+    	<a href="${ctx}/role/findRoleList.do" class="wxbtn">角色列表</a> | 
+        <a href="" class="xzbtn" style="color:#FFFFFF">#if($!{role.oid}==""|| !${role.oid})增加角色#else 修改角色#end</a>
+	</div>
+	<form method="post"  name="fom" id="fom">
+	<table width="98%"  border="0" align="center" style="margin-top:13px;">
+    <tr>
+      <td colspan="2">
+				<legend>角色信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">角色名称：</td>
+							<td class="pn-fcontent">
+								<input name="oid" class="text" value="$!{role.oid}" type="hidden" />
+								<input name="oldName" id="oldName" type="hidden" class="text-writer"  value="$!{role.roleName}"/> 
+								<input name="roleName" id="roleName" type="text" class="text-writer" value="$!{role.roleName}"/> 
+								<em class="required">*</em>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">角色编码：</td>
+							<td class="pn-fcontent">
+								<input name="oldEnName" id="oldEnName" type="hidden" class="text-writer"  value="$!{role.enname}"/> 
+								<input name="enname" id="enname" type="text" class="text-writer"value="$!{role.enname}" />
+								<em class="required">*</em>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">状态：</td>
+							<td class="pn-fcontent">
+                                <select name="status" style="width:120px" id="status">
+										<option value="1" #if($!{role.status} == 1|| !${role.status}) selected #end >启用</option>
+										<option value="2" #if($!{role.status} == 2) selected #end >隐藏</option>
+										<option value="3" #if($!{role.status} == 3) selected #end >冻结</option>
+										<option value="0" #if($!{role.status} == 0) selected #end >弃用</option>
+								</select>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">排序：</td>
+							<td class="pn-fcontent">
+								<input name="orderid" id="orderid" type="text" class="text-writer" value="$!{role.orderid}"/>
+								<em class="required">*</em>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">备注：</td>
+							<td class="pn-fcontent" colspan="3">
+								<textarea id="textarea" name="memo" rows="5" cols="100">$!{role.memo}</textarea>
+                            </td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" id="saveRole" class="bt-primary">保存</button>
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+	<script language="javascript" src="${ctx}/js/ott/shiro/roleInfo.js"></script>
+</body>
+</html>

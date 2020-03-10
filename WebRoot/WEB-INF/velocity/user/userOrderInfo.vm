@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>点播节目订单信息</title>
+#tagLibs()
+</head>
+<body>
+<form id="form1" name="form1" action="" method="post">
+<div class="topline">
+	<a href="${ctx}/order/findUserOrder.do" class="wxbtn">点播订单列表</a> | 
+    <a href="#" class="xzbtn" style="color:#FFFFFF">点播订单详情</a>
+</div>
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+				<legend>点播订单信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">宽带账号：</td>
+							<td class="pn-fcontent">
+								$!{userOrder.account}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">盒子MAC：</td>
+							<td class="pn-fcontent">
+								$!{userOrder.mac}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">节目名称：</td>
+							<td class="pn-fcontent">
+								$!{userOrder.programName}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">节目类型：</td>
+							<td class="pn-fcontent">
+								#if($!{order.type}==1)
+                        			单点播
+                        		#else
+                        			资产点播
+                        		#end
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">订购价格：</td>
+							<td class="pn-fcontent">
+								$!{userOrder.price}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">订购时间：</td>
+							<td class="pn-fcontent">
+								$!{userOrder.orderTimeStr}
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">订购状态：</td>
+							<td class="pn-fcontent">
+								$!{userOrder.statusName}
+							</td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" onClick="history.go(-1);" class="bt-secondary">返回</button>
+    </td>
+   </tr>
+</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>修改用户信息</title>
+#tagLibs()
+#calendar()
+<script>
+	function checkSubmit(){
+		jQuery.post('../userinfo/modifyUser.do',jQuery('#form0').serializeArray(),function(res){
+			if(res=="ok"){
+				window.opener.location.reload();
+				window.close();
+			}
+		});
+		
+		return false;
+	}
+</script>
+</head>
+<body onload="showCity('province','city','$proId','$cityId');">
+<form id="form0" name="form0" action="" method="post" >
+  <table width="98%"  border="0" align="center" cellpadding="2" cellspacing="2" id="needset" style="border:1px solid #cfcfcf;background:#ffffff;">
+    <tr>
+      <td colspan="2">
+				<legend>编辑账号信息</legend>
+					<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">用户ID（宽带账号）：</td>
+							<td class="pn-fcontent">
+								<input type="hidden" id="id"  name="id" value="$!u.id"/>
+								$!u.id
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">用户名：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="trueName"  name="trueName" value="$!{u.trueName}" readonly />
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">MAC：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="mac"  name="mac" value="$!{u.mac}"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">昵称：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="nickName"  name="nickName" value="$!{u.nickName}"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">手机号码：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="phone"  name="phone" value="$!u.phone"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">邮箱：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="email"  name="email" value="$!{u.email}"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">性别：</td>
+							<td class="pn-fcontent">
+								#if($!u.sex==1)
+                            	 <input name="sex" type="radio" class="np" value="1" checked="checked" />男
+                                 <input type="radio" name="sex" value="0" class="np"/>女
+                			   #else
+                				 <input name="sex" type="radio" class="np" value="1" />男
+                                 <input type="radio" name="sex" value="0" class="np" checked="checked" />女
+                				#end
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">生日：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="pubdate" name="birthday" value="$!u.birthday" style="width:105px" 
+									readonly="readonly"	onclick="WdatePicker()" class="Wdate"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">地址：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="address"  name="address" value="$!u.address"/>
+							</td>
+							<td width="10%" class="pn-flabel pn-flabel-h">邮编：</td>
+							<td class="pn-fcontent">
+								<input type="text" id="postCode"  name="postCode" value="$!{u.postCode}"/>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">城市：</td>
+							<td class="pn-fcontent" colspan="3">
+								<select name="province" id="province" onchange="changeCity(this,'city');" style="width:132px">
+                					<option value="">==请选择==</option>
+                					#foreach($p in $!provins)
+                                        <option value="$!p.id">$!p.name</option>
+                					#end
+                                </select>
+                				<select name="city" id="city" style="width:132px">
+                					#foreach($c in $!citys)
+                                        <option value="$!c.areacode">$!c.name</option>
+                					#end
+                                </select>
+							</td>
+                        </tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">状态：</td>
+							<td class="pn-fcontent" colspan="3">
+								<select name="status" id="status" style="width:132px">
+                					#if($!u.status==1)
+                	                <option value="0">正常</option>
+                	                <option value="-1" selected >已删除</option>
+                					#else
+                					<option value="0" selected >正常</option>
+                	                <option value="-1">已删除</option>	
+                					#end
+                	              </select>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" class="pn-flabel pn-flabel-h">注册时间：</td>
+							<td class="pn-fcontent" colspan="3">
+								<input type="hidden" id="regTime"  name="regTime" value="$!{u.regTime}"/>
+								$!{u.regTime}
+							</td>
+						</tr>
+					</table>
+		</td>
+    </tr>
+   <tr>
+    <td width="17%">&nbsp;</td>
+    <td width="83%">
+		<button type="button" id="saveType" onClick="javascript:checkSubmit();" class="bt-primary">保存</button>
+		<button type="button" onClick="window.close();" class="bt-secondary">关闭</button>
+    </td>
+   </tr>
+</table>
+</form>
+
+</body>
+</html>

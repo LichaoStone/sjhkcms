@@ -1,0 +1,23 @@
+<html>
+<head>
+#tagLibs()
+<meta content="text/html; charset=utf-8" http-equiv="content-type">
+<link rel="stylesheet" type="text/css" href="${ctx}/css/top.css">
+<script language="javascript" type="text/javascript" src="${ctx}/js/ott/top.js"></script>
+</head>
+<body>
+<div class="logo"></div>
+<ul id="nav" class="nav">
+	#foreach ($menu in $userMenuPri)
+      <li><a #if($velocityCount ==1) class="current" #end href="#" menuId='ct_$!{menu.id}'><span>$!{menu.name}</span></a></li>
+	#end
+  </ul>
+<div class="right">
+$!{user.loginname} &nbsp;&nbsp;
+<script language="javascript" type="text/javascript">document.write(greetings());</script>
+~！&nbsp; 
+[ <a href="${ctx}/shiro/logout.do"><font color="#b2d5eb">注销</font></a> ]&nbsp;
+[ <a href="javascript:changePwd();" color="#b2d5eb">修改密码</a> ]
+</div>
+</body>
+</html>

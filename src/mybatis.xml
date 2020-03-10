@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+		<property name="dialect" value="mysql"/>
+	</properties>
+	<!-- mybatis二级缓存开启标识-->
+	<settings>
+	   <setting name="cacheEnabled" value="true"></setting>
+	</settings>
+	<typeAliases>
+	                                         
+		<typeAlias alias="Dictionary" type="com.br.ott.client.common.entity.Dictionary" />
+		<!-- 操作日志 --> 
+		<typeAlias alias="OperaLog" type="com.br.ott.client.common.entity.OperaLog" />
+		<!-- 地域 --> 
+		<typeAlias alias="District" type="com.br.ott.client.common.entity.District" />			
+		<!-- 资源内容-->
+		<typeAlias alias="UploadSource" type="com.br.ott.client.common.entity.UploadSource" />
+		<typeAlias alias="DramaNavigation" type="com.br.ott.client.select.entity.DramaNavigation" />
+		
+		<typeAlias alias="UserInfo" type="com.br.ott.client.shiro.entity.UserInfo" />
+		<typeAlias alias="Role" type="com.br.ott.client.shiro.entity.Role" />
+		<typeAlias alias="Groups" type="com.br.ott.client.shiro.entity.Groups" />
+		<typeAlias alias="RoleAuth" type="com.br.ott.client.shiro.entity.RoleAuth" />
+		<typeAlias alias="Systems" type="com.br.ott.client.shiro.entity.Systems" />
+		<typeAlias alias="Resources" type="com.br.ott.client.shiro.entity.Resources" />
+		<typeAlias alias="GroupRole" type="com.br.ott.client.shiro.entity.GroupRole" />
+		<typeAlias alias="GroupUser" type="com.br.ott.client.shiro.entity.GroupUser" />
+		 
+		 <!-- 合作伙伴实体类 -->
+		<typeAlias alias="Partner" type="com.br.ott.client.partner.entity.Partner" />
+		
+		<!-- 用户账号 -->
+		<typeAlias alias="UserAccount" type="com.br.ott.client.user.entity.UserAccount" />
+		<typeAlias alias="UserOrder" type="com.br.ott.client.user.entity.UserOrder"/>
+		
+		<!-- 点播内容 -->
+		<typeAlias alias="DramaProgram" type="com.br.ott.client.select.entity.DramaProgram"/>
+		<typeAlias alias="ViewLog" type="com.br.ott.client.select.entity.ViewLog"/>
+		<typeAlias alias="DramaPosition" type="com.br.ott.client.select.entity.DramaPosition"/>
+		<typeAlias alias="DramaChildren" type="com.br.ott.client.select.entity.DramaChildren"/>
+		<typeAlias alias="DramaSource" type="com.br.ott.client.select.entity.DramaSource"/>
+		<typeAlias alias="DramaType" type="com.br.ott.client.select.entity.DramaType"/>
+		<typeAlias alias="Tariff" type="com.br.ott.client.select.entity.Tariff"/>
+		<typeAlias alias="AssetLog" type="com.br.ott.client.select.entity.AssetLog"/>
+		<typeAlias alias="DramaRecommend" type="com.br.ott.client.select.entity.DramaRecommend"/>
+	    <typeAlias alias="Assets" type="com.br.ott.client.operasset.entity.Assets"/>
+	    <typeAlias alias="DramaAlbum" type="com.br.ott.client.select.entity.DramaAlbum"/>
+		<typeAlias alias="Map" type="java.util.Map"/>
+	</typeAliases>
+	<plugins>
+		<plugin interceptor="com.br.ott.common.util.orm.mybatis.PaginationPlugin"> 
+			<property name="dialect" value="mysql"/>
+			<property name="pageSqlId" value=".*ByPage.*"/> 
+		</plugin>
+		<!-- 当需要使用精细化处理mybatis的二级缓存时可以开启 -->
+		<!-- <plugin interceptor="com.br.ott.common.util.plugin.cache.EnhancedCachingExecutor">  
+           <property name="dependency" value="dependencys.xml"/>
+                                  开启二级缓存
+           <property name="cacheEnabled" value="true"/>
+           <property name="pageSqlId" value=".*ByPage.*"/>
+        </plugin> -->
+	</plugins>
+</configuration>

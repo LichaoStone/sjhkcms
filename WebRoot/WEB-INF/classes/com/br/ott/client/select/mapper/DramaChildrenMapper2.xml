@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.select.mapper.DramaChildrenMapper2">
+	 <!--mybatis二级缓存
+        1，size:表示缓存cache中能容纳的最大元素数。默认是1024；
+        2，flushInterval:定义缓存刷新周期，以毫秒计；
+        3，eviction:定义缓存的移除机制；默认是LRU(least recently userd，最近最少使用),还有FIFO(first in first out，先进先出)
+        4，readOnly:默认值是false，假如是true的话，缓存只能读。
+     -->
+	<cache size="2014" flushInterval="300000" eviction="LRU" readOnly="false"/>
+	<resultMap id="DramaChildrenMap" type="DramaChildren">
+		<id property="id" column="id"></id>
+		<result property="dramaId" column="dramaId"/>
+		<result property="title" column="title"/>
+		<result property="timeLongth" column="timeLongth"/>
+		<result property="price" column="price"/>
+		<result property="dramaDesc" column="dramaDesc"/>
+		<result property="status" column="status"/>
+		<result property="operator" column="operator"/>
+		<result property="playUrl" column="playUrl"/>
+	</resultMap>
+	
+	<!-- 获取资产子节目全部信息 -->
+	<select id="findDramaChildren" resultMap="DramaChildrenMap">
+		SELECT ds.id, ds.dramaId, ds.title, ds.status
+		FROM OTT_DRAMA_Children ds
+		<where>
+		    1 = 1
+		    <if test="dramaId != null and dramaId != ''">
+				and ds.dramaId = #{dramaId}
+			</if>
+			<if test="title != null and title != ''">
+				and ds.title = #{title}
+			</if>
+			<if test="status !=null and status != ''">
+				and ds.status = #{status}
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			order by cast(ds.title as SIGNED) desc
+		</if>
+	</select>
+	
+</mapper>

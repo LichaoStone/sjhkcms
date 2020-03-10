@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "/www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="/www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>点播资费管理</title>
+#tagLibs()
+</head>
+<body>
+<!--  快速转换位置按钮  --> 
+<!--  内容列表   -->
+<form id="queryForm" method="get">
+<div class="topline">
+	<a href="#" class="xzbtn" style="color:#FFFFFF">点播资费列表</a> | 
+    <a href="${ctx}/select/toTariff.do" class="wxbtn">新增点播资费</a>
+</div>
+ <table border='0' cellpadding='0' cellspacing='0' height="36">
+    <tr class="search">
+        <td>资费名称：<input type='text' id="tariffName" name='tariffName' value='$!{tariff.name}' style="width:180px;"/></td>
+		<td>
+			<input type="hidden" id="orderColumn" name="orderColumn" value="$!{tariff.orderColumn}" />
+            <img id="queryTariff" type="image" src="${ctx}/images/button_search.gif"/>
+        </td>
+	</tr>
+</table>
+<table id="list-table" width="100%" border="0" cellpadding='0' cellspacing='0' style="margin-top:10px;">
+<tr align="left" bgcolor="#eff2f7" height="30">
+    <td width="20%"><a href="javascript:void(0);" onclick="orderBy(this);" name="tariffName" lastOrderBy="$!{tariff.orderColumn}" class="tb_head">资费名称</a></td>
+    <td width="15%"><a href="javascript:void(0);" onclick="orderBy(this);" name="tariffValue" lastOrderBy="$!{tariff.orderColumn}" class="tb_head">资费值</a></td>
+    <td width="20%"><a href="javascript:void(0);" onclick="orderBy(this);" name="tariffType" lastOrderBy="$!{tariff.orderColumn}" class="tb_head">资费类型</a></td>
+    <td width="20%"><a href="javascript:void(0);" onclick="orderBy(this);" name="status" lastOrderBy="$!{tariff.orderColumn}" class="tb_head">状态</a></td>
+	<td width="15%">操作</td>
+</tr>
+
+#if ($null.isNull($list) || $list.size()==0)
+	<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td colspan="5"><h1>暂无相关数据内容</h1></td>
+    </tr>
+#end
+#foreach ($tariff in $list)
+<tr align='left' height="30" onMouseMove="javascript:this.bgColor='#FFFFEE';" onMouseOut="javascript:this.bgColor='';">
+	 <td >$!{tariff.tariffName}</td>
+     <td >￥$!{tariff.tariffValue}</td>
+     <td >$!{tariff.tariffTypeName}</td>
+     <td >$!{tariff.statusName}</td>
+     <td >
+		<a href="${ctx}/select/toTariff.do?id=$!{tariff.id}">编辑</a>
+		#if($!{tariff.status}=='1')
+			<a href="javascript:updateTariffStatus(this,'$!{tariff.id}','$!{tariff.status}');">停用</a>
+		#else
+			<a href="javascript:updateTariffStatus(this,'$!{tariff.id}','$!{tariff.status}');">启用</a>
+		#end
+     </td>
+</tr>
+#end
+</table>
+<div height="36" align="right">
+    #pagination(${tariff})
+</div>
+</form>
+<script type="text/javascript" src="${ctx}/js/ott/select/listTariff.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+* {
+	margin: 0px; padding: 0px;
+}
+body {
+	background: repeat-y left rgb(239, 242, 247);
+}
+.drag-close {
+	left: 0px; top: 45%; width: 6px; height: 60px; display: block; position: absolute; cursor: pointer;
+}
+.drag-open {
+	left: 0px; top: 45%; width: 6px; height: 60px; display: block; position: absolute; cursor: pointer;
+}
+.drag-close {
+	background: url("../images/drag_arrow.gif") no-repeat;
+}
+.drag-open {
+	background: url("../images/drag_arrow.gif") no-repeat -6px 0px;
+}

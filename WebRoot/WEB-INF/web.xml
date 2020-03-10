@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+   
+    <!-- 跨域过滤器 start -->
+   <filter>  
+	    <description>跨域过滤器</description>  
+	    <filter-name>CORS</filter-name>    
+	    <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>    
+	    <init-param>    
+	     <param-name>cors.allowOrigin</param-name>    
+	        <param-value>*</param-value>
+	    </init-param>    
+	    <init-param>    
+	     <param-name>cors.supportedMethods</param-name>    
+	        <param-value>GET, POST, HEAD, PUT, OPTIONS, DELETE</param-value>    
+	    </init-param>    
+	    <init-param>    
+	     <param-name>cors.supportedHeaders</param-name>    
+	        <param-value>Access-Control-Allow-Origin,Accept,groupId,providerId,operators,mac,cityCode,userToken,Origin, X-Requested-With, Content-Type,Content-Length, Last-Modified</param-value>    
+	    </init-param>    
+	    <init-param>    
+	        <param-name>cors.exposedHeaders</param-name>    
+	        <param-value>Set-Cookie</param-value>    
+	    </init-param>    
+	    <init-param>    
+	        <param-name>cors.supportsCredentials</param-name>    
+	        <param-value>true</param-value>    
+	    </init-param>    
+	</filter>  
+	  
+	<filter-mapping>    
+	    <filter-name>CORS</filter-name>    
+	    <url-pattern>/*</url-pattern>    
+	</filter-mapping>  
+    <!-- 跨域过滤器 end -->
+
+	<!-- Shiro Security filter -->
+	<filter>
+		<filter-name>shiroFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>shiroFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+
+	<!-- log4j -->
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>classpath:log4j.properties</param-value>
+	</context-param>
+	<context-param>
+		<param-name>log4jRefreshInterval</param-name>
+		<param-value>6000</param-value>
+	</context-param>
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>webapp.root.sdhkcms</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+
+
+	<!-- 加载spring容器 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:spring-application*.xml,/WEB-INF/spring-cxf.xml</param-value>
+	</context-param>
+
+	<!-- 拦截处理字符编码&ndash;&gt; -->
+	<filter>
+		<filter-name>encode</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encode</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- UrlRewrite filter -->
+	<filter>
+		<filter-name>urlRewriteFilter</filter-name>
+		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>urlRewriteFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+
+	<!-- 注册spring监听器 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+
+	<!-- 配置spring mvc -->
+	<servlet>
+		<servlet-name>tv</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+
+	<listener>
+		<listener-class>com.br.ott.client.common.CacheListener</listener-class>
+	</listener>
+
+	<servlet-mapping>
+		<servlet-name>tv</servlet-name>
+		<url-pattern>*.do</url-pattern>
+		<url-pattern>*.action</url-pattern>
+		<url-pattern>*.htm</url-pattern>
+	</servlet-mapping>
+
+	<!--CXF配置 -->
+	<!-- <servlet>
+		<servlet-name>CXFServlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>CXFServlet</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping> -->
+	
+	<!-- APACHE-AXIS1.4配置 -->
+	<servlet>   
+	    <servlet-name>AdminServlet</servlet-name>
+        <servlet-class>org.apache.axis.transport.http.AdminServlet</servlet-class>  
+        <load-on-startup>1</load-on-startup>   
+    </servlet>
+    <servlet>
+        <servlet-name>AxisServlet</servlet-name>
+        <servlet-class>org.apache.axis.transport.http.AxisServlet</servlet-class>
+    </servlet>   
+  
+    <servlet-mapping>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>/servlet/AxisServlet</url-pattern>   
+    </servlet-mapping>   
+    <servlet-mapping>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>*.jws</url-pattern>   
+    </servlet-mapping>   
+    <servlet-mapping>   
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>/services/*</url-pattern>   
+    </servlet-mapping>  
+   
+    <servlet-mapping>   
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/servlet/AdminServlet</url-pattern>   
+    </servlet-mapping>   
+	
+	<!-- 默认主页 -->
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+	<!-- 错误跳转页面 -->
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404.vm</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error.vm</location>
+	</error-page>
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/error.vm</location>
+	</error-page>
+	<distributable />
+</web-app>

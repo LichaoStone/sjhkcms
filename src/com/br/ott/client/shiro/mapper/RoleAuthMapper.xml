@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.shiro.mapper.RoleAuthMapper">
+	<resultMap type="RoleAuth" id="RoleAuth">
+		<id property="id" column="id"></id>
+		<result property="roleId" column="roleId"></result>
+		<result property="resourceId" column="resourceId"></result>
+		<result property="actions" column="actions"></result>
+		
+	</resultMap>
+
+	<!--添加一个角色菜单 -->
+	<insert id="addAuthToRole" parameterType="RoleAuth">
+		<![CDATA[   INSERT INTO ott_qx_roleauth (roleId, resourceId,actions)
+			VALUES (#{roleId,jdbcType=VARCHAR},
+				 	#{resourceId,jdbcType=VARCHAR},
+				 	#{actions,jdbcType=VARCHAR})
+	 	]]>
+	</insert>
+	
+	<!-- 根据角色,资源ID查找角色菜单  -->
+	<select id="findRoleAuth" resultMap="RoleAuth">
+		<![CDATA[ SELECT * FROM ott_qx_roleauth WHERE roleId = #{roleId} and resourceId = #{resId}]]>
+	</select>
+	
+	<!-- 根据资源ID删除角色菜单  -->
+	<delete id="delResourToRole">
+		<![CDATA[ DELETE FROM ott_qx_roleauth WHERE resourceid = #{resourceId} and roleId = #{roleId}]]>
+	</delete>
+	
+	<!-- 根据角色ID删除角色菜单  -->
+	<delete id="deleteRoleAuthByRoleId">
+		<![CDATA[ DELETE FROM ott_qx_roleauth WHERE roleId = #{roleId} ]]>
+	</delete>
+	
+	<!-- 根据角色ID查找角色菜单  -->
+	<select id="findRoleAuthByRoleId" resultMap="RoleAuth">
+		<![CDATA[ SELECT * FROM ott_qx_roleauth WHERE roleId = #{roleId}]]>
+	</select>
+</mapper>

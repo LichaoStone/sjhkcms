@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.select.mapper.AssetLogMapper">
+	<resultMap id="AssetLogMap" type="AssetLog" >
+		<id property="id" column="id"></id>
+		<result property="assetId" column="assetId"></result>
+		<result property="assetTitle" column="assetTitle"></result>
+		<result property="action" column="action"></result>
+		<result property="assetInfo" column="assetInfo"></result>
+		<result property="returnInfo" column="returnInfo"/>
+		<result property="result" column="result"/>
+		<result property="recordTime" column="recordTime"/>
+	</resultMap>
+
+	<!--添加同步日志 -->
+	<insert id="addAssetLog" parameterType="AssetLog">
+       <selectKey keyProperty="id" resultType="String"  order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+		<![CDATA[ INSERT INTO OTT_ASSET_LOG (assetId, assetTitle, action,assetInfo, returnInfo, result,recordTime)
+			VALUES (#{assetId,jdbcType=VARCHAR},
+			#{assetTitle,jdbcType=VARCHAR},
+			#{action,jdbcType=VARCHAR},
+			#{assetInfo,jdbcType=VARCHAR},
+			#{returnInfo,jdbcType=VARCHAR},
+			#{result,jdbcType=VARCHAR},
+			now())   
+	 	]]>
+	</insert>
+	
+	<insert id="addAssetLogList" parameterType="java.util.List">
+			INSERT INTO OTT_ASSET_LOG(assetId, assetTitle, action, assetInfo, returnInfo, result,recordTime) 
+			VALUES
+			<foreach collection="list" item="item" index="index" separator="," >
+		        (
+			        #{item.assetId,jdbcType=VARCHAR},
+					#{item.assetTitle,jdbcType=VARCHAR},
+					#{item.action,jdbcType=VARCHAR},
+					#{item.assetInfo,jdbcType=VARCHAR},
+					#{item.returnInfo,jdbcType=VARCHAR},
+					#{item.result,jdbcType=VARCHAR},
+					now())
+				)
+		    </foreach>
+	</insert>
+	
+	<!-- 按ID查询 -->
+	<select id="getAssetLogById" resultMap="AssetLogMap">
+		SELECT id, assetId, assetTitle, assetInfo, action,returnInfo, result,date_format(recordTime,'%Y-%m-%d %H:%i:%s') recordTime
+		FROM  OTT_ASSET_LOG WHERE id = #{id, jdbcType=INTEGER}
+	</select>	
+	
+	<!-- 按分页查询 -->
+	<select id="findAssetLogByPage" resultMap="AssetLogMap">
+		SELECT id, assetId, assetTitle, action,result, date_format(recordTime,'%Y-%m-%d %H:%i:%s') recordTime 
+		FROM OTT_ASSET_LOG
+		<where>
+			<if test="assetId != null and assetId != ''">
+				and assetId = #{assetId}
+			</if>
+			<if test="assetTitle != null and assetTitle != ''">
+				and assetTitle = #{assetTitle}
+			</if>
+			<if test="result != null and result != ''">
+				and result = #{result}
+			</if>
+			<if test="recordTimeMin != null and recordTimeMin !=''">
+				and recordTime >= str_to_date(#{recordTimeMin,jdbcType=VARCHAR},'%Y-%m-%d')
+			</if>
+			<if test="recordTimeMax != null and recordTimeMax != ''">
+				<![CDATA[and recordTime < DATE_ADD( str_to_date(#{recordTimeMax,jdbcType=VARCHAR},'%Y-%m-%d'), INTERVAL 1 DAY)]]>
+			</if>
+		</where>
+		<if test="orderColumn != null and orderColumn !=''">
+			order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			order by id desc
+		</if>
+	</select>
+	<select id="getCountAssetLog" resultType="int">
+		SELECT count(1) FROM OTT_ASSET_LOG
+		<where>
+			<if test="assetId != null and assetId != ''">
+				and assetId = #{assetId}
+			</if>
+			<if test="assetTitle != null and assetTitle != ''">
+				and assetTitle = #{assetTitle}
+			</if>
+			<if test="result != null and result != ''">
+				and result = #{result}
+			</if>
+			<if test="recordTime !='' and recordTime !=null">
+				and date_format(recordTime,'%Y-%m-%d') = #{recordTime,jdbcType=VARCHAR}
+			</if>
+			<if test="recordTimeMin != null and recordTimeMin !=''">
+				and recordTime >= str_to_date(#{recordTimeMin,jdbcType=VARCHAR},'%Y-%m-%d')
+			</if>
+			<if test="recordTimeMax != null and recordTimeMax != ''">
+				<![CDATA[and recordTime < DATE_ADD( str_to_date(#{recordTimeMax,jdbcType=VARCHAR},'%Y-%m-%d'), INTERVAL 1 DAY)]]>
+			</if>
+		</where>
+	</select>
+	
+	<!--删除 -->
+	<delete id="delAssetLogList">
+		delete from OTT_ASSET_LOG where id in
+		 <foreach collection="list" item="ids"  open="(" separator="," close=")">  
+        	#{ids}  
+     	</foreach>
+	</delete>
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.shiro.mapper.GroupUserMapper">
+	<resultMap type="GroupUser" id="GroupUser">
+		<id property="id" column="id"></id>
+		<result property="userid" column="userid"></result>
+		<result property="groupid" column="groupid"></result>
+	</resultMap>
+	
+	<!--添加一个分组 -->
+	<insert id="addUserToGroup" parameterType="GroupUser">
+		<![CDATA[   INSERT INTO ott_qx_groupuser (userid, groupid)
+			VALUES (#{userid,jdbcType=VARCHAR},
+				 	#{groupid,jdbcType=VARCHAR})
+	 	]]>
+	</insert>
+	
+	<!-- 根据组ID删除角色 -->
+	<delete id="delUserToGroup" parameterType="String">
+		<![CDATA[ DELETE FROM ott_qx_groupuser WHERE userid = #{ids} and groupid = #{gid} ]]>
+	</delete>
+	
+	<!-- 根据用户ID删除组 -->
+	<delete id="delGroupToUser" parameterType="String">
+		<![CDATA[ DELETE FROM ott_qx_groupuser WHERE groupid = #{ids} and userid = #{uId} ]]>
+	</delete>
+	
+	<delete id="delGroupUserByUserId">
+		<![CDATA[ DELETE FROM ott_qx_groupuser WHERE userid = #{uId} ]]>
+	</delete>
+	
+	<resultMap type="GroupUser" id="GroupUserMap">
+		<id property="id" column="id"></id>
+		<result property="userid" column="userid"></result>
+		<result property="userName" column="userName"></result>
+		<result property="groupid" column="groupid"></result>
+		<result property="groupName" column="groupName"></result>
+	</resultMap>
+	<!-- 按组编号查询组用户信息 -->
+	<select id="findGroupUserByGroupId" resultMap="GroupUserMap">
+		select gu.id, gu.userid, a.ADMINNAME as userName, gu.groupid, g.name as groupName
+		from ott_qx_groupuser gu
+		left outer join ott_admin a on gu.userid=a.id
+		left outer join ott_qx_group g on gu.groupid=g.id
+		where gu.groupid= #{groupid} 
+	</select>
+	
+	<!-- 按用户编号查询组用户信息 -->
+	<select id="findGroupUserByUserId" resultMap="GroupUserMap">
+		select gu.id, gu.userid, a.ADMINNAME as userName, gu.groupid, g.name as groupName
+		from ott_qx_groupuser gu
+		left outer join ott_admin a on gu.userid=a.id
+		left outer join ott_qx_group g on gu.groupid=g.id
+		where gu.userid= #{userid} 
+	</select>
+	
+	<!-- 按用户编号组编号查询组用户信息 -->
+	<select id="getGroupUserByGIdAndUId" resultMap="GroupUserMap">
+		select gu.id, gu.userid, a.ADMINNAME as userName, gu.groupid, g.name as groupName
+		from ott_qx_groupuser gu
+		left outer join ott_admin a on gu.userid=a.id
+		left outer join ott_qx_group g on gu.groupid=g.id
+		where gu.userid= #{userid} and gu.groupid= #{groupid}
+	</select>
+</mapper>

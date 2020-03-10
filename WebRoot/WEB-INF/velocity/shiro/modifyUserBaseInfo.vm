@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>用户信息编辑 </title>
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="this is my page">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	#tagLibs()
+</head>
+
+<body class="ContentBody">
+	<form method="post"  name="fom" id="fom">
+    	<table width="98%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0">
+    		<tr>
+    			<td width="20%" class="pn-flabel pn-flabel-h">用户名：</td>
+    			<td class="pn-fcontent">
+    				<input name="userId" class="text" id="userId" value="$!{userInfo.userId}" type="hidden"/>
+    				<input type="hidden" id="oldName" value="$!{userInfo.userName}"/>
+    				<input name="userName" class="text" id="userName" type="text" value="$!{userInfo.userName}" disabled="disabled" /> 
+    			</td>
+    		</tr>
+    		<tr>
+    			<td width="20%" class="pn-flabel pn-flabel-h">状态：</td>
+    			<td class="pn-fcontent">
+    				<select name="status" style="width:135px" id="status" disabled="disabled">
+    						<option value="0" #if($!{userInfo.status} == 0) selected #end>未激活</option>
+    						<option value="1" #if($!{userInfo.status} == 1) selected #end>正常</option>
+    						<option value="2" #if($!{userInfo.status} == 2) selected #end>禁用</option>
+    				</select>
+    			</td>
+    		</tr>
+    		<tr>
+    			<td width="20%" class="pn-flabel pn-flabel-h">真实姓名：</td>
+    			<td class="pn-fcontent">
+    				<input name="loginname" class="text" id="loginname" type="text" value="$!{userInfo.loginname}" />
+    				<em class="required">*</em>
+    			</td>
+    		</tr>
+    		<tr>
+    			<td width="20%" class="pn-flabel pn-flabel-h">联系方式：</td>
+    			<td class="pn-fcontent">
+    				<input type="hidden" id="oldPhone" value="$!{userInfo.phone}"/>
+    				<input name="phone" class="text" id="phone" type="text" value="$!{userInfo.phone}"/>
+    				<em class="required">*</em>
+    			</td>
+    		</tr>
+    		<tr>
+				<td width="20%" class="pn-flabel pn-flabel-h"> </td>
+    			<td class="pn-fcontent">
+					<button type="button" id="editUser" class="bt-primary">保存</button>
+				</td>
+    		</tr>
+    	</table>
+	</form>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${ctx}/js/jquery/validate/validate-tip.js"></script>
+	<script language="javascript" src="${ctx}/js/ott/shiro/modifyUserBaseInfo.js"></script>
+</body>
+</html>

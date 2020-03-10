@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.br.ott.client.operasset.mapper.HandleAssetsMapper">
+    
+    <resultMap id="AssetsMap" type="Assets" > 
+		<id property="id" column="id"></id>
+		<result property="correlateID" column="correlateID"></result>    <!--property映射数据库列的字段或属性。如果JavaBean 的属性与给定的名称匹配，就会使用匹配的名字。否则，MyBatis 将搜索给定名称的字段-->
+		<result property="localFileName" column="localFileName"></result><!--column数据库的列名或者列标签别名 -->
+		<result property="cmdFileURL" column="cmdFileURL"></result>
+		<result property="jointTime" column="jointTime"></result>
+		<result property="isCreateFile" column="isCreateFile"></result>
+		<result property="isDealFile" column="isDealFile"></result>
+		<result property="cerror" column="cerror"></result>
+		<result property="derror" column="derror"></result>
+		<result property="sendStatus" column="sendStatus"></result>
+		<result property="sendTime" column="sendTime"></result>
+	</resultMap>
+	
+	<select id="findAssetsByPage" resultMap="AssetsMap">
+		SELECT fo.id, fo.correlateID, fo.cmdFileURL, fo.localFileName, DATE_FORMAT(fo.jointTime, '%Y-%m-%d %H:%i:%s')jointTime, fo.isCreateFile, fo.isDealFile, fo.sendStatus, DATE_FORMAT(fo.sendTime, '%Y-%m-%d %H:%i:%s')sendTime, 
+                (SELECT IFNULL(GROUP_CONCAT(g.error),'无') error FROM ott_jointinfo_handlelog g WHERE g.correlateID = fo.correlateID  AND g.status = '-1') cerror,
+                (SELECT IFNULL(GROUP_CONCAT(g.error),'无') error FROM ott_jointinfo_handlelog g WHERE g.correlateID = fo.correlateID AND g.status = '-2') derror
+        FROM ott_jointinfo fo
+        <where>
+            1 = 1
+            <if test="correlateID != null and correlateID != ''">
+               and fo.correlateID = #{correlateID}
+            </if>
+            <if test="jointTime != null and jointTime != ''">
+               and DATE_FORMAT(fo.jointTime, '%Y-%m-%d') = #{jointTime}
+            </if>
+            <if test="isCreateFile != null and isCreateFile != ''">
+               and fo.isCreateFile = #{isCreateFile}
+            </if>
+            <if test="isDealFile != null and isDealFile != ''">
+               and fo.isDealFile = #{isDealFile}
+            </if>
+             <if test="sendStatus != null and sendStatus != ''">
+               and fo.sendStatus = #{sendStatus}
+            </if>
+            <if test="sendTime != null and sendTime != ''">
+               and DATE_FORMAT(fo.sendTime, '%Y-%m-%d') = #{sendTime}
+            </if>
+        </where>
+		<if test="orderColumn != null and orderColumn !=''">
+			  order by ${orderColumn} 
+		</if>
+		<if test="orderColumn == null or orderColumn ==''">
+			  ORDER BY fo.jointTime ASC
+		</if>
+	</select>
+	
+	<select id="getCountHandleAssets" resultType="int">
+		select count(fo.id)
+		from ott_jointinfo fo
+		<where>
+            1 = 1
+            <if test="correlateID != null and correlateID != ''">
+               and fo.correlateID = #{correlateID}
+            </if>
+            <if test="jointTime != null and jointTime != ''">
+               and DATE_FORMAT(fo.jointTime, '%Y-%m-%d') = #{jointTime}
+            </if>
+            <if test="isCreateFile != null and isCreateFile != ''">
+               and fo.isCreateFile = #{isCreateFile}
+            </if>
+            <if test="isDealFile != null and isDealFile != ''">
+               and fo.isDealFile = #{isDealFile}
+            </if>
+             <if test="sendStatus != null and sendStatus != ''">
+               and fo.sendStatus = #{sendStatus}
+            </if>
+            <if test="sendTime != null and sendTime != ''">
+               and DATE_FORMAT(fo.sendTime, '%Y-%m-%d') = #{sendTime}
+            </if>
+        </where>
+	</select>
+	
+	<select id="getAssetsByCorrelateID" resultMap="AssetsMap">
+	    select fo.id,fo.correlateID,fo.cmdFileURL,fo.localFileName,DATE_FORMAT(fo.jointTime,'%Y-%m-%d %H:%i:%s')jointTime,fo.isCreateFile,fo.isDealFile,fo.sendStatus,DATE_FORMAT(fo.sendTime,'%Y-%m-%d %H:%i:%s')sendTime,
+	            (SELECT IFNULL(GROUP_CONCAT(g.error),'无') error FROM ott_jointinfo_handlelog g WHERE g.correlateID = fo.correlateID  AND g.status = '-1') cerror,
+                (SELECT IFNULL(GROUP_CONCAT(g.error),'无') error FROM ott_jointinfo_handlelog g WHERE g.correlateID = fo.correlateID AND g.status = '-2') derror
+	     from ott_jointinfo fo where fo.correlateID=#{correlateID,jdbcType=VARCHAR}
+	</select>
+    
+    <insert id="addJointinfo_handlelog" parameterType="Map">
+        insert into ott_jointinfo_handlelog(correlateID,fileName,tableName,status,error,handleTime,handleType,elementID,elementType) values (#{correlateID,jdbcType=VARCHAR},#{fileName,jdbcType=VARCHAR},#{tableName,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{error,jdbcType=VARCHAR},sysdate(),#{handleType,jdbcType=VARCHAR},#{elementID,jdbcType=VARCHAR},#{elementType,jdbcType=VARCHAR})
+    </insert>
+    
+    <insert id="addProgram" useGeneratedKeys="true" keyProperty="prId" parameterType="Map">
+        insert into ott_drama_program(name,cProvider,assetId,pId,ptype,pcode,language,playyear,director,actor,compere,remark,createTime,status,updateTime) 
+		values(#{name,jdbcType=VARCHAR},
+			#{cProvider,jdbcType=VARCHAR},
+			#{assetId,jdbcType=VARCHAR},
+			#{pId,jdbcType=VARCHAR},
+			#{ptype,jdbcType=VARCHAR},
+			#{pcode,jdbcType=VARCHAR},
+			#{language,jdbcType=VARCHAR},
+			#{playyear,jdbcType=VARCHAR},
+			#{director,jdbcType=VARCHAR},
+			#{actor,jdbcType=VARCHAR},
+			#{compere,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR},
+			sysdate(),
+			#{status,jdbcType=VARCHAR},
+			sysdate())
+    </insert>
+    
+    <insert id="addProgramType" parameterType="Map">
+        insert into ott_drama_type(dramaId,navId) values (#{prId,jdbcType=VARCHAR},#{navId,jdbcType=VARCHAR})
+    </insert>
+    
+    <insert id="addJointInfo_category" parameterType="Map">
+        insert into ott_jointInfo_category(localNavId,crNavId,elementType,localNavName,crNavName,navRank) values (#{localNavId,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},#{elementType,jdbcType=VARCHAR},#{localNavName,jdbcType=VARCHAR},#{Name,jdbcType=VARCHAR},#{navRank,jdbcType=VARCHAR})
+    </insert>
+   
+    <insert id="addJointInfo" parameterType="Map">
+        insert into ott_jointinfo(cspid,lspid,correlateID,cmdFileURL,localFileName,jointTime) values (#{cspid,jdbcType=VARCHAR},#{lspid,jdbcType=VARCHAR},#{correlateID,jdbcType=VARCHAR},#{cmdFileURL,jdbcType=VARCHAR},#{localFileName,jdbcType=VARCHAR},sysdate())
+    </insert>
+    
+    <select id="queryJointInfoForList" resultType="Map">
+      <![CDATA[
+        select correlateID,cmdFileURL,localFileName from ott_jointinfo where isCreateFile = '2' and UNIX_TIMESTAMP(jointTime) >= (UNIX_TIMESTAMP(sysdate()) - (20*60*1000)) and UNIX_TIMESTAMP(jointTime) < UNIX_TIMESTAMP(sysdate()) order by id asc
+	    ]]>
+    </select>
+    
+    <update id="updateJointInfo" parameterType="Map">
+        update ott_jointinfo <set>
+                                 <if test="isCreateFile != null"> isCreateFile = #{isCreateFile,jdbcType=VARCHAR},</if>
+                                 <if test="isDealFile != null"> isDealFile = #{isDealFile,jdbcType=VARCHAR},</if>
+                                 <if test="isCategoryFile != null"> isCategoryFile = #{isCategoryFile,jdbcType=VARCHAR},</if>
+                                 <if test="modifyFileName != null"> localFileName = #{fileName,jdbcType=VARCHAR},</if>
+                                 <if test="createTime != null"> createTime=sysdate(),</if>
+                                 updateTime=sysdate()
+                             </set>
+        where correlateID = #{correlateID,jdbcType=VARCHAR}
+    </update>
+    
+    <select id="queryCategoryInfo" parameterType="String" resultType="Map">
+         select cy.localNavId, oy.albumId from ott_jointinfo_category cy, ott_jointinfo_othercategory oy
+              where cy.crNavId = oy.parentCrNrNavId 
+                    and oy.crNavId = #{crNavId, jdbcType=VARCHAR} 
+                    and oy.elementType = #{elementType, jdbcType=VARCHAR}
+    </select>
+    
+    <update id="updateCategoryInfo" parameterType="Map">
+         update ott_jointinfo_othercategory <set>
+                                              <if test="Name != null"> crNavName = #{Name, jdbcType=VARCHAR},</if>
+                                              <if test="Status != null"> crStatus = #{Status, jdbcType=VARCHAR}</if>
+                                            </set>
+                            where crNavId = #{elementID, jdbcType=VARCHAR} and elementType = #{elementType, jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateCategoryInfo2" parameterType="Map">
+         update ott_jointinfo_category <set>
+                                          <if test="Name != null"> crNavName = #{Name, jdbcType=VARCHAR},</if>
+                                          <if test="Status != null"> crStatus = #{Status, jdbcType=VARCHAR}</if>
+                                       </set>
+                            where crNavId = #{elementID, jdbcType=VARCHAR} and elementType = #{elementType, jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateCategoryInfos" parameterType="Map">
+         update ott_jointinfo_othercategory set isDele = '1' where crNavId = #{elementID, jdbcType=VARCHAR} and elementType = #{elementType, jdbcType=VARCHAR}
+    </update>
+    
+     <update id="updateCategoryInfo2s" parameterType="Map">
+         update ott_jointinfo_category set isDele = '1' where crNavId = #{elementID, jdbcType=VARCHAR} and elementType = #{elementType, jdbcType=VARCHAR}
+    </update>
+    
+    <select id="queryCategoryInfo2" parameterType="String" resultType="Map">
+        select localNavId from ott_jointinfo_category where crNavId=#{crNavId, jdbcType=VARCHAR} and elementType=#{elementType, jdbcType=VARCHAR}
+    </select>
+   
+    <select id="queryPendingAssetForList" resultType="Map">
+        <!-- <![CDATA[
+        select correlateID,localFileName from ott_jointinfo where isCreateFile ='0' and isDealFile = '2' and UNIX_TIMESTAMP(createTime) >= (UNIX_TIMESTAMP(sysdate()) - 300) and UNIX_TIMESTAMP(createTime) < UNIX_TIMESTAMP(sysdate()) order by id asc;
+	    ]]> -->
+    </select>
+    
+    <select id="queryJointInfoByName" parameterType="String" resultType="Map">
+        select id,name from ott_drama_program where name=#{assetName,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="queryChildByIdAndType" parameterType="String" resultType="Map">
+        select id,crChildDramaId from ott_drama_children where crChildDramaId=#{elementID, jdbcType=VARCHAR} and crChildDramaType=#{eleType, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="queryParentByIdAndType" parameterType="String" resultType="Map">
+        select dramaId,crDramaId from ott_jointinfo_type where crDramaId=#{parentID, jdbcType=VARCHAR} and elementType=#{parentType, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="queryPictureOrMoviesByIdAndType" parameterType="String" resultType="Map">
+        select crDramaId,elementType,fileURL,isCreateFile,isDealFile,movieBitrate,movieBitrateType,status,isDele,localFilePath,isDispatch,dispatchTime from ott_jointinfo_source where crDramaId=#{elementID,jdbcType=VARCHAR} and elementType=#{elementType,jdbcType=VARCHAR} and crParentId is null and crParentType is null
+    </select>
+    
+    <select id="queryMovieByIdAndType" parameterType="String" resultType="Map">
+        select id,dramaId,crChildDramaId from ott_drama_children where crChildDramaId=#{elementID,jdbcType=VARCHAR} and crChildDramaType=#{elementType,jdbcType=VARCHAR}
+    </select>
+    
+    <insert id="addDrama_type" parameterType="Map">
+        insert into ott_drama_type(dramaId,navId) values (#{dramaId,jdbcType=VARCHAR}, #{navId,jdbcType=VARCHAR})
+    </insert>
+    
+    <select id="queryDramaTypeInfo" parameterType="String" resultType="Map">
+        select dramaId,navId from ott_drama_type where dramaId = #{dramaId, jdbcType=VARCHAR} and navId = #{navId, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="queryDramaSource" parameterType="Map" resultType="DramaSource">
+        select id from ott_drama_source where childId=#{childId, jdbcType=VARCHAR} and playUrl=#{playUrl, jdbcType=VARCHAR} and source=#{source, jdbcType=VARCHAR}
+    </select>
+    
+    <insert id="addDrama_source" parameterType="Map">
+        insert into ott_drama_source(childId,playUrl,bitrate,bitrateType,ftpUrl,status, source) values (#{childId,jdbcType=VARCHAR}, #{playUrl,jdbcType=VARCHAR}, #{bitrate,jdbcType=VARCHAR}, #{bitrateType,jdbcType=INTEGER}, #{ftpUrl,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR})
+    </insert>
+    
+    <insert id="addJointinfo_source" parameterType="Map">
+        insert into ott_jointinfo_source(crDramaId,elementType,crParentId,crParentType,fileURL,isCreateFile,isDealFile,movieBitrate,movieBitrateType,type,status,isDele,createTime,localFilePath,isDispatch,dispatchTime) values (#{crDramaId,jdbcType=VARCHAR},#{elementType,jdbcType=VARCHAR},#{crParentId,jdbcType=VARCHAR},#{crParentType,jdbcType=VARCHAR},#{fileURL,jdbcType=VARCHAR},#{isCreateFile,jdbcType=VARCHAR},#{isDealFile,jdbcType=VARCHAR},
+                                       #{movieBitrate,jdbcType=VARCHAR},#{movieBitrateType,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{isDele,jdbcType=VARCHAR},sysdate(),#{localFilePath,jdbcType=VARCHAR},#{isDispatch,jdbcType=VARCHAR},#{dispatchTime,jdbcType=VARCHAR})
+    </insert>
+    
+     <insert id="addJointinfo_source2" parameterType="Map">
+        insert into ott_jointinfo_source(crDramaId,elementType,crParentId,crParentType,fileURL,movieBitrate,movieBitrateType,type,createTime) values (#{crDramaId,jdbcType=VARCHAR},#{elementType,jdbcType=VARCHAR},#{crParentId,jdbcType=VARCHAR},#{crParentType,jdbcType=VARCHAR},#{fileURL,jdbcType=VARCHAR},#{movieBitrate,jdbcType=VARCHAR},#{movieBitrateType,jdbcType=VARCHAR},#{Type,jdbcType=VARCHAR},sysdate())
+    </insert>
+    
+    <update id="updateChildrenAssets" parameterType="Map">
+        update ott_drama_children <set>
+                                     <if test="dramaId != null and dramaId != ''">dramaId=#{dramaId},</if>
+                                     <if test="title != null and title != ''">title=#{title,jdbcType=INTEGER},</if>
+                                     status=#{status, jdbcType=VARCHAR}
+                                  </set>
+                                  where crChildDramaId=#{elementID, jdbcType=VARCHAR} and crChildDramaType=#{elementType, jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateJointInfoType" parameterType="String">
+        update ott_jointinfo_type set dramaId=#{dramaId, jdbcType=VARCHAR} where crDramaId=#{elementID, jdbcType=VARCHAR} and elementType=#{elementType, jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateDramaProgram" parameterType="Map">
+        update ott_drama_program <set>
+                                     <if test="Name != null and Name != ''">name=#{Name},</if>
+                                     <if test="OriginalCountry != null and OriginalCountry != ''">origin=#{OriginalCountry},</if>
+                                     <if test="Language != null and Language != ''">language=#{Language},</if>
+                                     <if test="ReleaseYear != null and ReleaseYear != ''">playyear=#{ReleaseYear},</if>
+                                     <if test="Director != null and Director != ''">director=#{Director},</if>
+                                     <if test="ActorDisplay != null and ActorDisplay != ''">actor=#{ActorDisplay},</if>
+                                     <if test="OriginalCountry != null and OriginalCountry != ''">origin=#{OriginalCountry},</if>
+                                     <if test="Compere != null and Compere != ''">compere=#{Compere},</if>
+                                     <if test="Status != null and Status != ''">status=#{Status},</if>
+                                     <if test="Pid != null and Pid != ''">pId=#{Pid},</if>
+                                     <if test="Description != null and Description != ''">remark=#{Description},</if>
+                                     updateTime = now()                                     
+                                 </set>
+                                 where id=#{dramaId,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateDrama_source" parameterType="Map">
+        update ott_drama_source <set>
+                                    <if test="FileURL != null and FileURL !=''">ftpUrl=#{FileURL},</if>
+                                    <if test="Status != null and Status !=''">status=#{Status}</if>
+                                </set>
+                                where childId=#{childId,jdbcType=VARCHAR}
+    </update>
+    
+    
+     <update id="updateDramaSource" parameterType="Map">
+        update ott_drama_source <set>
+                                    <if test="Status != null and Status !=''">status=#{Status},</if>
+                                    <if test="BitRateType != null and BitRateType !=''">bitrate=#{movieBitrate},bitrateType=#{movieBitrateType},</if>
+                                    ftpUrl=#{FileURL, jdbcType=VARCHAR}
+                                </set>
+                                where childId=(select id from ott_drama_children where crChildDramaId=#{crParentId,jdbcType=VARCHAR} and crChildDramaType=#{crParentType,jdbcType=VARCHAR})
+    </update>
+      
+    <update id="updateJointinfo_source" parameterType="Map">
+        update ott_jointinfo_source <set>
+                                       <if test="FileURL != null and FileURL !=''">fileURL=#{FileURL},</if>
+                                       <if test="Status != null and Status !=''">status=#{Status},</if>
+                                       <if test="BitRateType != null and BitRateType !=''">movieBitrate=#{BitRateType},movieBitrateType=#{movieBitrateType},</if>
+                                       <if test="(BitRateType == null or BitRateType == '') and (Type != null and Type !='')">type=#{Type},</if>
+                                       updateTime=now()
+                                    </set>
+                                where crDramaId=#{elementID,jdbcType=VARCHAR} and elementType=#{elementType,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateJointinfo_source2" parameterType="Map">
+        update ott_jointinfo_source set isDele='1',updateTime=sysdate() where crDramaId=#{elementID,jdbcType=VARCHAR} and elementType=#{elementType,jdbcType=VARCHAR}
+    </update>
+   
+    <select id="queryNodifyAssetForList" parameterType="Map" resultType="Map">
+        select cspid,lspid,correlateID,cmdFileURL,isDealFile from ott_jointinfo where correlateID in <foreach collection="correlateIDList" item="item" open="(" separator="," close=")">#{item.correlateID, jdbcType=VARCHAR}</foreach>
+    </select>
+    
+    <select id="queryPendParseFileForList" parameterType="Map" resultType="Map">
+        select correlateID,localFileName,isCreateFile from ott_jointinfo where correlateID in <foreach collection="assetsList" item="item" open="(" separator="," close=")">#{item.correlateID, jdbcType=VARCHAR}</foreach>
+    </select>
+    
+    <select id="queryPictureByList" parameterType="String" resultType="Map">
+        select crDramaId,elementType,fileURL,isCreateFile,isDealFile,type,status,isDele from ott_jointinfo_source where crDramaId=#{parentID, jdbcType=VARCHAR} and elementType=#{parentType, jdbcType=VARCHAR} and crParentId=#{elementID, jdbcType=VARCHAR} and crParentType=#{elementType, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="queryMovieByList" parameterType="String" resultType="Map">
+        select crDramaId,elementType,fileURL,isCreateFile,isDealFile,type,status,isDele from ott_jointinfo_source where crDramaId=#{elementID, jdbcType=VARCHAR} and elementType=#{elementType, jdbcType=VARCHAR} and crParentId=#{parentID, jdbcType=VARCHAR} and crParentType=#{parentType, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="queryAllMoviesByList" parameterType="String" resultType="Map">
+        select crParentId,crParentType from ott_jointinfo_source where crDramaId=#{elementID, jdbcType=VARCHAR} and elementType=#{elementType, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="queryPictureByIdAndType" parameterType="String" resultType="Map">
+        select crDramaId,elementType,fileURL,isCreateFile,isDealFile,status,isDele,localFilePath,isDispatch,dispatchTime from ott_jointinfo_source where crDramaId=#{elementID, jdbcType=VARCHAR} and elementType=#{elementType, jdbcType=VARCHAR} and crParentId is null and crParentType is null
+    </select>
+    
+    <update id="updateJointInfoForSendStatus" parameterType="Map">
+        update ott_jointinfo set sendStatus = #{result, jdbcType=VARCHAR},sendTime=sysdate() where correlateID=#{correlateID, jdbcType=VARCHAR}
+    </update>
+    
+    <select id="queryCategoryForList" parameterType="Map" resultType="Map">
+        select localNavId,crNavId,navRank from ott_jointinfo_category where crNavId=#{parentCode, jdbcType=VARCHAR}
+    </select>
+    
+    <insert id="addOtherCategory" parameterType="Map">
+        insert into ott_jointinfo_othercategory(crNavId,elementType,crNavName,parentCrNrNavId,description,albumId) values (#{elementID,jdbcType=VARCHAR}, #{elementType,jdbcType=VARCHAR}, #{Name,jdbcType=VARCHAR}, #{parentCrNrNavId,jdbcType=VARCHAR}, #{Description,jdbcType=VARCHAR}, #{albumId,jdbcType=VARCHAR})
+    </insert>
+    
+    <insert id="addDrama_navigation" useGeneratedKeys="true" keyProperty="navId" parameterType="Map">
+        insert into ott_drama_navigation(name,operators,parentId,code,sequence,status,recommend) values (#{Name,jdbcType=VARCHAR},#{operators,jdbcType=VARCHAR},#{parentId,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},#{sequence,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{recommend,jdbcType=VARCHAR})
+    </insert>
+    
+    <insert id="addCategory" parameterType="Map">
+        insert into ott_jointinfo_category(localNavId,crNavId,elementType,localNavName,crNavName,navRank) values (#{localNavId,jdbcType=VARCHAR}, #{elementID,jdbcType=VARCHAR}, #{elementType,jdbcType=VARCHAR}, #{Name,jdbcType=VARCHAR}, #{Name,jdbcType=VARCHAR}, #{navRank,jdbcType=VARCHAR})
+    </insert>
+    
+    <select id="queryProgramByIdAndType" parameterType="String" resultType="Map">
+        select id,pId from ott_drama_program where id = (select dramaId from ott_jointinfo_type where crDramaId=#{elementID, jdbcType=VARCHAR} and elementType=#{elementType, jdbcType=VARCHAR})
+    </select>
+    
+    <insert id="addJointInfoType" parameterType="Map">
+        insert into ott_jointinfo_type(dramaId,crDramaId,crDramaCode,elementType,createTime) values (#{localNavId,jdbcType=VARCHAR},#{elementID,jdbcType=VARCHAR},#{elementCode,jdbcType=VARCHAR},#{elementType,jdbcType=VARCHAR},sysdate())
+    </insert>
+    
+    <insert id="addAssets" parameterType="Map">
+        insert into ott_jointinfo(cspid,lspid,correlateID,cmdFileURL,localFileName,jointTime) values (#{cspid,jdbcType=VARCHAR},#{lspid,jdbcType=VARCHAR},#{correlateID,jdbcType=VARCHAR},#{cmdFileURL,jdbcType=VARCHAR},#{localFileName,jdbcType=VARCHAR},sysdate())
+    </insert>
+    
+    <insert id="addDrama_children" parameterType="Map">
+        insert into ott_drama_children(dramaId,title,operator,createTime,status,crChildDramaId,crChildDramaType) values (#{dramaId,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{operator,jdbcType=VARCHAR},sysdate(),#{status,jdbcType=VARCHAR},#{crChildDramaId,jdbcType=VARCHAR},#{crChildDramaType,jdbcType=VARCHAR})
+    </insert>
+    
+    <select id="queryAllPendPic" resultType="Map">
+        select id,crDramaId,elementType,fileURL from ott_jointinfo_source where elementType = 'Picture' and isCreateFile = '2' and crParentId is null and crParentType is null
+    </select>
+    
+    <update id="updateJointinfoSource" parameterType="Map">
+        update ott_jointinfo_source set isCreateFile = #{isCreateFile, jdbcType=VARCHAR},isDealFile = #{isDealFile, jdbcType=VARCHAR}, updateTime=sysdate()<if test="isDispatch != null and isDispatch !=''">, isDispatch=#{isDispatch}, dispatchTime=null</if><if test="localFilePath != null and localFilePath !=''">, localFilePath=#{localFilePath, jdbcType=VARCHAR}</if> where crDramaId = #{crDramaId, jdbcType=VARCHAR} and elementType = #{elementType, jdbcType=VARCHAR}
+    </update>
+
+    <select id="queryJointInfoTypeInfo" parameterType="String" resultType="Map">
+        select dramaId,crDramaId,crDramaCode,elementType from ott_jointinfo_type where crDramaId=#{elementID, jdbcType=VARCHAR} and elementType=#{elementType, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="queryAllDispatchPics" resultType="Map">
+        select s.crDramaId,s.elementType,s.type,s.localFilePath,t.dramaId from ott_jointinfo_source s,ott_jointinfo_type t where s.crParentId=t.crDramaId and s.crParentType=t.elementType and s.elementType='Picture' and s.crParentId is not null and s.crParentType is not null and s.isCreateFile='0' and s.isDealFile='0' and s.status='1' and s.isDele='0' and s.isDispatch='0'
+    </select>
+    
+    <update id="updateJointinfoSource2" parameterType="Map">
+        update ott_jointinfo_source set isDispatch='1',dispatchTime=sysdate() where crDramaId=#{crDramaId,jdbcType=VARCHAR} and elementType=#{elementType,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateDramaNavigation" parameterType="String">
+        update ott_drama_navigation set status=#{status, jdbcType=VARCHAR} where id=#{localNavId, jdbcType=INTEGER}
+    </update>
+    
+	<select id="queryOtherCategory" resultType="java.util.Map">
+	    select oy.crNavId, oy.crNavName, oy.description, cy.localNavId from ott_jointinfo_othercategory oy,ott_jointinfo_category cy
+	      where oy.parentCrNrNavId = cy.crNavId;
+	</select>
+	
+	<update id="updateOtherCategory">
+	    update ott_jointinfo_othercategory set albumId = #{albumId, jdbcType=VARCHAR} where crNavId = #{crNavId, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateDramaPid" parameterType="String">
+	    update ott_drama_program set pId = #{status, jdbcType=VARCHAR} where id = #{dramaId, jdbcType=INTEGER}
+	</update>
+	
+	<insert id="addJointinfoPath" parameterType="String">
+	    insert into ott_jointinfo_path(elementID, elementCode, elementType, localFileName, correlateID) 
+	       values (#{elementID, jdbcType=VARCHAR},#{elementCode, jdbcType=VARCHAR},#{elementType, jdbcType=VARCHAR},#{localFileName, jdbcType=VARCHAR},#{correlateID, jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="findDramaAlbums" parameterType="String" resultType="DramaAlbum">
+	    select am.id,am.albumId,am.dramaId from ott_drama_album am
+	       <where>
+	           1 = 1
+	           and am.albumId=#{albumId, jdbcType=INTEGER}
+	           and am.dramaId=#{dramaId, jdbcType=INTEGER}
+	       </where>
+	</select>
+</mapper>
